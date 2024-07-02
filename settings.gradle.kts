@@ -1,8 +1,20 @@
 rootProject.name = "tomoyo"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+
 pluginManagement {
     repositories {
+//        maven(url = "https://mirrors.cloud.tencent.com/gradle/")
+
+        maven(url = "https://maven.aliyun.com/repository/public/")
+        maven(url = "https://maven.aliyun.com/repository/jcenter/")
+        maven(url = "https://maven.aliyun.com/repository/google/")
+        maven(url = "https://maven.aliyun.com/repository/gradle-plugin/")
+
+
+
+
+
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")
@@ -17,6 +29,14 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+//        maven(url = "https://mirrors.cloud.tencent.com/gradle/")
+
+        maven(url = "https://maven.aliyun.com/repository/public/")
+        maven(url = "https://maven.aliyun.com/repository/jcenter/")
+        maven(url = "https://maven.aliyun.com/repository/google/")
+        maven(url = "https://maven.aliyun.com/repository/gradle-plugin/")
+
+
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")
