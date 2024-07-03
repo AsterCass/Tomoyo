@@ -1,7 +1,9 @@
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.delay
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.seconds
 
 class Greeting {
     private val platform = getPlatform()
