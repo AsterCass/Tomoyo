@@ -13,9 +13,6 @@ plugins {
 
 kotlin {
 
-    val ktorVersion = "2.3.12"
-
-
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -31,11 +28,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-
-            implementation("io.ktor:ktor-client-android:$ktorVersion")
-            implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-            implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
-            implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -45,15 +38,18 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
-            implementation("io.ktor:ktor-client-core:$ktorVersion")
-            implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-            implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+            implementation(libs.ktor.client.core)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+
+//            api(libs.koin.core)
+//            api(libs.kotlinx.serialization)
+//            implementation(libs.koin.compose.multiplatform)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation(libs.ktor.client.okhttp)
         }
     }
 }

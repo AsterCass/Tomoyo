@@ -1,13 +1,12 @@
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import kotlin.random.Random
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import kotlin.time.Duration.Companion.seconds
 
 class Greeting {
     private val platform = getPlatform()
+
+    private val client = HttpClient()
 
 //    private val rocketComponent = RocketComponent()
 
@@ -29,5 +28,11 @@ class Greeting {
 //        emit(daysPhrase())
 //        emit(rocketComponent.launchPhrase())
 //    }
+
+    suspend fun greeting(): String {
+//        delay(10.seconds)
+        val response = client.get("https://api.astercasc.com/yui/asGo/health")
+        return response.bodyAsText()
+    }
 
 }
