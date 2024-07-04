@@ -25,4 +25,12 @@
     <string name="order_details">Quantity: %1$s \nFlavor: %2$s \nPickup date: %3$s \nTotal: %4$s \n\nThank you!</string>
     <string name="back_button">Back</string>
     <string name="cupcakes">%1$d cupcakes</string>
+
+
+    <string name="home">Home</string>
+    <string name="articles">Articles</string>
+    <string name="musics">Musics</string>
+    <string name="videos">Videos</string>
+    <string name="settings">Settings</string>
+
 </resources>

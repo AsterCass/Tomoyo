@@ -1,0 +1,4 @@
+package constant
+
+class BaseConstants {
+}
