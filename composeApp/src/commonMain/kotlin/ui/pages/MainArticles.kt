@@ -6,18 +6,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import data.ArticleSimpleModel
 
 @Composable
 fun MainArticleScreen(
-    modifier: Modifier = Modifier
+    articleDataList: List<ArticleSimpleModel>?,
+    modifier: Modifier = Modifier,
+    updateArticleList: @Composable (Boolean) -> Unit,
 ) {
+    updateArticleList(false)
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "This is article page",
+            text = articleDataList.toString(),
             style = MaterialTheme.typography.headlineSmall
         )
     }
+
 }

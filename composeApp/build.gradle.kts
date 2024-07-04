@@ -38,8 +38,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
-
             implementation(libs.ktor.client.core)
+
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
 
@@ -48,7 +48,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.compose)
 
 
+            implementation(libs.fastjson2)
 
+
+//            runtimeOnly(libs.kotlin.reflect)
 //            api(libs.koin.core)
 //            api(libs.kotlinx.serialization)
 //            implementation(libs.koin.compose.multiplatform)

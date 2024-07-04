@@ -1,4 +1,3 @@
 package constant
 
-class BaseConstants {
-}
+const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"
