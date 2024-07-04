@@ -85,7 +85,6 @@ fun MainApp(
                                 }
                             }
                         }
-
                     }
                 }
                 composable(route = MainNavigationEnum.MUSICS.name) {
