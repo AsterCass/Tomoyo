@@ -15,10 +15,17 @@ fun MainArticleScreen(
     updateArticleList: @Composable (Boolean) -> Unit,
 ) {
     updateArticleList(false)
+
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+
+
+
+
+
         Text(
             text = articleDataList.toString(),
             style = MaterialTheme.typography.headlineSmall
