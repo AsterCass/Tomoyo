@@ -29,6 +29,12 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+
+
+            implementation("androidx.media3:media3-exoplayer:1.1.0")
+            implementation("androidx.media3:media3-exoplayer-dash:1.1.0")
+            implementation("androidx.media3:media3-ui:1.1.0")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -63,6 +69,8 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.okhttp)
+
+            implementation("uk.co.caprica:vlcj:4.7.0")
         }
     }
 }
@@ -105,13 +113,46 @@ android {
 }
 
 compose.desktop {
+
+//    tasks.withType<Jar> {
+//        from("src/main/resources/vlc") {
+//            into("vlc")
+//        }
+//    }
+//
+//    tasks.withType<JavaExec> {
+//        val vlcLibDir = "${layout.buildDirectory}/resources/main/vlc"
+//        jvmArgs = listOf("-Djna.library.path=$vlcLibDir")
+//    }
+
+
     application {
+
         mainClass = "MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.aster.yuno.tomoyo"
+            //targetFormats(TargetFormat.Exe)
+            includeAllModules = true
+
+            packageName = "Tomoyo"
             packageVersion = "1.0.0"
+
+
+            //appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
+            //fromFiles(project.fileTree("include/") { include("**/*.dll") })
+
+
+            windows {
+                iconFile.set(project.file("src/desktopMain/resources/snow.ico"))
+            }
+
+
+
+
         }
+
     }
 }
+
+

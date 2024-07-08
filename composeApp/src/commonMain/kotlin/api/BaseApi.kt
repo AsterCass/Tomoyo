@@ -26,6 +26,7 @@ class BaseApi {
     private fun getUrl(path: String): String = BASE_SERVER_ADDRESS + path
 
     suspend fun getArticleList(offset: Int = 0, keyword: String = ""): List<ArticleSimpleModel> {
+        //delay(2000)
         val body = client.get(getUrl("/kotomi/article/list"))
         {
             url {
