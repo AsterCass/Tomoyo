@@ -25,8 +25,15 @@ class BaseApi {
 
     private fun getUrl(path: String): String = BASE_SERVER_ADDRESS + path
 
-    suspend fun getArticleList(): List<ArticleSimpleModel> {
-        val body = client.get(getUrl("/kotomi/article/list")).body<ArticleListModel>()
+    suspend fun getArticleList(offset: Int = 0, keyword: String = ""): List<ArticleSimpleModel> {
+        val body = client.get(getUrl("/kotomi/article/list"))
+        {
+            url {
+                parameters.append("offset", offset.toString())
+                parameters.append("keyword", keyword)
+            }
+        }
+            .body<ArticleListModel>()
         return if (body.data.isNullOrEmpty()) emptyList() else body.data
     }
 

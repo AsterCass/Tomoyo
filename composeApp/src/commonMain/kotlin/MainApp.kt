@@ -77,12 +77,12 @@ fun MainApp(
                     MainArticleScreen(
                         articleDataList = articleDataList,
                         modifier = Modifier.fillMaxHeight()
-                    ) { forceUpdate ->
-                        if (forceUpdate || articleDataList.isEmpty()) {
-                            LaunchedEffect(Unit) {
-                                scope.launch {
-                                    articleDataList = BaseApi().getArticleList()
-                                }
+                    ) {
+                        LaunchedEffect(Unit) {
+                            scope.launch {
+                                articleDataList = articleDataList + BaseApi().getArticleList(
+                                    offset = articleDataList.size,
+                                )
                             }
                         }
                     }
