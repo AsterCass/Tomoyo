@@ -25,7 +25,14 @@ koinComposeMultiplatform = "1.2.0-Beta4"
 navigationCompose = "2.7.0-alpha07"
 androidx-lifecycle = "2.8.0-rc03"
 
+javaFx = "0.1.0"
+javaFxLib = "22.0.1"
+
 [libraries]
+javafx-base = { module = "org.openjfx:javafx-base", version.ref = "javaFxLib" }
+javafx-graphics = { module = "org.openjfx:javafx-graphics", version.ref = "javaFxLib" }
+javafx-controls = { module = "org.openjfx:javafx-controls", version.ref = "javaFxLib" }
+javafx-media = { module = "org.openjfx:javafx-media", version.ref = "javaFxLib" }
 
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -66,3 +73,4 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+javaFx = { id = "org.openjfx.javafxplugin", version.ref = "javaFx" }

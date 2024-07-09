@@ -3,10 +3,12 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
+
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    //alias(libs.plugins.javaFx)
 
     kotlin("plugin.serialization") version "2.0.0"
 }
@@ -70,7 +72,28 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.okhttp)
 
-            implementation("uk.co.caprica:vlcj:4.7.0")
+//            implementation(libs.javafx.base)
+//            implementation(libs.javafx.graphics)
+//            implementation(libs.javafx.controls)
+//            implementation(libs.javafx.media)
+
+//            val fxSuffix = when (osdetector.classifier) {
+//                "linux-x86_64" -> "linux"
+//                "linux-aarch_64" -> "linux-aarch64"
+//                "windows-x86_64" -> "win"
+//                "osx-x86_64" -> "mac"
+//                "osx-aarch_64" -> "mac-aarch64"
+//                else -> throw IllegalStateException("Unknown OS: ${osdetector.classifier}")
+//            }
+
+            val fxSuffix = "win"
+            implementation("org.openjfx:javafx-base:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-graphics:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-controls:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-media:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-swing:22.0.1:$fxSuffix")
+
+//            implementation("uk.co.caprica:vlcj:4.7.0")
         }
     }
 }
@@ -128,6 +151,8 @@ compose.desktop {
 
     application {
 
+        //jvmArgs += listOf("-Djna.library.path=app/resources")
+
         mainClass = "MainKt"
 
         buildTypes.release.proguard {
@@ -139,7 +164,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             //targetFormats(TargetFormat.Exe)
-            includeAllModules = true
+            //includeAllModules = true
 
             packageName = "Tomoyo"
             packageVersion = "1.0.0"
@@ -151,6 +176,7 @@ compose.desktop {
 
             //appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
             //fromFiles(project.fileTree("include/") { include("**/*.dll") })
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("libs"))
 
             windows {
                 menuGroup = "Tomoyo"
