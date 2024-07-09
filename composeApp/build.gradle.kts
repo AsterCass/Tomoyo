@@ -130,6 +130,12 @@ compose.desktop {
 
         mainClass = "MainKt"
 
+        buildTypes.release.proguard {
+            optimize.set(true)
+            obfuscate.set(true)
+        }
+
+
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             //targetFormats(TargetFormat.Exe)
@@ -139,15 +145,17 @@ compose.desktop {
             packageVersion = "1.0.0"
 
 
+            description = "Aster Casc Yuno Door Multiplatform App"
+            copyright = "astercasc.com. All rights reserved."
+            vendor = "Aster Casc"
+
             //appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
             //fromFiles(project.fileTree("include/") { include("**/*.dll") })
 
-
             windows {
+                menuGroup = "Tomoyo"
                 iconFile.set(project.file("src/desktopMain/resources/snow.ico"))
             }
-
-
 
 
         }
