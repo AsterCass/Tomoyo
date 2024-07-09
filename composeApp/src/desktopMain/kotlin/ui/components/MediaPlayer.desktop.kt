@@ -1,6 +1,7 @@
 package ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -8,6 +9,8 @@ import androidx.compose.ui.Modifier
 @Composable
 actual fun MediaPlayer(modifier: Modifier, url: String) {
     Column {
+        Text("Desktop Media TODO")
+
         //vlc 太大了，暂不处理
 //        VideoPlayerImpl(
 //            url = url,

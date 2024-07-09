@@ -86,12 +86,12 @@ kotlin {
 //                else -> throw IllegalStateException("Unknown OS: ${osdetector.classifier}")
 //            }
 
-            val fxSuffix = "win"
-            implementation("org.openjfx:javafx-base:22.0.1:$fxSuffix")
-            implementation("org.openjfx:javafx-graphics:22.0.1:$fxSuffix")
-            implementation("org.openjfx:javafx-controls:22.0.1:$fxSuffix")
-            implementation("org.openjfx:javafx-media:22.0.1:$fxSuffix")
-            implementation("org.openjfx:javafx-swing:22.0.1:$fxSuffix")
+//            val fxSuffix = "win"
+//            implementation("org.openjfx:javafx-base:22.0.1:$fxSuffix")
+//            implementation("org.openjfx:javafx-graphics:22.0.1:$fxSuffix")
+//            implementation("org.openjfx:javafx-controls:22.0.1:$fxSuffix")
+//            implementation("org.openjfx:javafx-media:22.0.1:$fxSuffix")
+//            implementation("org.openjfx:javafx-swing:22.0.1:$fxSuffix")
 
 //            implementation("uk.co.caprica:vlcj:4.7.0")
         }
