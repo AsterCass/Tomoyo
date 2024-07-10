@@ -32,7 +32,7 @@ import ui.pages.MainVideosScreen
 
 
 @Composable
-fun MainApp(
+fun     MainApp(
     navController: NavHostController = rememberNavController(),
 ) {
     MaterialTheme {

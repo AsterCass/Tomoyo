@@ -92,8 +92,9 @@ kotlin {
 //            implementation("org.openjfx:javafx-controls:22.0.1:$fxSuffix")
 //            implementation("org.openjfx:javafx-media:22.0.1:$fxSuffix")
 //            implementation("org.openjfx:javafx-swing:22.0.1:$fxSuffix")
+//            implementation("org.openjfx:javafx-fxml:22.0.1:$fxSuffix")
 
-//            implementation("uk.co.caprica:vlcj:4.7.0")
+            implementation("uk.co.caprica:vlcj:4.7.0")
         }
     }
 }
@@ -136,17 +137,6 @@ android {
 }
 
 compose.desktop {
-
-//    tasks.withType<Jar> {
-//        from("src/main/resources/vlc") {
-//            into("vlc")
-//        }
-//    }
-//
-//    tasks.withType<JavaExec> {
-//        val vlcLibDir = "${layout.buildDirectory}/resources/main/vlc"
-//        jvmArgs = listOf("-Djna.library.path=$vlcLibDir")
-//    }
 
 
     application {
