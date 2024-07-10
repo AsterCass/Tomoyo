@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import javax.swing.JButton
+import javax.swing.JFrame
 
 fun main() {
 
@@ -16,12 +18,23 @@ fun main() {
 //    }
 
 
+    val frame =  JFrame("Simple Swing GUI");
+    val button =  JButton("这里是开始动画");
+
+    frame.contentPane.add(button);
+    frame.setSize(300, 200);
+    frame.isVisible = true;
+
+
+
     println("同步加载主应用")
 
 
     application {
 
         println("应用加载完成")
+
+        frame.isVisible = false;
 //        Platform.exit()
 
 //    https://stackoverflow.com/questions/68246840/how-to-avoid-main-libvlc-error-when-using-the-python-vlc-package
