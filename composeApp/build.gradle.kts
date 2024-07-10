@@ -18,7 +18,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -86,15 +86,15 @@ kotlin {
 //                else -> throw IllegalStateException("Unknown OS: ${osdetector.classifier}")
 //            }
 
-//            val fxSuffix = "win"
-//            implementation("org.openjfx:javafx-base:22.0.1:$fxSuffix")
-//            implementation("org.openjfx:javafx-graphics:22.0.1:$fxSuffix")
-//            implementation("org.openjfx:javafx-controls:22.0.1:$fxSuffix")
+            val fxSuffix = "win"
+            implementation("org.openjfx:javafx-base:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-graphics:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-controls:22.0.1:$fxSuffix")
 //            implementation("org.openjfx:javafx-media:22.0.1:$fxSuffix")
 //            implementation("org.openjfx:javafx-swing:22.0.1:$fxSuffix")
 //            implementation("org.openjfx:javafx-fxml:22.0.1:$fxSuffix")
 
-            implementation("uk.co.caprica:vlcj:4.7.0")
+//            implementation("uk.co.caprica:vlcj:4.7.0")
         }
     }
 }
@@ -125,8 +125,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -141,15 +141,15 @@ compose.desktop {
 
     application {
 
-        //jvmArgs += listOf("-Djna.library.path=app/resources")
+        //jvmArgs += listOf("-Djna.library.path=app/resources/vlc")
 
         mainClass = "MainKt"
 
-        buildTypes.release.proguard {
-            optimize.set(true)
-            obfuscate.set(true)
-        }
-
+//        buildTypes.release.proguard {
+//            isEnabled.set(true)
+//            optimize.set(true)
+//            obfuscate.set(true)
+//        }
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
@@ -157,8 +157,7 @@ compose.desktop {
             //includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.0.0"
-
+            packageVersion = "1.0.18"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."
@@ -166,11 +165,14 @@ compose.desktop {
 
             //appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
             //fromFiles(project.fileTree("include/") { include("**/*.dll") })
-            appResourcesRootDir.set(project.layout.projectDirectory.dir("libs"))
+
+            //appResourcesRootDir.set(project.layout.projectDirectory.dir("libs"))
 
             windows {
+                console = true
                 menuGroup = "Tomoyo"
                 iconFile.set(project.file("src/desktopMain/resources/snow.ico"))
+                upgradeUuid = "a33226c1-436e-44e4-9f4a-f9fbc6fc0dde"
             }
 
 

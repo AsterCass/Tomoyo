@@ -5,10 +5,27 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import java.io.File
+
+fun main() {
+
+    println("这里是开始动画")
+
+//    thread {
+    println("加载开始动画")
+//    Application.launch(StartLoading::class.java)
+//    }
 
 
-fun main() = application {
+    println("同步加载主应用")
+
+
+    application {
+
+        println("应用加载完成")
+//        Platform.exit()
+
+//    https://stackoverflow.com/questions/68246840/how-to-avoid-main-libvlc-error-when-using-the-python-vlc-package
+//    "C:\Program Files\VideoLAN\VLC\vlc-cache-gen.exe" "C:\Program Files\VideoLAN\VLC\plugins"
 
 //    val tempDir = Files.createTempDirectory("nativeLibs").toFile()
 //    tempDir.deleteOnExit() // Ensure the temp directory is deleted on ex
@@ -69,7 +86,8 @@ fun main() = application {
 //    // Now you can load your libraries using JNA
 //    println("Native libraries loaded from: $tempDir")
 
-
+        //   System.setProperty("jna.library.path", "Z:\\workspace\\yuno\\tomoyo\\composeApp\\libs\\common\\vlc")
+        //System.setProperty("jna.library.path", "app/resources/vlc")
 
     Window(
         onCloseRequest = ::exitApplication,
@@ -78,6 +96,7 @@ fun main() = application {
 
     ) {
         MainApp()
+    }
     }
 }
 
@@ -95,31 +114,5 @@ object MyAppIcon : Painter() {
     }
 }
 
-class Temp {
-    @Throws(java.lang.Exception::class)
-    private fun getNativeLibs(resourceDir: String): List<String> {
-        val nativeLibs: MutableList<String> = ArrayList()
-        this::class.java.getResourceAsStream(resourceDir).use { `is` ->
-            if (`is` == null) {
-                throw java.lang.RuntimeException("Resource directory $resourceDir not found")
-            }
-            // Check if resourceDir is a directory
-            if (`is`.available() == 0) {
-                // List all files in the resource directory
-                val files: Array<out File>? =
-                    File(this::class.java.getResource(resourceDir).toURI())
-                        .listFiles()
-                if (files != null) {
-                    for (file in files) {
-                        if (file.isFile) {
-                            nativeLibs.add(file.name)
-                        }
-                    }
-                }
-            }
-        }
-        return nativeLibs
-    }
-}
 
 
