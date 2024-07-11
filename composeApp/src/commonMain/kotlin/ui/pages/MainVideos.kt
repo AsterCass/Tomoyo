@@ -24,7 +24,7 @@ fun MainVideosScreen(
             MediaPlayer(
                 modifier = modifier.fillMaxWidth().height(400.dp),
                 url =
-                "https://api.astercasc.com/ushio/video/play/VC1648909883875288/1.mp4"
+                "https://api.astercasc.com/ushio/video/play/VC1648909883875288/output.mp4"
             )
 
 

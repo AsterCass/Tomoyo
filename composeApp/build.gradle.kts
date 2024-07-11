@@ -90,8 +90,8 @@ kotlin {
             implementation("org.openjfx:javafx-base:22.0.1:$fxSuffix")
             implementation("org.openjfx:javafx-graphics:22.0.1:$fxSuffix")
             implementation("org.openjfx:javafx-controls:22.0.1:$fxSuffix")
-//            implementation("org.openjfx:javafx-media:22.0.1:$fxSuffix")
-//            implementation("org.openjfx:javafx-swing:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-media:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-swing:22.0.1:$fxSuffix")
 //            implementation("org.openjfx:javafx-fxml:22.0.1:$fxSuffix")
 
 //            implementation("uk.co.caprica:vlcj:4.7.0")
@@ -157,7 +157,7 @@ compose.desktop {
             //includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.0.20"
+            packageVersion = "1.0.22"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."

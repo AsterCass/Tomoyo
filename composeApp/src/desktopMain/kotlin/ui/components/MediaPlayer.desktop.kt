@@ -1,27 +1,109 @@
 package ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.awt.SwingPanel
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import javafx.application.Platform
+import javafx.embed.swing.JFXPanel
+import javafx.scene.Scene
+import javafx.scene.layout.StackPane
+import javafx.scene.media.Media
+import javafx.scene.media.MediaException
+import javafx.scene.media.MediaPlayer
+import javafx.scene.media.MediaView
+import jfxPanel
+import java.awt.Component
+import javax.swing.BoxLayout
 
 @Composable
 actual fun MediaPlayer(modifier: Modifier, url: String) {
 
     println("start load MediaPlayer")
 
+    val mediaPlayerComponent = remember { initializeMediaPlayerComponent() }
+    val mediaPlayer = remember { mediaPlayerComponent.mediaPlayer(url) }
+    val factory = remember { { mediaPlayerComponent } }
+
     Column {
         Text("Desktop Media TODO")
 
-        //vlc 太大了，暂不处理
-//        VideoPlayerImpl(
-//            url = url,
-//            modifier = Modifier.fillMaxWidth().height(400.dp)
-//        )
+        LaunchedEffect(Unit) {
+            println(mediaPlayer?.mediaPlayer?.status)
+            mediaPlayer?.mediaPlayer?.play()
+        }
+        DisposableEffect(Unit) {
+            onDispose {
+                mediaPlayer?.mediaPlayer?.stop()
+            }
+        }
 
+        SwingPanel(
+            background = Color.Black,
+            modifier = Modifier.size(800.dp, 600.dp).padding(0.dp),
+            factory = factory,
+        )
     }
 }
+
+private fun initializeMediaPlayerComponent(): Component {
+    //base
+    val root = StackPane()
+    val scene = Scene(root, 800.0, 600.0, javafx.scene.paint.Color.BLACK)
+    //element
+    val mediaView = MediaView()
+    root.children.add(mediaView)
+    //panel
+    jfxPanel.layout = BoxLayout(jfxPanel, BoxLayout.Y_AXIS)
+    jfxPanel.scene = scene
+    Platform.setImplicitExit(false)
+    return jfxPanel
+}
+
+private fun Component.mediaPlayer(url: String): MediaView? {
+    if (this is JFXPanel) {
+        val view = this.scene.root.childrenUnmodifiable[0]
+        if (view is MediaView) {
+            val media = Media(url)
+            val mediaPlayer = MediaPlayer(media)
+            view.mediaPlayer = mediaPlayer
+
+
+            mediaPlayer.onError = Runnable {
+                val error: MediaException = mediaPlayer.error
+                println("Media error occurred: " + error.message)
+            }
+            media.onError = Runnable {
+                val error: MediaException = media.error
+                println("Media error event: " + error.message)
+            }
+            mediaPlayer.onReady = Runnable {
+                println("ready")
+            }
+            mediaPlayer.onPlaying = Runnable {
+                println("playing")
+            }
+            mediaPlayer.onStopped = Runnable {
+                println("stop")
+            }
+            mediaPlayer.onStalled = Runnable {
+                println("onStalled")
+            }
+
+            return view
+        }
+    }
+    return null
+}
+
 
 
 //@Composable
