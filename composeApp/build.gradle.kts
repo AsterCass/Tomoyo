@@ -87,11 +87,11 @@ kotlin {
 //            }
 
             val fxSuffix = "win"
-            implementation("org.openjfx:javafx-base:22.0.1:$fxSuffix")
-            implementation("org.openjfx:javafx-graphics:22.0.1:$fxSuffix")
-            implementation("org.openjfx:javafx-controls:22.0.1:$fxSuffix")
-            implementation("org.openjfx:javafx-media:22.0.1:$fxSuffix")
-            implementation("org.openjfx:javafx-swing:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-base:21.0.3:$fxSuffix")
+            implementation("org.openjfx:javafx-graphics:21.0.3:$fxSuffix")
+            implementation("org.openjfx:javafx-controls:21.0.3:$fxSuffix")
+            implementation("org.openjfx:javafx-media:21.0.3:$fxSuffix")
+            implementation("org.openjfx:javafx-swing:21.0.3:$fxSuffix")
 //            implementation("org.openjfx:javafx-fxml:22.0.1:$fxSuffix")
 
 //            implementation("uk.co.caprica:vlcj:4.7.0")
@@ -145,19 +145,19 @@ compose.desktop {
 
         mainClass = "MainKt"
 
-//        buildTypes.release.proguard {
-//            isEnabled.set(true)
-//            optimize.set(true)
-//            obfuscate.set(true)
-//        }
+        buildTypes.release.proguard {
+            isEnabled.set(true)
+            optimize.set(true)
+            obfuscate.set(true)
+        }
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             //targetFormats(TargetFormat.Exe)
-            //includeAllModules = true
+            includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.0.22"
+            packageVersion = "1.0.25"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."

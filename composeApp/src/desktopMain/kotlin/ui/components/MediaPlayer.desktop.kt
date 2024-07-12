@@ -1,9 +1,9 @@
 package ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -34,8 +34,6 @@ actual fun MediaPlayer(modifier: Modifier, url: String) {
     val factory = remember { { mediaPlayerComponent } }
 
     Column {
-        Text("Desktop Media TODO")
-
         LaunchedEffect(Unit) {
             println(mediaPlayer?.mediaPlayer?.status)
             mediaPlayer?.mediaPlayer?.play()
@@ -48,7 +46,7 @@ actual fun MediaPlayer(modifier: Modifier, url: String) {
 
         SwingPanel(
             background = Color.Black,
-            modifier = Modifier.size(800.dp, 600.dp).padding(0.dp),
+            modifier = Modifier.height(720.dp).width(1080.dp).padding(0.dp),
             factory = factory,
         )
     }
@@ -57,7 +55,7 @@ actual fun MediaPlayer(modifier: Modifier, url: String) {
 private fun initializeMediaPlayerComponent(): Component {
     //base
     val root = StackPane()
-    val scene = Scene(root, 800.0, 600.0, javafx.scene.paint.Color.BLACK)
+    val scene = Scene(root, 1080.0, 720.0, javafx.scene.paint.Color.BLACK)
     //element
     val mediaView = MediaView()
     root.children.add(mediaView)

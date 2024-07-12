@@ -4,8 +4,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPlacement
+import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
+import constant.enums.WindowsSizeEnum
+import data.PlatformInitData
 import javafx.embed.swing.JFXPanel
+import java.awt.Dimension
+import java.awt.GraphicsEnvironment
+import java.awt.Toolkit
+import java.awt.Window
 
 val jfxPanel = JFXPanel()
 
@@ -17,90 +26,64 @@ fun main() {
     println("加载开始动画")
     // Application.launch(StartLoading::class.java)
 //    }
-
-
     println("同步加载主应用")
 
     application {
 
         println("应用加载完成")
 
+        val state = rememberWindowState(
+            placement = WindowPlacement.Floating,
+            position = WindowPosition.PlatformDefault,
+            size = WindowsSizeEnum.LOW.data,
+        )
 
-//        Platform.exit()
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "Tomoyo",
+            icon = MyAppIcon,
+            state = state,
+//            undecorated = true
 
-//    https://stackoverflow.com/questions/68246840/how-to-avoid-main-libvlc-error-when-using-the-python-vlc-package
-//    "C:\Program Files\VideoLAN\VLC\vlc-cache-gen.exe" "C:\Program Files\VideoLAN\VLC\plugins"
+        ) {
 
-//    val tempDir = Files.createTempDirectory("nativeLibs").toFile()
-//    tempDir.deleteOnExit() // Ensure the temp directory is deleted on ex
-//    try {
-//        // Define the path to the native directory inside resources
-//        val resourceDir = "/vlc"
-//
-//        // Get the list of native libraries in the directory
-//        val nativeLibs: MutableList<String> = mutableListOf();
-//
-//        val resourceURL = this::class.java.getResource(resourceDir)
-//            ?: throw RuntimeException("Resource directory $resourceDir not found")
-//
-//        if (resourceURL.protocol == "jar") {
-//            // Running from a JAR file
-//            val jarPath = resourceURL.path.substring(5, resourceURL.path.indexOf("!"))
-//            val jarFile = JarFile(File(jarPath))
-//            val entries = jarFile.entries()
-//            while (entries.hasMoreElements()) {
-//                val entry = entries.nextElement()
-//                if (entry.name.startsWith(resourceDir.drop(1)) && !entry.isDirectory) {
-//                    nativeLibs.add(entry.name)
-//                }
-//            }
-//        } else {
-//            // Running from the filesystem
-//            val dir = File(resourceURL.toURI())
-//            if (dir.isDirectory) {
-//                dir.listFiles()?.forEach { file ->
-//                    if (file.isFile) {
-//                        nativeLibs.add(file.name)
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Copy each native library to the temporary directory
-//        nativeLibs.forEach { lib ->
-//            val tempLib = File(tempDir, lib)
-//            tempLib.parentFile.mkdirs()
-//            tempLib.deleteOnExit() // Ensure the temp file is deleted on exit
-//            this::class.java.getResourceAsStream("/$lib")?.use { inputStream ->
-//                FileOutputStream(tempLib).use { fos ->
-//                    val buffer = ByteArray(1024)
-//                    var bytesRead: Int
-//                    while ((inputStream.read(buffer).also { bytesRead = it }) != -1) {
-//                        fos.write(buffer, 0, bytesRead)
-//                    }
-//                }
-//            } ?: throw RuntimeException("Library $lib not found in resources")
-//        }
-//        // Your library loading code here
-//    } catch (e: Exception) {
-//        e.printStackTrace()
-//    }
-//    // Set the system property to point to the temporary directory
-//    System.setProperty("jna.library.path", tempDir.toString() + "/vlc")
-//    // Now you can load your libraries using JNA
-//    println("Native libraries loaded from: $tempDir")
+            MainApp(
+                getPlatformData = {
+                    PlatformInitData(
+                        winState = state,
+                        isFullScreen = window.size == getScreenSize(window),
+                    )
+                },
+                updatePlatformData = { data ->
 
-        //   System.setProperty("jna.library.path", "Z:\\workspace\\yuno\\tomoyo\\composeApp\\libs\\common\\vlc")
-        //System.setProperty("jna.library.path", "app/resources/vlc")
+                    val maxSize = getScreenSize(window)
 
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "Tomoyo",
-        icon = MyAppIcon,
+                    println("==========================")
+                    println("当前窗口大小：${window.size}")
+                    println("当前屏幕大小：$maxSize")
+                    println("即将调整大小：${data.winState.size}")
 
-    ) {
-        MainApp()
-    }
+
+                    if (data.winState.size.height.value >= maxSize.height ||
+                        data.winState.size.width.value >= maxSize.width
+                    ) {
+                        println("已到最大值")
+                        state.placement = WindowPlacement.Maximized
+                    } else {
+                        println("还未到最大值")
+                        state.size = data.winState.size
+                        window.size = Dimension(
+                            data.winState.size.width.value.toInt(),
+                            data.winState.size.height.value.toInt()
+                        )
+                    }
+                },
+            )
+            println("窗口加载完成")
+
+        }
+
+
     }
 }
 
@@ -116,6 +99,20 @@ object MyAppIcon : Painter() {
             Size(size.width / 2f, size.height / 2f)
         )
     }
+}
+
+
+fun getScreenSize(window: Window): Dimension {
+    val graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment()
+    val screenDevices = graphicsEnvironment.screenDevices
+    for (device in screenDevices) {
+        val bounds = device.defaultConfiguration.bounds
+        if (bounds.contains(window.location)) {
+            return bounds.size
+        }
+    }
+    println("使用了默认屏幕大小")
+    return Toolkit.getDefaultToolkit().screenSize
 }
 
 

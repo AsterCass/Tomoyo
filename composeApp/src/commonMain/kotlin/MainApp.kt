@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import api.BaseApi
 import constant.enums.MainNavigationEnum
 import data.ArticleSimpleModel
+import data.PlatformInitData
 import kotlinx.coroutines.launch
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
@@ -32,10 +33,14 @@ import ui.pages.MainVideosScreen
 
 
 @Composable
-fun     MainApp(
+fun MainApp(
+    getPlatformData: () -> PlatformInitData = { PlatformInitData() },
+    updatePlatformData: (PlatformInitData) -> Unit = {},
     navController: NavHostController = rememberNavController(),
 ) {
     MaterialTheme {
+
+
         //navigation
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentScreen = MainNavigationEnum.valueOf(
@@ -99,7 +104,9 @@ fun     MainApp(
                 }
                 composable(route = MainNavigationEnum.SETTING.name) {
                     MainSettingsScreen(
-                        modifier = Modifier.fillMaxHeight()
+                        getPlatformData = getPlatformData,
+                        updatePlatformData = updatePlatformData,
+                        modifier = Modifier.fillMaxHeight(),
                     )
                 }
             }
