@@ -34,12 +34,11 @@ import ui.pages.MainVideosScreen
 
 @Composable
 fun MainApp(
-    getPlatformData: () -> PlatformInitData = { PlatformInitData() },
+    platformData: PlatformInitData = PlatformInitData(),
     updatePlatformData: (PlatformInitData) -> Unit = {},
     navController: NavHostController = rememberNavController(),
 ) {
     MaterialTheme {
-
 
         //navigation
         val backStackEntry by navController.currentBackStackEntryAsState()
@@ -60,7 +59,8 @@ fun MainApp(
             bottomBar = {
                 MainAppNavigationBar(
                     currentScreen = currentScreen,
-                    navigationClicked = { navObj -> navController.navigate(navObj.name) }
+                    navigationClicked = { navObj -> navController.navigate(navObj.name) },
+                    extraNavigationList = platformData.extraNavigationList,
                 )
             }
         ) { innerPadding ->
@@ -73,42 +73,56 @@ fun MainApp(
                     .verticalScroll(rememberScrollState())
                     .padding(innerPadding)
             ) {
+
                 composable(route = MainNavigationEnum.HOME.name) {
                     MainHomeScreen(
                         modifier = Modifier.fillMaxHeight()
                     )
                 }
-                composable(route = MainNavigationEnum.ARTICLES.name) {
-                    MainArticleScreen(
-                        articleDataList = articleDataList,
-                        modifier = Modifier.fillMaxHeight()
-                    ) {
-                        LaunchedEffect(Unit) {
-                            scope.launch {
-                                articleDataList = articleDataList + BaseApi().getArticleList(
-                                    offset = articleDataList.size,
-                                )
+
+                if (platformData.extraNavigationList.contains(MainNavigationEnum.ARTICLES)) {
+                    composable(route = MainNavigationEnum.ARTICLES.name) {
+                        MainArticleScreen(
+                            articleDataList = articleDataList,
+                            modifier = Modifier.fillMaxHeight()
+                        ) {
+                            LaunchedEffect(Unit) {
+                                scope.launch {
+                                    articleDataList = articleDataList + BaseApi().getArticleList(
+                                        offset = articleDataList.size,
+                                    )
+                                }
                             }
                         }
                     }
                 }
-                composable(route = MainNavigationEnum.MUSICS.name) {
-                    MainMusicsScreen(
-                        modifier = Modifier.fillMaxHeight()
-                    )
+
+                if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
+                    composable(route = MainNavigationEnum.MUSICS.name) {
+                        MainMusicsScreen(
+                            modifier = Modifier.fillMaxHeight()
+                        )
+                    }
                 }
-                composable(route = MainNavigationEnum.VIDEOS.name) {
-                    MainVideosScreen(
-                        modifier = Modifier.fillMaxHeight()
-                    )
+
+                if (platformData.extraNavigationList.contains(MainNavigationEnum.VIDEOS)) {
+                    composable(route = MainNavigationEnum.VIDEOS.name) {
+                        MainVideosScreen(
+                            modifier = Modifier.fillMaxHeight()
+                        )
+                    }
                 }
-                composable(route = MainNavigationEnum.SETTING.name) {
-                    MainSettingsScreen(
-                        getPlatformData = getPlatformData,
-                        updatePlatformData = updatePlatformData,
-                        modifier = Modifier.fillMaxHeight(),
-                    )
+
+                if (platformData.extraNavigationList.contains(MainNavigationEnum.SETTING)) {
+                    composable(route = MainNavigationEnum.SETTING.name) {
+                        MainSettingsScreen(
+                            platformData = platformData,
+                            updatePlatformData = updatePlatformData,
+                            modifier = Modifier.fillMaxHeight(),
+                        )
+                    }
                 }
+
             }
         }
 

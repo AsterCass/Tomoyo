@@ -29,18 +29,21 @@ fun MainAppBar(
 fun MainAppNavigationBar(
     currentScreen: MainNavigationEnum,
     navigationClicked: (MainNavigationEnum) -> Unit,
+    extraNavigationList: List<MainNavigationEnum> = emptyList(),
     modifier: Modifier = Modifier,
 ) {
     NavigationBar(
         modifier = modifier,
     ) {
         MainNavigationEnum.entries.toTypedArray().forEach { nav ->
-            NavigationBarItem(
-                icon = { Icon(Icons.Filled.Favorite, contentDescription = nav.name) },
-                label = { Text(nav.name) },
-                selected = currentScreen == nav,
-                onClick = { navigationClicked(nav) }
-            )
+            if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Favorite, contentDescription = nav.name) },
+                    label = { Text(nav.name) },
+                    selected = currentScreen == nav,
+                    onClick = { navigationClicked(nav) }
+                )
+            }
         }
     }
 }

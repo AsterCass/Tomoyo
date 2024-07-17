@@ -1,9 +1,8 @@
 package data
 
-import androidx.compose.ui.window.WindowState
+import constant.enums.MainNavigationEnum
 
 
 data class PlatformInitData(
-    val winState: WindowState = WindowState(),
-    val isFullScreen: Boolean = false,
+    val extraNavigationList: List<MainNavigationEnum> = emptyList(),
 )

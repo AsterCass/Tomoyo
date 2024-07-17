@@ -7,7 +7,7 @@ import data.PlatformInitData
 
 @Composable
 actual fun PlatformSetting(
-    getPlatformData: () -> PlatformInitData,
+    platformData: PlatformInitData,
     updatePlatformData: (PlatformInitData) -> Unit,
     modifier: Modifier
 ) {

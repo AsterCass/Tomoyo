@@ -11,7 +11,7 @@ import ui.components.PlatformSetting
 
 @Composable
 fun MainSettingsScreen(
-    getPlatformData: () -> PlatformInitData = { PlatformInitData() },
+    platformData: PlatformInitData = PlatformInitData(),
     updatePlatformData: (PlatformInitData) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -26,7 +26,7 @@ fun MainSettingsScreen(
         )
 
         PlatformSetting(
-            getPlatformData = getPlatformData,
+            platformData = platformData,
             updatePlatformData = updatePlatformData,
             modifier = modifier,
         )

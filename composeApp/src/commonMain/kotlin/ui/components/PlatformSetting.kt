@@ -7,7 +7,7 @@ import data.PlatformInitData
 
 @Composable
 expect fun PlatformSetting(
-    getPlatformData: () -> PlatformInitData = { PlatformInitData() },
+    platformData: PlatformInitData,
     updatePlatformData: (PlatformInitData) -> Unit = {},
     modifier: Modifier,
 )

@@ -32,5 +32,6 @@
     <string name="musics">Musics</string>
     <string name="videos">Videos</string>
     <string name="settings">Settings</string>
+    <string name="chat">Chat</string>
 
 </resources>

@@ -71,30 +71,6 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.okhttp)
-
-//            implementation(libs.javafx.base)
-//            implementation(libs.javafx.graphics)
-//            implementation(libs.javafx.controls)
-//            implementation(libs.javafx.media)
-
-//            val fxSuffix = when (osdetector.classifier) {
-//                "linux-x86_64" -> "linux"
-//                "linux-aarch_64" -> "linux-aarch64"
-//                "windows-x86_64" -> "win"
-//                "osx-x86_64" -> "mac"
-//                "osx-aarch_64" -> "mac-aarch64"
-//                else -> throw IllegalStateException("Unknown OS: ${osdetector.classifier}")
-//            }
-
-            val fxSuffix = "win"
-            implementation("org.openjfx:javafx-base:21.0.3:$fxSuffix")
-            implementation("org.openjfx:javafx-graphics:21.0.3:$fxSuffix")
-            implementation("org.openjfx:javafx-controls:21.0.3:$fxSuffix")
-            implementation("org.openjfx:javafx-media:21.0.3:$fxSuffix")
-            implementation("org.openjfx:javafx-swing:21.0.3:$fxSuffix")
-//            implementation("org.openjfx:javafx-fxml:22.0.1:$fxSuffix")
-
-//            implementation("uk.co.caprica:vlcj:4.7.0")
         }
     }
 }

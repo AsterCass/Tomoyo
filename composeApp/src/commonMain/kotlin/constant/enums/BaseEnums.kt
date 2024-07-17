@@ -21,6 +21,7 @@ enum class MainNavigationEnum(
     ARTICLES("articles", Res.string.articles, Res.string.app_name),
     MUSICS("musics", Res.string.musics, Res.string.app_name),
     VIDEOS("videos", Res.string.videos, Res.string.app_name),
+    CHAT("chat", Res.string.videos, Res.string.app_name),
     SETTING("settings", Res.string.settings, Res.string.app_name),
 
 }
