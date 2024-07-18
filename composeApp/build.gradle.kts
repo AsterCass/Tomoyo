@@ -62,6 +62,15 @@ kotlin {
 
 
 
+            implementation("org.hildan.krossbow:krossbow-stomp-core:7.1.0")
+            implementation("org.hildan.krossbow:krossbow-websocket-sockjs:7.1.0")
+//            https://github.com/NaikSoftware/StompProtocolAndroid
+            runtimeOnly("org.glassfish.tyrus.bundles:tyrus-standalone-client:2.1.5")
+            runtimeOnly("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+//            implementation("org.springframework.boot:spring-boot-starter-websocket:3.2.5")
+//            implementation("org.apache.tomcat.embed:tomcat-embed-websocket:10.1.26")
+
+
 
 //            implementation(libs.fastjson2)
 //            runtimeOnly(libs.kotlin.reflect)
@@ -89,10 +98,11 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        minSdk = 26
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/**"
         }
     }
     buildTypes {
@@ -133,7 +143,7 @@ compose.desktop {
             includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.0.25"
+            packageVersion = "1.1.0"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."

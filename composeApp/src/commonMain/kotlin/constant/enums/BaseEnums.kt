@@ -6,6 +6,7 @@ import org.jetbrains.compose.resources.StringResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.app_name
 import tomoyo.composeapp.generated.resources.articles
+import tomoyo.composeapp.generated.resources.chat
 import tomoyo.composeapp.generated.resources.home
 import tomoyo.composeapp.generated.resources.musics
 import tomoyo.composeapp.generated.resources.settings
@@ -21,7 +22,7 @@ enum class MainNavigationEnum(
     ARTICLES("articles", Res.string.articles, Res.string.app_name),
     MUSICS("musics", Res.string.musics, Res.string.app_name),
     VIDEOS("videos", Res.string.videos, Res.string.app_name),
-    CHAT("chat", Res.string.videos, Res.string.app_name),
+    CHAT("chat", Res.string.chat, Res.string.app_name),
     SETTING("settings", Res.string.settings, Res.string.app_name),
 
 }

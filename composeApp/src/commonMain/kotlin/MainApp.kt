@@ -22,10 +22,12 @@ import api.BaseApi
 import constant.enums.MainNavigationEnum
 import data.ArticleSimpleModel
 import data.PlatformInitData
+import data.UserDataModel
 import kotlinx.coroutines.launch
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
 import ui.pages.MainArticleScreen
+import ui.pages.MainChatScreen
 import ui.pages.MainHomeScreen
 import ui.pages.MainMusicsScreen
 import ui.pages.MainSettingsScreen
@@ -40,6 +42,9 @@ fun MainApp(
 ) {
     MaterialTheme {
 
+        //coroutine
+        val apiCoroutine = rememberCoroutineScope()
+
         //navigation
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentScreen = MainNavigationEnum.valueOf(
@@ -47,8 +52,11 @@ fun MainApp(
         )
         //article data
         var articleDataList by remember { mutableStateOf(emptyList<ArticleSimpleModel>()) }
-        val scope = rememberCoroutineScope()
 
+        //userData
+        var userData by remember { mutableStateOf(UserDataModel()) }
+
+        println("reload MaterialTheme")
 
         Scaffold(
             topBar = {
@@ -74,6 +82,7 @@ fun MainApp(
                     .padding(innerPadding)
             ) {
 
+                println("reload NavHost")
                 composable(route = MainNavigationEnum.HOME.name) {
                     MainHomeScreen(
                         modifier = Modifier.fillMaxHeight()
@@ -87,11 +96,9 @@ fun MainApp(
                             modifier = Modifier.fillMaxHeight()
                         ) {
                             LaunchedEffect(Unit) {
-                                scope.launch {
-                                    articleDataList = articleDataList + BaseApi().getArticleList(
-                                        offset = articleDataList.size,
-                                    )
-                                }
+                                articleDataList = articleDataList + BaseApi().getArticleList(
+                                    offset = articleDataList.size,
+                                )
                             }
                         }
                     }
@@ -100,6 +107,15 @@ fun MainApp(
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
                     composable(route = MainNavigationEnum.MUSICS.name) {
                         MainMusicsScreen(
+                            modifier = Modifier.fillMaxHeight()
+                        )
+                    }
+                }
+
+                if (platformData.extraNavigationList.contains(MainNavigationEnum.CHAT)) {
+                    composable(route = MainNavigationEnum.CHAT.name) {
+                        MainChatScreen(
+                            userData = userData,
                             modifier = Modifier.fillMaxHeight()
                         )
                     }
@@ -116,6 +132,12 @@ fun MainApp(
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.SETTING)) {
                     composable(route = MainNavigationEnum.SETTING.name) {
                         MainSettingsScreen(
+                            userData = userData,
+                            login = { account: String, passwd: String ->
+                                apiCoroutine.launch {
+                                    userData = BaseApi().login(account, passwd)
+                                }
+                            },
                             platformData = platformData,
                             updatePlatformData = updatePlatformData,
                             modifier = Modifier.fillMaxHeight(),
