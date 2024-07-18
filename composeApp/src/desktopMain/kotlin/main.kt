@@ -7,19 +7,30 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
-import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
 import constant.enums.MainNavigationEnum
 import constant.enums.WindowsSizeEnum
 import data.PlatformInitData
+import java.awt.SystemTray
+import java.awt.TrayIcon
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
+import javax.imageio.ImageIO
 
 
 fun main() {
+
+    val tray = SystemTray.getSystemTray()
+    val image = ImageIO.read(
+        Thread.currentThread().contextClassLoader
+            .getResource("snow.png")
+    )
+    val trayIcon = TrayIcon(image, "Tomoyo")
+    tray.add(trayIcon)
 
     application {
 
@@ -29,28 +40,25 @@ fun main() {
             position = WindowPosition.PlatformDefault,
             size = WindowsSizeEnum.LOW.data,
         )
-        val trayState = rememberTrayState()
-
-        Tray(
-            state = trayState,
-            icon = TrayIcon,
-
-            menu = {
-                Separator()
-                Item(
-                    "     Show",
-                    onClick = {
-                        visible = true
+        trayIcon.apply {
+            isImageAutoSize = true
+            addMouseListener(
+                object : MouseListener {
+                    override fun mouseClicked(e: MouseEvent?) {}
+                    override fun mousePressed(e: MouseEvent?) {}
+                    override fun mouseEntered(e: MouseEvent?) {}
+                    override fun mouseExited(e: MouseEvent?) {}
+                    override fun mouseReleased(e: MouseEvent?) {
+                        val isRight = e?.isPopupTrigger ?: false
+                        if (isRight) {
+                            exitApplication()
+                        } else {
+                            visible = true
+                        }
                     }
-                )
-                Separator()
-                Item(
-                    "     Exit",
-                    onClick = ::exitApplication
-                )
-                Separator()
-            }
-        )
+                }
+            )
+        }
 
         Window(
             onCloseRequest = { visible = false },
@@ -85,14 +93,5 @@ object MyAppIcon : Painter() {
         )
     }
 }
-
-object TrayIcon : Painter() {
-    override val intrinsicSize = Size(256f, 256f)
-
-    override fun DrawScope.onDraw() {
-        drawOval(Color(0xFFFFA500))
-    }
-}
-
 
 
