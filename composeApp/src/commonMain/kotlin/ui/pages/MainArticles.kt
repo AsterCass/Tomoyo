@@ -17,8 +17,12 @@ import data.ArticleSimpleModel
 fun MainArticleScreen(
     articleDataList: List<ArticleSimpleModel>,
     modifier: Modifier = Modifier,
-    updateArticleList: @Composable () -> Unit,
+    updateArticleList: () -> Unit,
 ) {
+
+    println("reload MainArticleScreen")
+
+
     LazyColumn(
         modifier = modifier.height(10.dp),
         verticalArrangement = Arrangement.SpaceBetween

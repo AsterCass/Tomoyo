@@ -10,6 +10,10 @@ data class UserDataModel(
     var avatar: String? = null,
     var nickName: String? = null,
     var token: String? = null,
+
+
+    var chatId: String? = null,
+    var chatRowList: List<ChatRowModel> = emptyList()
 )
 
 @Serializable

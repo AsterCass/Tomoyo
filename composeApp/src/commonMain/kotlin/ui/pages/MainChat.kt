@@ -1,22 +1,21 @@
 package ui.pages
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,30 +23,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import data.ChatRowModel
 import data.UserDataModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.sendText
-import org.hildan.krossbow.stomp.subscribeText
-import org.hildan.krossbow.websocket.sockjs.SockJSClient
-
-private val json = Json {
-    prettyPrint = true
-    isLenient = true
-    ignoreUnknownKeys = true
-}
 
 @Composable
 fun MainChatScreen(
     userData: UserDataModel = UserDataModel(),
+    userDataVersion: Int = 0,
+    socketSession: StompSession?,
     modifier: Modifier = Modifier
 ) {
 
@@ -58,56 +47,29 @@ fun MainChatScreen(
     //coroutine
     val sendMsgCoroutine = rememberCoroutineScope()
 
-
-    var chatRowList by remember { mutableStateOf(emptyList<ChatRowModel>()) }
-
-    val scope = rememberCoroutineScope()
-
-    var msg by rememberSaveable { mutableStateOf("") }
-
-    var chatId by rememberSaveable { mutableStateOf("") }
-
-    var socketSession by remember { mutableStateOf<Any?>(null) }
-
-
-    LaunchedEffect(Unit) {
-        val client = StompClient(SockJSClient())
-        val session: StompSession = client.connect(
-            "https://api.astercasc.com/yui/chat-websocket/socketAuthNoError?User-Token=${userData.token}"
-        )
-        socketSession = session
-        val subscription: Flow<String> =
-            session.subscribeText("/user/${userData.token}/message/receive")
-        val collectorJob = scope.launch {
-            subscription.collect { msg ->
-                val chatRow: ChatRowModel = Json {
-                    prettyPrint = true
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                }.decodeFromString(msg)
-                chatId = chatRow.fromChatId
-                chatRowList = chatRowList + chatRow
-                println(chatRowList)
-            }
-        }
-    }
+    var chatMessage by rememberSaveable { mutableStateOf(userDataVersion.toString()) }
 
     Column(
     ) {
         if (!userData.token.isNullOrBlank()) {
             TextField(
-                value = msg,
+                value = chatMessage,
                 placeholder = { Text("信息") },
-                onValueChange = { msg = it }
+                onValueChange = { chatMessage = it }
             )
             Button(
                 onClick = {
-                    sendMsgCoroutine.launch {
-                        (socketSession as? StompSession)?.sendText(
+//                    sendMsgCoroutine.launch {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        socketSession?.sendText(
                             "/socket/message/send",
-                            "{\"chatId\": \"$chatId\", \"message\": \"$msg\"}"
+                            "{\"chatId\": \"${userData.chatId}\", " +
+                                    "\"message\": \"$chatMessage\"}"
                         )
                     }
+//                    sendMsgCoroutine.launch {
+//
+//                    }
 
                 }
             ) {
@@ -117,54 +79,73 @@ fun MainChatScreen(
 
 
         LazyColumn(
-            modifier = Modifier.height(300.dp)
+            modifier = Modifier.height(1200.dp)
 //        modifier = Modifier.verticalScroll(),
 //        verticalArrangement = Arrangement.SpaceBetween
         ) {
             item {
 
             }
-            items(chatRowList.size) { index ->
-                ChatRowComposable(item = chatRowList[index])
+            items(userData.chatRowList.size) { index ->
+                MessageCard(item = userData.chatRowList[index])
             }
         }
 
 
     }
 
-
 }
 
 
 @Composable
-fun ChatRowComposable(item: ChatRowModel) {
+fun MessageCard(item: ChatRowModel) {
 
-    Row {
-//        Avatar(icon = ImageIO.read(URL(item.sendUserAvatar)).toPainter())
-        Text(
-            item.sendMessage,
-            modifier = Modifier.padding(5.dp)
+    Row(modifier = Modifier.padding(all = 8.dp)) {
+//        Image(
+//            painter = rememberAsyncImagePainter(item.sendUserAvatar),
+//            contentDescription = null,
+//            modifier = Modifier
+//                .size(40.dp)
+//                .clip(CircleShape)
+//                .border(1.5.dp, MaterialTheme.colorScheme.secondary, CircleShape)
+//        )
+        Spacer(modifier = Modifier.width(8.dp))
+
+        // We keep track if the message is expanded or not in this
+        // variable
+        var isExpanded by remember { mutableStateOf(false) }
+        // surfaceColor will be updated gradually from one color to the other
+        val surfaceColor by animateColorAsState(
+            if (isExpanded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
         )
-    }
 
-}
+        // We toggle the isExpanded variable when we click on this Column
+        Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
+            Text(
+                text = item.sendUserNickname,
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.titleSmall
+            )
 
+            Spacer(modifier = Modifier.height(4.dp))
 
-@Composable
-fun Avatar(icon: Painter, modifier: Modifier = Modifier.padding(5.dp), size: Int = 40) {
-    Surface(
-        modifier = modifier.size(size.dp),
-        shape = CircleShape,
-        color = MaterialTheme.colorScheme.primary,
-        contentColor = Color.White
-    ) {
-        Image(
-            painter = icon,
-            contentDescription = "Avatar",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Gray, CircleShape)
-        )
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                shadowElevation = 1.dp,
+                // surfaceColor color will be changing gradually from primary to surface
+                color = surfaceColor,
+                // animateContentSize will change the Surface size gradually
+                modifier = Modifier.animateContentSize().padding(1.dp)
+            ) {
+                Text(
+                    text = item.sendMessage,
+                    modifier = Modifier.padding(all = 4.dp),
+                    // If the message is expanded, we display all its content
+                    // otherwise we only display the first line
+                    maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
     }
 }

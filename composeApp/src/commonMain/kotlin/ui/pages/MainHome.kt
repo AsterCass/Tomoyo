@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 fun MainHomeScreen(
     modifier: Modifier = Modifier
 ) {
+    println("reload MainHomeScreen")
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween

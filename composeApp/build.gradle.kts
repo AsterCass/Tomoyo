@@ -31,6 +31,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
 
 
             implementation("androidx.media3:media3-exoplayer:1.1.0")
@@ -62,12 +63,19 @@ kotlin {
 
 
 
-            implementation("org.hildan.krossbow:krossbow-stomp-core:7.1.0")
-            implementation("org.hildan.krossbow:krossbow-websocket-sockjs:7.1.0")
+            implementation("org.hildan.krossbow:krossbow-stomp-core:5.12.0")
+            implementation("org.hildan.krossbow:krossbow-websocket-sockjs:5.12.0")
 //            https://github.com/NaikSoftware/StompProtocolAndroid
-            runtimeOnly("org.glassfish.tyrus.bundles:tyrus-standalone-client:2.1.5")
-            runtimeOnly("com.fasterxml.jackson.core:jackson-databind:2.17.2")
-//            implementation("org.springframework.boot:spring-boot-starter-websocket:3.2.5")
+//            https://stackoverflow.com/questions/31817135/connect-with-ios-and-android-clients-to-sockjs-backend
+
+
+            runtimeOnly("org.glassfish.tyrus.bundles:tyrus-standalone-client:2.0.7")
+            runtimeOnly("com.fasterxml.jackson.core:jackson-databind:2.15.4")
+
+            implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
+
+
+//            runtimeOnly("org.springframework.boot:spring-boot-starter-websocket:3.2.6")
 //            implementation("org.apache.tomcat.embed:tomcat-embed-websocket:10.1.26")
 
 
@@ -143,7 +151,7 @@ compose.desktop {
             includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.1.0"
+            packageVersion = "1.1.2"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."

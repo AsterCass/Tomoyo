@@ -12,8 +12,9 @@ import data.PlatformInitData
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        println("reload onCreate")
         setContent {
+            println("reload setContent")
             MainApp(
                 platformData = PlatformInitData(
                     extraNavigationList = listOf(
