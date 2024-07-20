@@ -62,22 +62,23 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.compose)
 
 
+//            implementation("org.hildan.krossbow:krossbow-stomp-core:5.12.0")
+//            implementation("org.hildan.krossbow:krossbow-websocket-sockjs:5.12.0")
+//            runtimeOnly("org.glassfish.tyrus.bundles:tyrus-standalone-client:2.0.7")
+//            runtimeOnly("com.fasterxml.jackson.core:jackson-databind:2.15.4")
 
-            implementation("org.hildan.krossbow:krossbow-stomp-core:5.12.0")
-            implementation("org.hildan.krossbow:krossbow-websocket-sockjs:5.12.0")
-//            https://github.com/NaikSoftware/StompProtocolAndroid
-//            https://stackoverflow.com/questions/31817135/connect-with-ios-and-android-clients-to-sockjs-backend
 
+            implementation("org.hildan.krossbow:krossbow-stomp-core:4.5.0")
+            implementation("org.hildan.krossbow:krossbow-websocket-sockjs:4.5.0")
+            implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.19")
+            implementation("com.fasterxml.jackson.core:jackson-databind:2.13.5")
 
-            runtimeOnly("org.glassfish.tyrus.bundles:tyrus-standalone-client:2.0.7")
-            runtimeOnly("com.fasterxml.jackson.core:jackson-databind:2.15.4")
 
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
 
 
 //            runtimeOnly("org.springframework.boot:spring-boot-starter-websocket:3.2.6")
 //            implementation("org.apache.tomcat.embed:tomcat-embed-websocket:10.1.26")
-
 
 
 //            implementation(libs.fastjson2)
