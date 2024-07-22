@@ -70,10 +70,11 @@ fun main() {
             MainApp(
                 platformData = PlatformInitData(
                     extraNavigationList = listOf(
-                            MainNavigationEnum.ARTICLES,
-                    MainNavigationEnum.CHAT,
-                    MainNavigationEnum.SETTING,
-                )
+                        MainNavigationEnum.ARTICLES,
+                        MainNavigationEnum.CHAT,
+                        MainNavigationEnum.MUSICS,
+                        MainNavigationEnum.SETTING,
+                        )
                 )
             )
         }

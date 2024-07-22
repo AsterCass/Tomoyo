@@ -15,6 +15,11 @@ plugins {
 
 kotlin {
 
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -89,6 +94,12 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.okhttp)
+
+            implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4")
+            implementation("com.googlecode.soundlibs:jlayer:1.0.1.4")
+            implementation("com.googlecode.soundlibs:tritonus-share:0.3.7.4")
+//            implementation("com.googlecode.soundlibs:tritonus-sampled-file:0.3.7-2")
+//            implementation("com.googlecode.soundlibs:tritonus-sampled-convert:0.3.7-2")
         }
     }
 }

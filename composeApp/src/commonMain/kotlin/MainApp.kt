@@ -23,6 +23,7 @@ import data.ArticleSimpleModel
 import data.ChatRowModel
 import data.PlatformInitData
 import data.UserDataModel
+import data.rememberPlayerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +33,8 @@ import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import ui.components.AudioPlayer
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
 import ui.pages.MainArticleScreen
@@ -42,6 +45,7 @@ import ui.pages.MainSettingsScreen
 import ui.pages.MainVideosScreen
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MainApp(
     platformData: PlatformInitData = PlatformInitData(),
@@ -55,7 +59,8 @@ fun MainApp(
 
         //coroutine
         val apiCoroutine = rememberCoroutineScope()
-//        val windowsCoroutine = rememberCoroutineScope()
+        val musicCoroutine = rememberCoroutineScope()
+
 
         //navigation
         val backStackEntry by navController.currentBackStackEntryAsState()
@@ -69,6 +74,10 @@ fun MainApp(
 
         //article data
         var articleDataList by remember { mutableStateOf(emptyList<ArticleSimpleModel>()) }
+
+        //music data
+        val playerState = rememberPlayerState()
+        val player = remember { AudioPlayer(playerState) }
 
         //userData
         var userData by remember { mutableStateOf(UserDataModel()) }
@@ -170,7 +179,22 @@ fun MainApp(
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
                     composable(route = MainNavigationEnum.MUSICS.name) {
                         MainMusicsScreen(
-                            modifier = Modifier.fillMaxHeight()
+                            isPlaying = playerState.isPlaying,
+                            onStart = {
+                                musicCoroutine.launch(Dispatchers.IO) {
+                                    player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3")
+                                }
+                            },
+                            onPause = {
+                                musicCoroutine.launch(Dispatchers.IO) {
+                                    player.pause()
+                                }
+                            },
+                            onPlay = {
+                                musicCoroutine.launch(Dispatchers.IO) {
+                                    player.play()
+                                }
+                            },
                         )
                     }
                 }
