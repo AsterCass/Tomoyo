@@ -15,6 +15,7 @@ import androidx.compose.ui.window.rememberWindowState
 import constant.enums.MainNavigationEnum
 import constant.enums.WindowsSizeEnum
 import data.PlatformInitData
+import javafx.embed.swing.JFXPanel
 import java.awt.SystemTray
 import java.awt.TrayIcon
 import java.awt.event.MouseEvent
@@ -23,6 +24,9 @@ import javax.imageio.ImageIO
 
 
 fun main() {
+
+    //init javafx
+    JFXPanel()
 
     val tray = SystemTray.getSystemTray()
     val image = ImageIO.read(

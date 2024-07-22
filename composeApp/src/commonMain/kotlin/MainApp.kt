@@ -128,6 +128,7 @@ fun MainApp(
 //            }
 //        }
 
+        println("reload Main")
 
         Scaffold(
             topBar = {
@@ -179,22 +180,21 @@ fun MainApp(
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
                     composable(route = MainNavigationEnum.MUSICS.name) {
                         MainMusicsScreen(
+                            currentTime = playerState.currentTime,
+                            totalDuration = playerState.totalDuration,
                             isPlaying = playerState.isPlaying,
                             onStart = {
-                                musicCoroutine.launch(Dispatchers.IO) {
-                                    player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3")
-                                }
-                            },
-                            onPause = {
-                                musicCoroutine.launch(Dispatchers.IO) {
-                                    player.pause()
-                                }
+                                player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3")
                             },
                             onPlay = {
-                                musicCoroutine.launch(Dispatchers.IO) {
-                                    player.play()
-                                }
+                                player.play()
                             },
+                            onPause = {
+                                player.pause()
+                            },
+                            onSeek = { position ->
+                                player.seekTo(position)
+                            }
                         )
                     }
                 }

@@ -1,44 +1,62 @@
 package ui.components
 
 import data.PlayerState
-import javazoom.jl.player.advanced.AdvancedPlayer
-import java.io.IOException
+import javafx.scene.media.Media
+import javafx.scene.media.MediaPlayer
+import javafx.util.Duration
 import java.net.URL
-import javax.sound.sampled.AudioFormat
-import javax.sound.sampled.AudioFormat.Encoding.PCM_SIGNED
-import javax.sound.sampled.AudioInputStream
-import javax.sound.sampled.SourceDataLine
 
 
 actual class AudioPlayer actual constructor(private val playerState: PlayerState) {
 
+    private var media: Media? = null
 
-    private var advancedPlayer: AdvancedPlayer? = null
+    private var mediaPlayer: MediaPlayer? = null
 
     actual fun start(url: String) {
         //close
-        advancedPlayer?.close()
+        playerState.toBack()
+        mediaPlayer?.stop()
         //start
         val thisUrl = URL(url)
-        advancedPlayer = AdvancedPlayer(thisUrl.openStream())
+        media = Media(thisUrl.toString())
+        mediaPlayer = MediaPlayer(media)
+        mediaPlayer?.statusProperty()?.addListener { _, oldStatus, newStatus ->
+            if (newStatus === MediaPlayer.Status.READY) {
+                playerState.totalDuration = mediaPlayer?.totalDuration?.toSeconds() ?: 0.0
+                play()
+            }
+            if (newStatus === MediaPlayer.Status.STALLED) {
+                playerState.isBuffering = true
+            }
+            if (oldStatus === MediaPlayer.Status.STALLED
+                && newStatus !== MediaPlayer.Status.STALLED
+            ) {
+                playerState.isBuffering = false
+            }
+        }
+        mediaPlayer?.currentTimeProperty()?.addListener { _, _, newTime ->
+            if (newTime.toSeconds() > playerState.currentTime + 1) {
+                playerState.currentTime = newTime.toSeconds()
+            }
+        }
     }
 
-    actual suspend fun play() {
+    actual fun play() {
         if (playerState.isPlaying) return
         try {
             playerState.isPlaying = true
-            advancedPlayer?.play()
+            mediaPlayer?.play()
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
-
     }
 
-    actual suspend fun pause() {
+    actual fun pause() {
         if (!playerState.isPlaying) return
         try {
             playerState.isPlaying = false
-            advancedPlayer?.close()
+            mediaPlayer?.pause()
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -48,35 +66,20 @@ actual class AudioPlayer actual constructor(private val playerState: PlayerState
     }
 
     actual fun prev() {
+
     }
 
     actual fun play(songIndex: Int) {
     }
 
     actual fun seekTo(time: Double) {
+        mediaPlayer?.seek(Duration.seconds(time))
     }
 
     actual fun addSongsUrls(songsUrl: List<String>) {
     }
 
     actual fun cleanUp() {
-    }
-
-    private fun getOutFormat(inFormat: AudioFormat): AudioFormat {
-        val ch = inFormat.channels
-
-        val rate = inFormat.sampleRate
-        return AudioFormat(PCM_SIGNED, rate, 16, ch, ch * 2, rate, false)
-    }
-
-    @Throws(IOException::class)
-    private fun stream(`in`: AudioInputStream, line: SourceDataLine) {
-        val buffer = ByteArray(4096)
-        var n = 0
-        while (n != -1) {
-            line.write(buffer, 0, n)
-            n = `in`.read(buffer, 0, buffer.size)
-        }
     }
 
 

@@ -7,10 +7,10 @@ actual class AudioPlayer actual constructor(playerState: PlayerState) {
     actual fun start(url: String) {
     }
 
-    actual suspend fun play() {
+    actual fun play() {
     }
 
-    actual suspend fun pause() {
+    actual fun pause() {
     }
 
     actual fun next() {

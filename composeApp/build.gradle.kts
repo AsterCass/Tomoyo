@@ -95,11 +95,13 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.okhttp)
 
-            implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4")
-            implementation("com.googlecode.soundlibs:jlayer:1.0.1.4")
-            implementation("com.googlecode.soundlibs:tritonus-share:0.3.7.4")
-//            implementation("com.googlecode.soundlibs:tritonus-sampled-file:0.3.7-2")
-//            implementation("com.googlecode.soundlibs:tritonus-sampled-convert:0.3.7-2")
+            val fxSuffix = "win"
+            implementation("org.openjfx:javafx-media:21.0.3:$fxSuffix")
+            implementation("org.openjfx:javafx-base:21.0.3:$fxSuffix")
+            implementation("org.openjfx:javafx-swing:21.0.3:$fxSuffix")
+            implementation("org.openjfx:javafx-graphics:21.0.3:$fxSuffix")
+//            implementation("org.openjfx:javafx-controls:21.0.3:$fxSuffix")
+//            implementation("org.openjfx:javafx-fxml:22.0.1:$fxSuffix")
         }
     }
 }

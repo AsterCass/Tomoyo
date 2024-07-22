@@ -4,8 +4,8 @@ import data.PlayerState
 
 expect class AudioPlayer(playerState: PlayerState) {
     fun start(url: String)
-    suspend fun play()
-    suspend fun pause()
+    fun play()
+    fun pause()
     fun next()
     fun prev()
     fun play(songIndex: Int)
