@@ -1,6 +1,7 @@
 package com.aster.yuno.tomoyo
 
 import MainApp
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,11 +11,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import constant.enums.MainNavigationEnum
 import data.PlatformInitData
 
+
 class MainActivity : ComponentActivity() {
 
+    private val thisContext: Context = this
+
     companion object {
-        lateinit var appContext: Context
+        @SuppressLint("StaticFieldLeak")
+        var mainContext: Context? = null
     }
+
+    init {
+        mainContext = thisContext
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

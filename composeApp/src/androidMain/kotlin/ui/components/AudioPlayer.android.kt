@@ -6,9 +6,12 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.aster.yuno.tomoyo.MainActivity
 import data.PlayerState
 
-actual class AudioPlayer actual constructor(private val playerState: PlayerState) {
+actual class AudioPlayer actual constructor(
+    private val playerState: PlayerState,
+) {
 
-    private val mediaPlayer = ExoPlayer.Builder(MainActivity.appContext).build()
+    private val mediaPlayer = ExoPlayer.Builder(MainActivity.mainContext!!).build()
+
 
     private val listener = object : Player.Listener {
 
