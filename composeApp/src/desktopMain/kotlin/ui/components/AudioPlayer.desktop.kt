@@ -73,6 +73,7 @@ actual class AudioPlayer actual constructor(private val playerState: PlayerState
     }
 
     actual fun seekTo(time: Double) {
+        playerState.currentTime = time
         mediaPlayer?.seek(Duration.seconds(time))
     }
 
