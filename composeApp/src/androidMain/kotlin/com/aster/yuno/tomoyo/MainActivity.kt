@@ -1,6 +1,7 @@
 package com.aster.yuno.tomoyo
 
 import MainApp
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,11 @@ import constant.enums.MainNavigationEnum
 import data.PlatformInitData
 
 class MainActivity : ComponentActivity() {
+
+    companion object {
+        lateinit var appContext: Context
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         println("reload onCreate")
