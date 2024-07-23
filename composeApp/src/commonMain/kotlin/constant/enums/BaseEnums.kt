@@ -1,10 +1,17 @@
 package constant.enums
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Call
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.StringResource
 import tomoyo.composeapp.generated.resources.Res
-import tomoyo.composeapp.generated.resources.app_name
 import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.chat
 import tomoyo.composeapp.generated.resources.home
@@ -15,15 +22,24 @@ import tomoyo.composeapp.generated.resources.videos
 enum class MainNavigationEnum(
     val code: String,
     val title: StringResource,
-    val icon: StringResource,
+    val icon: ImageVector,
 ) {
 
-    HOME("home", Res.string.home, Res.string.app_name),
-    ARTICLES("articles", Res.string.articles, Res.string.app_name),
-    MUSICS("musics", Res.string.musics, Res.string.app_name),
-    VIDEOS("videos", Res.string.videos, Res.string.app_name),
-    CHAT("chat", Res.string.chat, Res.string.app_name),
-    SETTING("settings", Res.string.settings, Res.string.app_name),
+    HOME("home", Res.string.home, Icons.Rounded.Home), ARTICLES(
+        "articles",
+        Res.string.articles,
+        Icons.Rounded.Edit
+    ),
+    MUSICS("musics", Res.string.musics, Icons.Rounded.PlayArrow), VIDEOS(
+        "videos",
+        Res.string.videos,
+        Icons.Rounded.Call
+    ),
+    CHAT("chat", Res.string.chat, Icons.Rounded.Person), SETTING(
+        "settings",
+        Res.string.settings,
+        Icons.Rounded.Settings
+    ),
 
 }
 

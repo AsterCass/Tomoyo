@@ -9,31 +9,62 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val PrimaryColor = Color(0xFF6200EE)
-val SecondaryColor = Color(0xFF03DAC6)
-val BackgroundColor = Color(0xFFF5F5F5)
+val androidx.compose.material3.ColorScheme.unselectedColor: Color
+    get() = if (this.background == LightColorScheme.background)
+        Color(0XFF979797) else Color.Transparent
 
 
 val DarkColorScheme = darkColorScheme(
-    primary = PrimaryColor,
-    secondary = SecondaryColor,
-    background = BackgroundColor,
-    surface = BackgroundColor,
-    onPrimary = Color.White,
     onSecondary = Color.Black,
     onBackground = Color.White,
     onSurface = Color.White
 )
 
 val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF6200EE),
-    secondary = Color(0xFF03DAC6),
-    background = Color(0xFFFAFAFA),
-    surface = Color.White,
-    onPrimary = Color.White,
+    background = Color(0xFFEBEBEB),
+    onBackground = Color(0XFF191919),
+    surface = Color(0xFFF2F2F2),
+    onSurface = Color(0XFF191919),
+    onSurfaceVariant = Color(0XFF191919),
+
+    onSecondaryContainer = Color(0XFF191919),
+    secondaryContainer = Color.Transparent,
+
+
+//    surfaceContainer = Color.Transparent,
+//    surfaceContainerLow = Color.Transparent,
+//    surfaceContainerHigh = Color.Transparent,
+//    surfaceContainerLowest = Color.Transparent,
+//    surfaceContainerHighest = Color.Transparent,
+//    surfaceVariant = Color.Transparent,
+//
+//    surfaceBright = Color.Transparent,
+//    surfaceDim = Color.Transparent,
+//    inverseOnSurface = Color.Transparent,
+    inverseSurface = Color.Cyan,
+
+
+    primary = Color(0xFF2D4836),
+    onPrimary = Color(0xFFE9E9E9),
+
+
+    primaryContainer = Color.Red,
+    onPrimaryContainer = Color.Black,
+
+    secondary = Color.Yellow,
     onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black
+
+
+    error = Color(0xFFB00020),
+    onError = Color.White,
+    errorContainer = Color.White,
+    onErrorContainer = Color.Black,
+
+    outline = Color(0xFF79747E),
+    outlineVariant = Color(0xFFCCC2DC),
+
+    surfaceTint = Color.Transparent,
+    scrim = Color.Black,
 )
 
 val MainTypography = Typography(

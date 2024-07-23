@@ -33,6 +33,7 @@ import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import theme.LightColorScheme
 import ui.components.AudioPlayer
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
@@ -51,7 +52,10 @@ fun MainApp(
     updatePlatformData: (PlatformInitData) -> Unit = {},
     navController: NavHostController = rememberNavController(),
 ) {
-    MaterialTheme {
+
+    MaterialTheme(
+        colorScheme = LightColorScheme,
+    ) {
 
         println("reload MaterialTheme")
 
