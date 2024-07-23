@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun MainMusicsScreen(
-    modifier: Modifier = Modifier,
     currentTime: Double,
     totalDuration: Double,
     isPlaying: Boolean,
@@ -30,13 +29,11 @@ fun MainMusicsScreen(
     var curPosition by remember { mutableStateOf(0.0) }
     curPosition = currentTime
 
-    Column(
-        modifier = modifier,
-    ) {
+    Column {
 
         Button(onClick = {
             onStart()
-        }, modifier = modifier.align(Alignment.CenterHorizontally).padding(5.dp)) {
+        }, modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)) {
             Text(
                 "Select one"
             )
@@ -48,7 +45,7 @@ fun MainMusicsScreen(
             } else {
                 onPlay()
             }
-        }, modifier = modifier.align(Alignment.CenterHorizontally).padding(5.dp)) {
+        }, modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)) {
             Text(
                 if (isPlaying) "Pause" else "Play"
             )

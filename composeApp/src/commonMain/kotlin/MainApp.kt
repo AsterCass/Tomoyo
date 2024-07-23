@@ -1,4 +1,3 @@
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -56,7 +55,6 @@ fun MainApp(
 
         println("reload MaterialTheme")
 
-
         //coroutine
         val apiCoroutine = rememberCoroutineScope()
         val musicCoroutine = rememberCoroutineScope()
@@ -98,36 +96,6 @@ fun MainApp(
             updateUserVersion = { userDataVersion++ }
         )
 
-
-//        CoroutineScope(Dispatchers.IO).launch {
-////        if (null == socketSession) {
-//            println("====================build socket====================")
-//            try {
-//                val client = StompClient(SockJSClient())
-//                val session: StompSession = client.connect(
-//                    "https://api.astercasc.com/yui/chat-websocket/socketAuthNoError?User-Token=${userData.token}"
-//                )
-//                socketSession = session
-//                val subscription: Flow<String> =
-//                    session.subscribeText("/user/${userData.token}/message/receive")
-//                val collectorJob = apiCoroutine.launch {
-//                    subscription.collect { msg ->
-//                        val chatRow: ChatRowModel = Json {
-//                            prettyPrint = true
-//                            isLenient = true
-//                            ignoreUnknownKeys = true
-//                        }.decodeFromString(msg)
-//                        userData.chatId = chatRow.fromChatId
-//                        userData.chatRowList += chatRow
-//                        println(userData.chatRowList)
-//                    }
-//                }
-//
-//            } catch (ex: Exception) {
-//                ex.printStackTrace()
-//            }
-//        }
-
         println("reload Main")
 
         Scaffold(
@@ -158,7 +126,6 @@ fun MainApp(
 
                 composable(route = MainNavigationEnum.HOME.name) {
                     MainHomeScreen(
-                        modifier = Modifier.fillMaxHeight()
                     )
                 }
 
@@ -166,7 +133,6 @@ fun MainApp(
                     composable(route = MainNavigationEnum.ARTICLES.name) {
                         MainArticleScreen(
                             articleDataList = articleDataList,
-                            modifier = Modifier.fillMaxHeight()
                         ) {
                             apiCoroutine.launch {
                                 articleDataList = articleDataList + BaseApi().getArticleList(
@@ -184,7 +150,7 @@ fun MainApp(
                             totalDuration = playerState.totalDuration,
                             isPlaying = playerState.isPlaying,
                             onStart = {
-                                player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3")
+                                player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.ogg")
                             },
                             onPlay = {
                                 player.play()
@@ -205,7 +171,6 @@ fun MainApp(
                             userData = userData,
                             userDataVersion = userDataVersion,
                             socketSession = socketSession,
-                            modifier = Modifier.fillMaxHeight()
                         )
                     }
                 }
@@ -213,7 +178,6 @@ fun MainApp(
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.VIDEOS)) {
                     composable(route = MainNavigationEnum.VIDEOS.name) {
                         MainVideosScreen(
-                            modifier = Modifier.fillMaxHeight()
                         )
                     }
                 }
@@ -227,7 +191,6 @@ fun MainApp(
                                     userData = BaseApi().login(account, passwd)
                                 }
                             },
-                            modifier = Modifier.fillMaxHeight(),
                         )
                     }
                 }

@@ -13,16 +13,14 @@ import androidx.compose.ui.unit.dp
 import ui.components.MediaPlayer
 
 @Composable
-fun MainVideosScreen(
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+fun MainVideosScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
             MediaPlayer(
-                modifier = modifier.fillMaxWidth().height(400.dp),
+                modifier = Modifier.fillMaxWidth().height(400.dp),
                 url =
                 "https://api.astercasc.com/ushio/video/play/VC1648909883875288/output.mp4"
             )

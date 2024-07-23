@@ -16,7 +16,6 @@ import data.ArticleSimpleModel
 @Composable
 fun MainArticleScreen(
     articleDataList: List<ArticleSimpleModel>,
-    modifier: Modifier = Modifier,
     updateArticleList: () -> Unit,
 ) {
 
@@ -24,7 +23,7 @@ fun MainArticleScreen(
 
 
     LazyColumn(
-        modifier = modifier.height(10.dp),
+        modifier = Modifier.height(10.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         items(articleDataList.size) { index ->

@@ -37,7 +37,6 @@ fun MainChatScreen(
     userData: UserDataModel = UserDataModel(),
     userDataVersion: Int = 0,
     socketSession: StompSession?,
-    modifier: Modifier = Modifier
 ) {
 
     if (userData.token.isNullOrBlank()) {
