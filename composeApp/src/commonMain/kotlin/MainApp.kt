@@ -114,7 +114,7 @@ fun MainApp(
                     navigationClicked = { navObj -> navController.navigate(navObj.name) },
                     extraNavigationList = platformData.extraNavigationList,
                 )
-            }
+            },
         ) { innerPadding ->
 
             NavHost(

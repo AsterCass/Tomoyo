@@ -3,8 +3,10 @@ package ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,6 +18,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import constant.enums.MainNavigationEnum
 import org.jetbrains.compose.resources.stringResource
@@ -42,25 +45,29 @@ fun MainAppNavigationBar(
 ) {
 
     Row(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface).height(50.dp)
     ) {
         MainNavigationEnum.entries.toTypedArray().forEach { nav ->
             if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
                 NavigationBarItem(
+                    modifier = Modifier.padding(0.dp)
+                        .clip(RoundedCornerShape(100.dp)),
                     colors = NavigationBarItemDefaults.colors().copy(
                         unselectedIconColor = MaterialTheme.colorScheme.unselectedColor,
                     ),
                     icon = {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Icon(
                                 imageVector = nav.icon,
                                 contentDescription = nav.name,
-                                modifier = Modifier.size(30.dp)
+                                modifier = Modifier.size(20.dp)
                             )
                             Text(
-                                modifier = Modifier.padding(top = 3.dp),
+                                modifier = Modifier.padding(top = 1.dp),
                                 text = nav.name,
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodySmall,
                             )
                         }
                     },
