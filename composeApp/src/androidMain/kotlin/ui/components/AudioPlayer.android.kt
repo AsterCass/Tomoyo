@@ -1,5 +1,7 @@
 package ui.components
 
+import android.os.Handler
+import android.os.Looper
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -8,10 +10,11 @@ import data.PlayerState
 
 actual class AudioPlayer actual constructor(
     private val playerState: PlayerState,
-) {
+) : Runnable {
+
+    private val handler = Handler(Looper.getMainLooper())
 
     private val mediaPlayer = ExoPlayer.Builder(MainActivity.mainContext!!).build()
-
 
     private val listener = object : Player.Listener {
 
@@ -29,12 +32,14 @@ actual class AudioPlayer actual constructor(
 
                 Player.STATE_READY -> {
                     playerState.isBuffering = false
+                    playerState.totalDuration = (mediaPlayer.duration / 1000).toDouble()
                 }
             }
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             playerState.isPlaying = isPlaying
+            if (isPlaying) scheduleUpdate() else stopUpdate()
         }
 
     }
@@ -53,13 +58,11 @@ actual class AudioPlayer actual constructor(
 
     actual fun play() {
         if (playerState.isPlaying) return
-        playerState.isPlaying = true
         mediaPlayer.play()
     }
 
     actual fun pause() {
         if (!playerState.isPlaying) return
-        playerState.isPlaying = false
         mediaPlayer.pause()
     }
 
@@ -82,4 +85,20 @@ actual class AudioPlayer actual constructor(
 
     actual fun cleanUp() {
     }
+
+    override fun run() {
+        println("do something")
+        playerState.currentTime = (mediaPlayer.currentPosition / 1000).toDouble()
+        handler.postDelayed(this, 1000)
+    }
+
+    private fun stopUpdate() {
+        handler.removeCallbacks(this)
+    }
+
+    private fun scheduleUpdate() {
+        stopUpdate()
+        handler.postDelayed(this, 100)
+    }
+
 }

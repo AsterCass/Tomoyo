@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
                     extraNavigationList = listOf(
                         MainNavigationEnum.ARTICLES,
                         MainNavigationEnum.CHAT,
+                        MainNavigationEnum.MUSICS,
                         MainNavigationEnum.SETTING,
                     )
                 )
