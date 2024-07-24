@@ -3,11 +3,12 @@ package theme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.RobotoSlab_VariableFont_wght
 
 val androidx.compose.material3.ColorScheme.unselectedColor: Color
     get() = if (this.background == LightColorScheme.background)
@@ -27,6 +28,9 @@ val LightColorScheme = lightColorScheme(
     onSurface = Color(0XFF191919),
     onSurfaceVariant = Color(0XFF191919),
 
+    primary = Color(0xFF2D4836),
+    onPrimary = Color(0xFFE9E9E9),
+
     onSecondaryContainer = Color(0XFF191919),
     secondaryContainer = Color.Transparent,
 
@@ -37,40 +41,45 @@ val LightColorScheme = lightColorScheme(
 //    surfaceContainerLowest = Color.Transparent,
 //    surfaceContainerHighest = Color.Transparent,
 //    surfaceVariant = Color.Transparent,
-//
+
 //    surfaceBright = Color.Transparent,
 //    surfaceDim = Color.Transparent,
 //    inverseOnSurface = Color.Transparent,
-    inverseSurface = Color.Cyan,
-
-
-    primary = Color(0xFF2D4836),
-    onPrimary = Color(0xFFE9E9E9),
-
-
-    primaryContainer = Color.Red,
-    onPrimaryContainer = Color.Black,
-
-    secondary = Color.Yellow,
-    onSecondary = Color.Black,
-
-
-    error = Color(0xFFB00020),
-    onError = Color.White,
-    errorContainer = Color.White,
-    onErrorContainer = Color.Black,
-
-    outline = Color(0xFF79747E),
-    outlineVariant = Color(0xFFCCC2DC),
-
-    surfaceTint = Color.Transparent,
-    scrim = Color.Black,
+//
+//
+//    inverseSurface = Color.Cyan,
+//
+//    primaryContainer = Color.Red,
+//    onPrimaryContainer = Color.Black,
+//
+//
+//
+//    secondary = Color.Yellow,
+//    onSecondary = Color.Black,
+//
+//
+//    error = Color(0xFFB00020),
+//    onError = Color.White,
+//    errorContainer = Color.White,
+//    onErrorContainer = Color.Black,
+//
+//    outline = Color(0xFF79747E),
+//    outlineVariant = Color(0xFFCCC2DC),
+//
+//    surfaceTint = Color.Transparent,
+//    scrim = Color.Black,
 )
 
-val MainTypography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
-    ),
+@Composable
+fun MainTypography(): Typography {
+    Typography
+    return Typography(
+        bodySmall = TextStyle(
+            fontFamily = FontFamily(
+                org.jetbrains.compose.resources.Font(
+                    Res.font.RobotoSlab_VariableFont_wght
+                )
+            )
+        ),
     )
+}

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -19,27 +20,29 @@ import tomoyo.composeapp.generated.resources.musics
 import tomoyo.composeapp.generated.resources.settings
 import tomoyo.composeapp.generated.resources.videos
 
+enum class NotificationType(
+    val code: String,
+    val bgColor: Color,
+    val fontColor: Color,
+) {
+    SUCCESS("success", Color.Transparent, Color.Transparent),
+    WARNING("warning", Color.Transparent, Color.Transparent),
+    ERROR("error", Color.Transparent, Color.Transparent),
+    TIP("tip", Color.Transparent, Color.Transparent),
+}
+
 enum class MainNavigationEnum(
     val code: String,
     val title: StringResource,
     val icon: ImageVector,
 ) {
 
-    HOME("home", Res.string.home, Icons.Rounded.Home), ARTICLES(
-        "articles",
-        Res.string.articles,
-        Icons.Rounded.Edit
-    ),
-    MUSICS("musics", Res.string.musics, Icons.Rounded.PlayArrow), VIDEOS(
-        "videos",
-        Res.string.videos,
-        Icons.Rounded.Call
-    ),
-    CHAT("chat", Res.string.chat, Icons.Rounded.Person), SETTING(
-        "settings",
-        Res.string.settings,
-        Icons.Rounded.Settings
-    ),
+    HOME("home", Res.string.home, Icons.Rounded.Home),
+    ARTICLES("articles", Res.string.articles, Icons.Rounded.Edit),
+    MUSICS("musics", Res.string.musics, Icons.Rounded.PlayArrow),
+    VIDEOS("videos", Res.string.videos, Icons.Rounded.Call),
+    CHAT("chat", Res.string.chat, Icons.Rounded.Person),
+    SETTING("settings", Res.string.settings, Icons.Rounded.Settings),
 
 }
 

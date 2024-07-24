@@ -2,7 +2,6 @@ package ui.pages
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,21 +13,26 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import data.ArticleSimpleModel
 
 @Composable
 fun MainArticleScreen(
+    constraints: Constraints,
     articleDataList: List<ArticleSimpleModel>,
     updateArticleList: () -> Unit,
 ) {
 
     println("reload MainArticleScreen")
 
+    val density = LocalDensity.current
+    val minHeightDp = with(density) { constraints.minHeight.toDp() }
+    println(minHeightDp)
 
     LazyColumn(
-        modifier = Modifier.height(10.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier = Modifier.height(minHeightDp)
     ) {
         items(articleDataList.size) { index ->
             ListItem(item = articleDataList[index])
@@ -54,7 +58,6 @@ fun ListItem(item: ArticleSimpleModel) {
         modifier = Modifier.padding(15.dp).animateContentSize()
             .clickable { println("显示文章详情") },
     ) {
-
         Column(
             modifier = Modifier.padding(15.dp)
         ) {

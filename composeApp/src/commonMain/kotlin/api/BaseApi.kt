@@ -1,6 +1,7 @@
 package api
 
 import constant.BASE_SERVER_ADDRESS
+import constant.enums.NotificationType
 import data.ArticleListModel
 import data.ArticleSimpleModel
 import data.LoginParam
@@ -17,6 +18,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import ui.components.MainNotification
+import ui.components.NotificationManager
 
 class BaseApi {
 
@@ -47,7 +50,14 @@ class BaseApi {
         val body = response.body<ResultObj<UserDataModel>>()
         body.data?.token = response.headers["User-Token"]
 
-        println(body.data)
+        if (200 == body.status) {
+            NotificationManager.showNotification(
+                MainNotification(
+                    "登录成功",
+                    NotificationType.SUCCESS
+                )
+            )
+        }
 
         return body.data ?: UserDataModel()
     }

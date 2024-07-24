@@ -32,8 +32,8 @@ import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import theme.LightColorScheme
+import theme.MainTypography
 import ui.components.AudioPlayer
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
@@ -41,11 +41,11 @@ import ui.pages.MainArticleScreen
 import ui.pages.MainChatScreen
 import ui.pages.MainHomeScreen
 import ui.pages.MainMusicsScreen
+import ui.pages.MainPageContainerScreen
 import ui.pages.MainSettingsScreen
 import ui.pages.MainVideosScreen
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MainApp(
     platformData: PlatformInitData = PlatformInitData(),
@@ -53,8 +53,10 @@ fun MainApp(
     navController: NavHostController = rememberNavController(),
 ) {
 
+
     MaterialTheme(
         colorScheme = LightColorScheme,
+        typography = MainTypography(),
     ) {
 
         println("reload MaterialTheme")
@@ -129,13 +131,17 @@ fun MainApp(
                 println("reload NavHost")
 
                 composable(route = MainNavigationEnum.HOME.name) {
-                    MainHomeScreen(
-                    )
+                    MainPageContainerScreen {
+                        MainHomeScreen(
+                        )
+                    }
                 }
 
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.ARTICLES)) {
                     composable(route = MainNavigationEnum.ARTICLES.name) {
+                        MainPageContainerScreen { constraints ->
                         MainArticleScreen(
+                            constraints = constraints,
                             articleDataList = articleDataList,
                         ) {
                             apiCoroutine.launch {
@@ -143,59 +149,70 @@ fun MainApp(
                                     offset = articleDataList.size,
                                 )
                             }
+                            }
                         }
                     }
                 }
 
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
                     composable(route = MainNavigationEnum.MUSICS.name) {
-                        MainMusicsScreen(
-                            currentTime = playerState.currentTime,
-                            totalDuration = playerState.totalDuration,
-                            isPlaying = playerState.isPlaying,
-                            onStart = {
-                                player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.ogg")
-                            },
-                            onPlay = {
-                                player.play()
-                            },
-                            onPause = {
-                                player.pause()
-                            },
-                            onSeek = { position ->
-                                player.seekTo(position)
-                            }
-                        )
+                        MainPageContainerScreen {
+                            MainMusicsScreen(
+                                currentTime = playerState.currentTime,
+                                totalDuration = playerState.totalDuration,
+                                isPlaying = playerState.isPlaying,
+                                onStart = {
+                                    player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.ogg")
+                                },
+                                onPlay = {
+                                    player.play()
+                                },
+                                onPause = {
+                                    player.pause()
+                                },
+                                onSeek = { position ->
+                                    player.seekTo(position)
+                                }
+                            )
+                        }
                     }
                 }
 
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.CHAT)) {
                     composable(route = MainNavigationEnum.CHAT.name) {
-                        MainChatScreen(
-                            userData = userData,
-                            userDataVersion = userDataVersion,
-                            socketSession = socketSession,
-                        )
+                        MainPageContainerScreen {
+                            MainChatScreen(
+                                userData = userData,
+                                userDataVersion = userDataVersion,
+                                socketSession = socketSession,
+                            )
+                        }
                     }
                 }
 
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.VIDEOS)) {
                     composable(route = MainNavigationEnum.VIDEOS.name) {
-                        MainVideosScreen(
-                        )
+                        MainPageContainerScreen {
+                            MainVideosScreen(
+                            )
+                        }
+
                     }
                 }
 
                 if (platformData.extraNavigationList.contains(MainNavigationEnum.SETTING)) {
                     composable(route = MainNavigationEnum.SETTING.name) {
-                        MainSettingsScreen(
-                            userData = userData,
-                            login = { account: String, passwd: String ->
-                                apiCoroutine.launch {
-                                    userData = BaseApi().login(account, passwd)
-                                }
-                            },
-                        )
+                        MainPageContainerScreen {
+                            MainSettingsScreen(
+                                userData = userData,
+                                login = { account: String, passwd: String ->
+                                    apiCoroutine.launch {
+                                        userData = BaseApi().login(account, passwd)
+                                    }
+                                },
+                            )
+
+                        }
                     }
                 }
 

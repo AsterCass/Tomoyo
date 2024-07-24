@@ -1,11 +1,19 @@
 package ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,11 +24,18 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import constant.enums.MainNavigationEnum
+import constant.enums.NotificationType
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
 import theme.unselectedColor
 
@@ -29,6 +44,15 @@ import theme.unselectedColor
 fun MainAppBar(
     currentScreen: MainNavigationEnum,
 ) {
+
+    when (currentScreen.code) {
+        MainNavigationEnum.HOME.code -> {}
+        MainNavigationEnum.SETTING.code -> {}
+
+        else -> {}
+    }
+
+
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
@@ -66,7 +90,7 @@ fun MainAppNavigationBar(
                             )
                             Text(
                                 modifier = Modifier.padding(top = 1.dp),
-                                text = nav.name,
+                                text = stringResource(nav.title),
                                 style = MaterialTheme.typography.bodySmall,
                             )
                         }
@@ -77,5 +101,72 @@ fun MainAppNavigationBar(
             }
         }
     }
+}
+
+data class MainNotification(
+    val message: String,
+    val type: NotificationType,
+    var isExpire: Boolean = false,
+)
+
+object NotificationManager {
+
+    private val _notifications = MutableStateFlow<MainNotification?>(null)
+    val notifications: StateFlow<MainNotification?> = _notifications
+
+
+    fun showNotification(notification: MainNotification) {
+        _notifications.value = notification
+    }
+
+    fun clearNotification() {
+        _notifications.value = _notifications.value?.copy(isExpire = true)
+    }
+}
+
+
+@Composable
+fun NotificationComponent() {
+
+    val notification by NotificationManager.notifications.collectAsState()
+
+    AnimatedVisibility(
+        visible = null != notification && false == notification?.isExpire,
+        enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
+                slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(durationMillis = 500)
+                ),
+        exit = fadeOut(animationSpec = tween(durationMillis = 2000)) +
+                slideOutVertically(
+                    targetOffsetY = { it },
+                    animationSpec = tween(durationMillis = 2000)
+                ),
+    ) {
+        Box(
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(15.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(8.dp)
+        ) {
+            Text(
+                text = notification?.message ?: "",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        LaunchedEffect(notification) {
+            delay(3000)
+            NotificationManager.clearNotification()
+        }
+
+    }
+
+
 }
 
