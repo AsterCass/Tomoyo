@@ -35,6 +35,7 @@ import org.hildan.krossbow.websocket.sockjs.SockJSClient
 import theme.LightColorScheme
 import theme.MainTypography
 import ui.components.AudioPlayer
+import ui.components.InitForNoComposableRes
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
 import ui.pages.MainArticleScreen
@@ -63,8 +64,6 @@ fun MainApp(
 
         //coroutine
         val apiCoroutine = rememberCoroutineScope()
-        val musicCoroutine = rememberCoroutineScope()
-
 
         //navigation
         val backStackEntry by navController.currentBackStackEntryAsState()
@@ -90,7 +89,6 @@ fun MainApp(
 
         //update session
         socketSessionUpdate(
-//            windowsCoroutine,
             socketClient,
             socketSession,
             userData,
@@ -103,6 +101,11 @@ fun MainApp(
         )
 
         println("reload Main")
+
+        //init
+        InitForNoComposableRes()
+
+
 
         Scaffold(
             topBar = {

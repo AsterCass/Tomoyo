@@ -27,16 +27,16 @@
     <string name="cupcakes">%1$d cupcakes</string>
 
 
-    <string name="home">Home</string>
-    <string name="articles">Articles</string>
-    <string name="musics">Musics</string>
-    <string name="videos">Videos</string>
-    <string name="settings">Settings</string>
-    <string name="chat">Chat</string>
+    <string name="home">主页</string>
+    <string name="articles">文章</string>
+    <string name="musics">音乐</string>
+    <string name="videos">视频</string>
+    <string name="settings">设置</string>
+    <string name="chat">聊天</string>
 
 
-    <string name="service_error">Error</string>
-    <string name="login_success">Login successful</string>
-    <string name="login_passwd_error">Passwd not match</string>
+    <string name="service_error">服务器开小差了，待会再来试试吧</string>
+    <string name="login_success">登录成功</string>
+    <string name="login_passwd_error">密码错误</string>
 
 </resources>

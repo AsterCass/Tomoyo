@@ -21,7 +21,22 @@ import kotlinx.serialization.json.Json
 import ui.components.MainNotification
 import ui.components.NotificationManager
 
+
+data class ApiResText(
+    val serviceErrorDes: String = "",
+    val loginSuccessDes: String = "",
+    val loginPasswdErrorDes: String = "",
+)
+
+private var apiResText: ApiResText = ApiResText()
+
 class BaseApi {
+
+    companion object {
+        fun buildStringRes(res: ApiResText) {
+            apiResText = res
+        }
+    }
 
     private val client = HttpClient {
         install(ContentNegotiation) {
@@ -53,7 +68,7 @@ class BaseApi {
         if (200 == body.status) {
             NotificationManager.showNotification(
                 MainNotification(
-                    "登录成功",
+                    apiResText.loginSuccessDes,
                     NotificationType.SUCCESS
                 )
             )

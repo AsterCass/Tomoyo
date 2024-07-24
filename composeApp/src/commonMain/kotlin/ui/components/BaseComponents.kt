@@ -31,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import api.ApiResText
+import api.BaseApi
 import constant.enums.MainNavigationEnum
 import constant.enums.NotificationType
 import kotlinx.coroutines.delay
@@ -38,6 +40,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
 import theme.unselectedColor
+import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.login_passwd_error
+import tomoyo.composeapp.generated.resources.login_success
+import tomoyo.composeapp.generated.resources.service_error
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -167,6 +173,17 @@ fun NotificationComponent() {
 
     }
 
+}
 
+
+@Composable
+fun InitForNoComposableRes() {
+    BaseApi.buildStringRes(
+        ApiResText(
+            serviceErrorDes = stringResource(Res.string.service_error),
+            loginSuccessDes = stringResource(Res.string.login_success),
+            loginPasswdErrorDes = stringResource(Res.string.login_passwd_error),
+        )
+    )
 }
 
