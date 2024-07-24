@@ -4,6 +4,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
 import api.BaseApi
 import constant.enums.MainNavigationEnum
 import data.ArticleSimpleModel
@@ -105,8 +107,118 @@ fun MainApp(
         //init
         InitForNoComposableRes()
 
+        //navigation graph
+        val navGraph = navController.createGraph(startDestination = MainNavigationEnum.HOME.name)
+        {
+
+            composable(route = MainNavigationEnum.HOME.name) {
+                MainPageContainerScreen {
+                    MainHomeScreen(
+                    )
+                }
+            }
+
+            if (platformData.extraNavigationList.contains(MainNavigationEnum.ARTICLES)) {
+                composable(route = MainNavigationEnum.ARTICLES.name) {
+                    MainPageContainerScreen { constraints ->
+                        MainArticleScreen(
+                            constraints = constraints,
+                            articleDataList = articleDataList,
+                        ) {
+                            apiCoroutine.launch {
+                                articleDataList = articleDataList + BaseApi().getArticleList(
+                                    offset = articleDataList.size,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
+                composable(route = MainNavigationEnum.MUSICS.name) {
+                    MainPageContainerScreen {
+                        MainMusicsScreen(
+                            currentTime = playerState.currentTime,
+                            totalDuration = playerState.totalDuration,
+                            isPlaying = playerState.isPlaying,
+                            onStart = {
+                                player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.ogg")
+                            },
+                            onPlay = {
+//                                    player.play()
+                                navController.navigate(MainNavigationEnum.MUSIC_PLAYER.name)
+                            },
+                            onPause = {
+                                player.pause()
+                            },
+                            onSeek = { position ->
+                                player.seekTo(position)
+                            }
+                        )
+                    }
+                }
+            }
+
+            if (platformData.extraNavigationList.contains(MainNavigationEnum.CHAT)) {
+                composable(route = MainNavigationEnum.CHAT.name) {
+                    MainPageContainerScreen {
+                        MainChatScreen(
+                            userData = userData,
+                            userDataVersion = userDataVersion,
+                            socketSession = socketSession,
+                        )
+                    }
+                }
+            }
+
+            if (platformData.extraNavigationList.contains(MainNavigationEnum.VIDEOS)) {
+                composable(route = MainNavigationEnum.VIDEOS.name) {
+                    MainPageContainerScreen {
+                        MainVideosScreen(
+                        )
+                    }
+
+                }
+            }
+
+            if (platformData.extraNavigationList.contains(MainNavigationEnum.SETTING)) {
+                composable(route = MainNavigationEnum.SETTING.name) {
+                    MainPageContainerScreen {
+                        MainSettingsScreen(
+                            userData = userData,
+                            login = { account: String, passwd: String ->
+                                apiCoroutine.launch {
+                                    userData = BaseApi().login(account, passwd)
+                                }
+                            },
+                        )
+
+                    }
+                }
+            }
+
+            composable(route = MainNavigationEnum.MUSIC_PLAYER.name) {
+                Text("12343242")
+            }
+
+        }
+
+        //full screen
+        when (navController.currentDestination?.route) {
+            MainNavigationEnum.MUSIC_PLAYER.name -> {
+                NavHost(
+                    navController, navGraph,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                )
+                return@MaterialTheme
+            }
+        }
 
 
+        //main
         Scaffold(
             topBar = {
                 MainAppBar(
@@ -123,105 +235,13 @@ fun MainApp(
         ) { innerPadding ->
 
             NavHost(
-                navController = navController,
-                startDestination = MainNavigationEnum.HOME.name,
+                navController, navGraph,
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(innerPadding)
-            ) {
-
-                println("reload NavHost")
-
-                composable(route = MainNavigationEnum.HOME.name) {
-                    MainPageContainerScreen {
-                        MainHomeScreen(
-                        )
-                    }
-                }
-
-                if (platformData.extraNavigationList.contains(MainNavigationEnum.ARTICLES)) {
-                    composable(route = MainNavigationEnum.ARTICLES.name) {
-                        MainPageContainerScreen { constraints ->
-                        MainArticleScreen(
-                            constraints = constraints,
-                            articleDataList = articleDataList,
-                        ) {
-                            apiCoroutine.launch {
-                                articleDataList = articleDataList + BaseApi().getArticleList(
-                                    offset = articleDataList.size,
-                                )
-                            }
-                            }
-                        }
-                    }
-                }
-
-                if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
-                    composable(route = MainNavigationEnum.MUSICS.name) {
-                        MainPageContainerScreen {
-                            MainMusicsScreen(
-                                currentTime = playerState.currentTime,
-                                totalDuration = playerState.totalDuration,
-                                isPlaying = playerState.isPlaying,
-                                onStart = {
-                                    player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.ogg")
-                                },
-                                onPlay = {
-                                    player.play()
-                                },
-                                onPause = {
-                                    player.pause()
-                                },
-                                onSeek = { position ->
-                                    player.seekTo(position)
-                                }
-                            )
-                        }
-                    }
-                }
-
-                if (platformData.extraNavigationList.contains(MainNavigationEnum.CHAT)) {
-                    composable(route = MainNavigationEnum.CHAT.name) {
-                        MainPageContainerScreen {
-                            MainChatScreen(
-                                userData = userData,
-                                userDataVersion = userDataVersion,
-                                socketSession = socketSession,
-                            )
-                        }
-                    }
-                }
-
-                if (platformData.extraNavigationList.contains(MainNavigationEnum.VIDEOS)) {
-                    composable(route = MainNavigationEnum.VIDEOS.name) {
-                        MainPageContainerScreen {
-                            MainVideosScreen(
-                            )
-                        }
-
-                    }
-                }
-
-                if (platformData.extraNavigationList.contains(MainNavigationEnum.SETTING)) {
-                    composable(route = MainNavigationEnum.SETTING.name) {
-                        MainPageContainerScreen {
-                            MainSettingsScreen(
-                                userData = userData,
-                                login = { account: String, passwd: String ->
-                                    apiCoroutine.launch {
-                                        userData = BaseApi().login(account, passwd)
-                                    }
-                                },
-                            )
-
-                        }
-                    }
-                }
-
-            }
+            )
         }
-
 
     }
 }

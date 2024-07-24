@@ -26,6 +26,7 @@
     <string name="back_button">Back</string>
     <string name="cupcakes">%1$d cupcakes</string>
 
+    <string name="none">None</string>
 
     <string name="home">Home</string>
     <string name="articles">Articles</string>

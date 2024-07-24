@@ -2,6 +2,7 @@ package constant.enums
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Call
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
@@ -17,6 +18,7 @@ import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.chat
 import tomoyo.composeapp.generated.resources.home
 import tomoyo.composeapp.generated.resources.musics
+import tomoyo.composeapp.generated.resources.none
 import tomoyo.composeapp.generated.resources.settings
 import tomoyo.composeapp.generated.resources.videos
 
@@ -43,6 +45,9 @@ enum class MainNavigationEnum(
     VIDEOS("videos", Res.string.videos, Icons.Rounded.Call),
     CHAT("chat", Res.string.chat, Icons.Rounded.Person),
     SETTING("settings", Res.string.settings, Icons.Rounded.Settings),
+
+
+    MUSIC_PLAYER("music_player", Res.string.none, Icons.Rounded.Done)
 
 }
 
