@@ -217,6 +217,9 @@ fun MainApp(
             }
         }
 
+        // 官网导航示例不好处理全景导航情况 需要使用NavController.createGraph()函数以编程方式创建航路
+        // https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-navigation-routing.html#sample-project
+        // https://github.com/JetBrains/compose-multiplatform/tree/master/examples/nav_cupcake
 
         //main
         Scaffold(
