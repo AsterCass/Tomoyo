@@ -1,18 +1,25 @@
 package theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.RobotoSlab_VariableFont_wght
 
 val androidx.compose.material3.ColorScheme.unselectedColor: Color
     get() = if (this.background == LightColorScheme.background)
         Color(0XFF979797) else Color.Transparent
+
+val androidx.compose.material3.ColorScheme.subTextColor: Color
+    get() = if (this.background == LightColorScheme.background)
+        Color(0XFF979797) else Color.Transparent
+
+
 
 
 val DarkColorScheme = darkColorScheme(
@@ -70,16 +77,36 @@ val LightColorScheme = lightColorScheme(
 //    scrim = Color.Black,
 )
 
+
 @Composable
 fun MainTypography(): Typography {
-    Typography
-    return Typography(
-        bodySmall = TextStyle(
-            fontFamily = FontFamily(
-                org.jetbrains.compose.resources.Font(
-                    Res.font.RobotoSlab_VariableFont_wght
-                )
-            )
-        ),
+
+    val defaultFontFamily = FontFamily(
+        org.jetbrains.compose.resources.Font(
+            Res.font.RobotoSlab_VariableFont_wght
+        )
     )
+
+    return Typography(
+        bodySmall = MaterialTheme.typography.bodySmall.copy(
+            fontFamily = defaultFontFamily,
+        ),
+        bodyMedium = MaterialTheme.typography.bodyMedium.copy(
+            fontFamily = defaultFontFamily,
+        ),
+        bodyLarge = MaterialTheme.typography.bodyLarge.copy(
+            fontFamily = defaultFontFamily,
+            fontWeight = FontWeight.Bold,
+        ),
+        titleSmall = MaterialTheme.typography.titleSmall.copy(
+            fontFamily = defaultFontFamily,
+        ),
+        titleMedium = MaterialTheme.typography.titleMedium.copy(
+            fontFamily = defaultFontFamily,
+        ),
+        titleLarge = MaterialTheme.typography.titleLarge.copy(
+            fontFamily = defaultFontFamily,
+        ),
+
+        )
 }

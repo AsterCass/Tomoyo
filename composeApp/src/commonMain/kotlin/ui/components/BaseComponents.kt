@@ -194,11 +194,12 @@ fun InitForNoComposableRes() {
 
 @Composable
 fun MainBaseCardBox(
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier,
     ) {
 
         val roundSize = 15.dp
