@@ -48,7 +48,6 @@ enum class MainNavigationEnum(
 
 
     MUSIC_PLAYER("music_player", Res.string.none, Icons.Rounded.Done)
-
 }
 
 
