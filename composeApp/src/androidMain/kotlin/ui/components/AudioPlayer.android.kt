@@ -6,10 +6,10 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.aster.yuno.tomoyo.MainActivity
-import data.PlayerState
+import data.MusicPlayerState
 
 actual class AudioPlayer actual constructor(
-    private val playerState: PlayerState,
+    private val musicPlayerState: MusicPlayerState,
 ) : Runnable {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -24,21 +24,21 @@ actual class AudioPlayer actual constructor(
                 }
 
                 Player.STATE_BUFFERING -> {
-                    playerState.isBuffering = true
+                    musicPlayerState.isBuffering = true
                 }
 
                 Player.STATE_ENDED -> {
                 }
 
                 Player.STATE_READY -> {
-                    playerState.isBuffering = false
-                    playerState.totalDuration = (mediaPlayer.duration / 1000).toDouble()
+                    musicPlayerState.isBuffering = false
+                    musicPlayerState.totalDuration = (mediaPlayer.duration / 1000).toDouble()
                 }
             }
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
-            playerState.isPlaying = isPlaying
+            musicPlayerState.isPlaying = isPlaying
             if (isPlaying) scheduleUpdate() else stopUpdate()
         }
 
@@ -57,12 +57,12 @@ actual class AudioPlayer actual constructor(
     }
 
     actual fun play() {
-        if (playerState.isPlaying) return
+        if (musicPlayerState.isPlaying) return
         mediaPlayer.play()
     }
 
     actual fun pause() {
-        if (!playerState.isPlaying) return
+        if (!musicPlayerState.isPlaying) return
         mediaPlayer.pause()
     }
 
@@ -76,7 +76,7 @@ actual class AudioPlayer actual constructor(
     }
 
     actual fun seekTo(time: Double) {
-        playerState.currentTime = time
+        musicPlayerState.currentTime = time
         mediaPlayer.seekTo((time * 1000).toLong())
     }
 
@@ -88,7 +88,7 @@ actual class AudioPlayer actual constructor(
 
     override fun run() {
         println("do something")
-        playerState.currentTime = (mediaPlayer.currentPosition / 1000).toDouble()
+        musicPlayerState.currentTime = (mediaPlayer.currentPosition / 1000).toDouble()
         handler.postDelayed(this, 1000)
     }
 

@@ -34,9 +34,10 @@ import constant.FULL_SCREEN_ROUTES
 import constant.enums.MainNavigationEnum
 import data.ArticleSimpleModel
 import data.ChatRowModel
+import data.MusicSimpleModel
 import data.PlatformInitData
 import data.UserDataModel
-import data.rememberPlayerState
+import data.rememberMusicPlayerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -94,8 +95,76 @@ fun MainApp(
         var articleDataList by remember { mutableStateOf(emptyList<ArticleSimpleModel>()) }
 
         //music data
-        val playerState = rememberPlayerState()
+        val playerState = rememberMusicPlayerState()
         val player = remember { AudioPlayer(playerState) }
+        var musicDataList by remember { mutableStateOf(emptyList<MusicSimpleModel>()) }
+
+        if (musicDataList.isEmpty()) {
+            musicDataList = listOf(
+                MusicSimpleModel(
+                    id = "1",
+                    musicName = "歌曲1",
+                    musicAuthor = "张三1",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.m4a",
+                ),
+                MusicSimpleModel(
+                    id = "2",
+                    musicName = "歌曲2",
+                    musicAuthor = "张三2",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/2.m4a",
+                ),
+                MusicSimpleModel(
+                    id = "3",
+                    musicName = "歌曲3",
+                    musicAuthor = "张三3",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                ),
+                MusicSimpleModel(
+                    id = "3",
+                    musicName = "歌曲3",
+                    musicAuthor = "张三3",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                ),
+                MusicSimpleModel(
+                    id = "3",
+                    musicName = "歌曲3",
+                    musicAuthor = "张三3",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                ),
+                MusicSimpleModel(
+                    id = "3",
+                    musicName = "歌曲3",
+                    musicAuthor = "张三3",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                ),
+                MusicSimpleModel(
+                    id = "3",
+                    musicName = "歌曲3",
+                    musicAuthor = "张三3",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                ),
+                MusicSimpleModel(
+                    id = "3",
+                    musicName = "歌曲3",
+                    musicAuthor = "张三3",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                ),
+                MusicSimpleModel(
+                    id = "3",
+                    musicName = "歌曲3",
+                    musicAuthor = "张三3",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                ),
+                MusicSimpleModel(
+                    id = "3",
+                    musicName = "歌曲3",
+                    musicAuthor = "张三3",
+                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                ),
+            )
+        }
+
+
 
         //userData
         var userData by remember { mutableStateOf(UserDataModel()) }
@@ -162,24 +231,23 @@ fun MainApp(
                     enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
                     exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
                 ) {
-                    MainPageContainerScreen {
+                    MainPageContainerScreen { constraints ->
                         MainMusicsScreen(
+                            constraints = constraints,
+                            playList = musicDataList,
                             currentTime = playerState.currentTime,
                             totalDuration = playerState.totalDuration,
                             isPlaying = playerState.isPlaying,
-                            onStart = {
-                                player.start("https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.ogg")
+                            onStart = { url ->
+                                player.start(url)
                             },
                             onPlay = {
-//                                    player.play()
-                                navController.navigate(MainNavigationEnum.MUSIC_PLAYER.name)
+                                player.play()
+//                                navController.navigate(MainNavigationEnum.MUSIC_PLAYER.name)
                             },
                             onPause = {
                                 player.pause()
                             },
-                            onSeek = { position ->
-                                player.seekTo(position)
-                            }
                         )
                     }
                 }

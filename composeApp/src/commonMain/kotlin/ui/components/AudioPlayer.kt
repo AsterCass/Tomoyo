@@ -1,8 +1,8 @@
 package ui.components
 
-import data.PlayerState
+import data.MusicPlayerState
 
-expect class AudioPlayer(playerState: PlayerState) {
+expect class AudioPlayer(musicPlayerState: MusicPlayerState) {
     fun start(url: String)
     fun play()
     fun pause()

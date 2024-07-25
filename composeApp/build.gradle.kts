@@ -81,6 +81,8 @@ kotlin {
 
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
 
+//            implementation("media.kamel:kamel-image:0.9.5")
+
 
 //            runtimeOnly("org.springframework.boot:spring-boot-starter-websocket:3.2.6")
 //            implementation("org.apache.tomcat.embed:tomcat-embed-websocket:10.1.26")

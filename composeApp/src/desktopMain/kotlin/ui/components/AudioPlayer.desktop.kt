@@ -1,13 +1,13 @@
 package ui.components
 
-import data.PlayerState
+import data.MusicPlayerState
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import javafx.util.Duration
 import java.net.URL
 
 
-actual class AudioPlayer actual constructor(private val playerState: PlayerState) {
+actual class AudioPlayer actual constructor(private val musicPlayerState: MusicPlayerState) {
 
     private var media: Media? = null
 
@@ -15,7 +15,7 @@ actual class AudioPlayer actual constructor(private val playerState: PlayerState
 
     actual fun start(url: String) {
         //close
-        playerState.toBack()
+        musicPlayerState.toBack()
         mediaPlayer?.stop()
         //start
         val thisUrl = URL(url)
@@ -23,29 +23,29 @@ actual class AudioPlayer actual constructor(private val playerState: PlayerState
         mediaPlayer = MediaPlayer(media)
         mediaPlayer?.statusProperty()?.addListener { _, oldStatus, newStatus ->
             if (newStatus === MediaPlayer.Status.READY) {
-                playerState.totalDuration = mediaPlayer?.totalDuration?.toSeconds() ?: 0.0
+                musicPlayerState.totalDuration = mediaPlayer?.totalDuration?.toSeconds() ?: 0.0
                 play()
             }
             if (newStatus === MediaPlayer.Status.STALLED) {
-                playerState.isBuffering = true
+                musicPlayerState.isBuffering = true
             }
             if (oldStatus === MediaPlayer.Status.STALLED
                 && newStatus !== MediaPlayer.Status.STALLED
             ) {
-                playerState.isBuffering = false
+                musicPlayerState.isBuffering = false
             }
         }
         mediaPlayer?.currentTimeProperty()?.addListener { _, _, newTime ->
-            if (newTime.toSeconds() > playerState.currentTime + 1) {
-                playerState.currentTime = newTime.toSeconds()
+            if (newTime.toSeconds() > musicPlayerState.currentTime + 1) {
+                musicPlayerState.currentTime = newTime.toSeconds()
             }
         }
     }
 
     actual fun play() {
-        if (playerState.isPlaying) return
+        if (musicPlayerState.isPlaying) return
         try {
-            playerState.isPlaying = true
+            musicPlayerState.isPlaying = true
             mediaPlayer?.play()
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -53,9 +53,9 @@ actual class AudioPlayer actual constructor(private val playerState: PlayerState
     }
 
     actual fun pause() {
-        if (!playerState.isPlaying) return
+        if (!musicPlayerState.isPlaying) return
         try {
-            playerState.isPlaying = false
+            musicPlayerState.isPlaying = false
             mediaPlayer?.pause()
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -73,7 +73,7 @@ actual class AudioPlayer actual constructor(private val playerState: PlayerState
     }
 
     actual fun seekTo(time: Double) {
-        playerState.currentTime = time
+        musicPlayerState.currentTime = time
         mediaPlayer?.seek(Duration.seconds(time))
     }
 

@@ -35,7 +35,7 @@ fun MainArticleScreen(
         modifier = Modifier.height(minHeightDp)
     ) {
         items(articleDataList.size) { index ->
-            ListItem(item = articleDataList[index])
+            ArticleListItem(item = articleDataList[index])
         }
         item {
             CircularProgressIndicator(
@@ -50,7 +50,7 @@ fun MainArticleScreen(
 
 
 @Composable
-fun ListItem(item: ArticleSimpleModel) {
+fun ArticleListItem(item: ArticleSimpleModel) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         shadowElevation = 1.dp,

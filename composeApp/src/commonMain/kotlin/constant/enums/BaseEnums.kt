@@ -22,6 +22,11 @@ import tomoyo.composeapp.generated.resources.none
 import tomoyo.composeapp.generated.resources.settings
 import tomoyo.composeapp.generated.resources.videos
 
+
+enum class MusicPlayModel {
+    CIRCULATION, ORDER, RANDOM
+}
+
 enum class NotificationType(
     val code: String,
     val bgColor: Color,

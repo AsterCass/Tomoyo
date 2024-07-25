@@ -2,7 +2,6 @@ package api
 
 import constant.BASE_SERVER_ADDRESS
 import constant.enums.NotificationType
-import data.ArticleListModel
 import data.ArticleSimpleModel
 import data.LoginParam
 import data.ResultObj
@@ -86,8 +85,8 @@ class BaseApi {
                 parameters.append("keyword", keyword)
             }
         }
-            .body<ArticleListModel>()
-        return if (body.data.isNullOrEmpty()) emptyList() else body.data
+            .body<ResultObj<List<ArticleSimpleModel>>>()
+        return if (body.data.isNullOrEmpty()) emptyList() else body.data!!
     }
 
     suspend fun getArticleDetail(id: String): String {
