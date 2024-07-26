@@ -81,6 +81,9 @@ kotlin {
 
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
 
+            //https://github.com/DevSrSouza/compose-icons
+            implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+
 //            implementation("media.kamel:kamel-image:0.9.5")
 
 

@@ -1,17 +1,19 @@
 package constant.enums
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Book
+import compose.icons.fontawesomeicons.solid.CandyCane
+import compose.icons.fontawesomeicons.solid.Comments
+import compose.icons.fontawesomeicons.solid.Film
+import compose.icons.fontawesomeicons.solid.ListUl
+import compose.icons.fontawesomeicons.solid.Music
 import org.jetbrains.compose.resources.StringResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
@@ -44,12 +46,12 @@ enum class MainNavigationEnum(
     val icon: ImageVector,
 ) {
 
-    HOME("home", Res.string.home, Icons.Rounded.Home),
-    ARTICLES("articles", Res.string.articles, Icons.Rounded.Edit),
-    MUSICS("musics", Res.string.musics, Icons.Rounded.PlayArrow),
-    VIDEOS("videos", Res.string.videos, Icons.Rounded.Call),
-    CHAT("chat", Res.string.chat, Icons.Rounded.Person),
-    SETTING("settings", Res.string.settings, Icons.Rounded.Settings),
+    HOME("home", Res.string.home, FontAwesomeIcons.Solid.CandyCane),
+    ARTICLES("articles", Res.string.articles, FontAwesomeIcons.Solid.Book),
+    MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music),
+    VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film),
+    CHAT("chat", Res.string.chat, FontAwesomeIcons.Solid.Comments),
+    SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl),
 
 
     MUSIC_PLAYER("music_player", Res.string.none, Icons.Rounded.Done)
