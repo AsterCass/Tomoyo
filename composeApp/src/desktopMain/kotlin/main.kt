@@ -15,15 +15,24 @@ import androidx.compose.ui.window.rememberWindowState
 import constant.enums.MainNavigationEnum
 import constant.enums.WindowsSizeEnum
 import data.PlatformInitData
+import di.KoinInit
 import javafx.embed.swing.JFXPanel
+import org.koin.core.Koin
 import java.awt.SystemTray
 import java.awt.TrayIcon
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.imageio.ImageIO
 
+lateinit var koin: Koin
+
 
 fun main() {
+
+    koin = KoinInit().init()
+    koin.loadModules(
+        listOf(),
+    )
 
     //init javafx
     JFXPanel()

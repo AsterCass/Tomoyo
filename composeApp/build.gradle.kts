@@ -38,6 +38,8 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
 
+            implementation(libs.koin.android)
+
 
             implementation("androidx.media3:media3-exoplayer:1.1.0")
             implementation("androidx.media3:media3-exoplayer-dash:1.1.0")
@@ -80,7 +82,7 @@ kotlin {
 
 
             //https://github.com/mahozad/wavy-slider
-            implementation("ir.mahozad.multiplatform:wavy-slider:2.0.0-alpha")
+            //implementation("ir.mahozad.multiplatform:wavy-slider:2.0.0-alpha")
 
 
 //            implementation("org.hildan.krossbow:krossbow-stomp-core:5.12.0")
@@ -98,7 +100,9 @@ kotlin {
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
 
             //https://github.com/DevSrSouza/compose-icons
-            //implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+            implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+
+
 
 //            implementation("media.kamel:kamel-image:0.9.5")
 
@@ -186,7 +190,7 @@ compose.desktop {
             includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.1.4"
+            packageVersion = "1.1.5"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."

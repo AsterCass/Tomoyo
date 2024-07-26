@@ -10,6 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import constant.enums.MainNavigationEnum
 import data.PlatformInitData
+import di.KoinInit
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 
 
 class MainActivity : ComponentActivity() {
@@ -28,6 +31,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        KoinInit().init {
+            androidLogger()
+            androidContext(thisContext)
+            modules()
+        }
+
         println("reload onCreate")
         setContent {
             println("reload setContent")

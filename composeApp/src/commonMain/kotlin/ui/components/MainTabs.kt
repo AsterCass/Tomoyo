@@ -60,7 +60,11 @@ object ArticlesTab : Tab {
 
     @Composable
     override fun Content() {
-        MainArticleScreen()
+//        val screenModel = koinScreenModel<ArticleScreenModel>()
+//        val state by screenModel.openBottomSheet.collectAsState()
+        MainArticleScreen(
+//            state
+        )
     }
 
 }

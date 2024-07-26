@@ -37,6 +37,7 @@ import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
+import org.koin.compose.KoinContext
 import theme.LightColorScheme
 import theme.MainTypography
 import ui.components.ArticlesTab
@@ -56,196 +57,196 @@ fun MainApp(
 ) {
 
 
-    MaterialTheme(
-        colorScheme = LightColorScheme,
-        typography = MainTypography(),
-    ) {
+    KoinContext {
+        MaterialTheme(
+            colorScheme = LightColorScheme,
+            typography = MainTypography(),
+        ) {
 
-        println("reload MaterialTheme")
+            println("reload MaterialTheme")
 
-        //coroutine
-        val apiCoroutine = rememberCoroutineScope()
+            //coroutine
+            val apiCoroutine = rememberCoroutineScope()
 
-        //navigation
+            //navigation
 //        val backStackEntry by navController.currentBackStackEntryAsState()
 //        val currentScreen = MainNavigationEnum.valueOf(
 //            backStackEntry?.destination?.route ?: MainNavigationEnum.HOME.name
 //        )
 
-        //socket
-        val socketClient = remember { socketClient() }
-        var socketSession by remember { mutableStateOf<StompSession?>(null) }
+            //socket
+            val socketClient = remember { socketClient() }
+            var socketSession by remember { mutableStateOf<StompSession?>(null) }
 
-        //article data
-        var articleDataList by remember { mutableStateOf(emptyList<ArticleSimpleModel>()) }
+            //article data
+            var articleDataList by remember { mutableStateOf(emptyList<ArticleSimpleModel>()) }
 
-        //music data
-        val playerState = rememberMusicPlayerState()
-        val player = remember { AudioPlayer(playerState) }
-        var musicDataList by remember { mutableStateOf(emptyList<MusicSimpleModel>()) }
+            //music data
+            val playerState = rememberMusicPlayerState()
+            val player = remember { AudioPlayer(playerState) }
+            var musicDataList by remember { mutableStateOf(emptyList<MusicSimpleModel>()) }
 
-        if (musicDataList.isEmpty()) {
-            musicDataList = listOf(
-                MusicSimpleModel(
-                    id = "1",
-                    musicName = "歌曲1",
-                    musicAuthor = "张三1",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.m4a",
-                ),
-                MusicSimpleModel(
-                    id = "2",
-                    musicName = "歌曲2",
-                    musicAuthor = "张三2",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/2.m4a",
-                ),
-                MusicSimpleModel(
-                    id = "3",
-                    musicName = "歌曲3",
-                    musicAuthor = "张三3",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
-                ),
-                MusicSimpleModel(
-                    id = "3",
-                    musicName = "歌曲3",
-                    musicAuthor = "张三3",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
-                ),
-                MusicSimpleModel(
-                    id = "3",
-                    musicName = "歌曲3",
-                    musicAuthor = "张三3",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
-                ),
-                MusicSimpleModel(
-                    id = "3",
-                    musicName = "歌曲3",
-                    musicAuthor = "张三3",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
-                ),
-                MusicSimpleModel(
-                    id = "3",
-                    musicName = "歌曲3",
-                    musicAuthor = "张三3",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
-                ),
-                MusicSimpleModel(
-                    id = "3",
-                    musicName = "歌曲3",
-                    musicAuthor = "张三3",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
-                ),
-                MusicSimpleModel(
-                    id = "3",
-                    musicName = "歌曲3",
-                    musicAuthor = "张三3",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
-                ),
-                MusicSimpleModel(
-                    id = "3",
-                    musicName = "歌曲3",
-                    musicAuthor = "张三3",
-                    musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
-                ),
-            )
-        }
-
-
-
-        //userData
-        var userData by remember { mutableStateOf(UserDataModel()) }
-        var userDataVersion by remember { mutableStateOf(0) }
-        var lastUserToken: String? by remember { mutableStateOf(null) }
-
-        //update session
-        socketSessionUpdate(
-            socketClient,
-            socketSession,
-            userData,
-            lastUserToken,
-            updateSession = { newSession, newToken ->
-                socketSession = newSession
-                lastUserToken = newToken
-            },
-            updateUserVersion = { userDataVersion++ }
-        )
-
-        println("reload Main")
-
-        //init
-        InitForNoComposableRes()
-
-        println("reload Main xxxxxxxxxx")
-
-        TabNavigator(
-            tab = HomeTab,
-            tabDisposable = {
-                TabDisposable(
-                    navigator = it,
-                    tabs = listOf(HomeTab, ArticlesTab)
+            if (musicDataList.isEmpty()) {
+                musicDataList = listOf(
+                    MusicSimpleModel(
+                        id = "1",
+                        musicName = "歌曲1",
+                        musicAuthor = "张三1",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.m4a",
+                    ),
+                    MusicSimpleModel(
+                        id = "2",
+                        musicName = "歌曲2",
+                        musicAuthor = "张三2",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/2.m4a",
+                    ),
+                    MusicSimpleModel(
+                        id = "3",
+                        musicName = "歌曲3",
+                        musicAuthor = "张三3",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                    ),
+                    MusicSimpleModel(
+                        id = "3",
+                        musicName = "歌曲3",
+                        musicAuthor = "张三3",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                    ),
+                    MusicSimpleModel(
+                        id = "3",
+                        musicName = "歌曲3",
+                        musicAuthor = "张三3",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                    ),
+                    MusicSimpleModel(
+                        id = "3",
+                        musicName = "歌曲3",
+                        musicAuthor = "张三3",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                    ),
+                    MusicSimpleModel(
+                        id = "3",
+                        musicName = "歌曲3",
+                        musicAuthor = "张三3",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                    ),
+                    MusicSimpleModel(
+                        id = "3",
+                        musicName = "歌曲3",
+                        musicAuthor = "张三3",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                    ),
+                    MusicSimpleModel(
+                        id = "3",
+                        musicName = "歌曲3",
+                        musicAuthor = "张三3",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                    ),
+                    MusicSimpleModel(
+                        id = "3",
+                        musicName = "歌曲3",
+                        musicAuthor = "张三3",
+                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                    ),
                 )
             }
-        ) { _ ->
 
-            Scaffold(
-                topBar = {
-                    AnimatedVisibility(
-                        visible = true,
-                        enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
-                                slideInVertically(
-                                    initialOffsetY = { -it },
-                                    animationSpec = tween(durationMillis = 750)
-                                ),
-                        exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
-                                slideOutVertically(
-                                    targetOffsetY = { -it },
-                                    animationSpec = tween(durationMillis = 750)
-                                ),
-                    ) {
-                        MainAppBar()
-                    }
 
+            //userData
+            var userData by remember { mutableStateOf(UserDataModel()) }
+            var userDataVersion by remember { mutableStateOf(0) }
+            var lastUserToken: String? by remember { mutableStateOf(null) }
+
+            //update session
+            socketSessionUpdate(
+                socketClient,
+                socketSession,
+                userData,
+                lastUserToken,
+                updateSession = { newSession, newToken ->
+                    socketSession = newSession
+                    lastUserToken = newToken
                 },
-                bottomBar = {
-                    AnimatedVisibility(
-                        visible = true,
-                        enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
-                                slideInVertically(
-                                    initialOffsetY = { it },
-                                    animationSpec = tween(durationMillis = 750)
-                                ),
-                        exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
-                                slideOutVertically(
-                                    targetOffsetY = { it },
-                                    animationSpec = tween(durationMillis = 750)
-                                ),
-                    ) {
-                        MainAppNavigationBar(
-                            extraNavigationList = platformData.extraNavigationList,
-                        )
-                    }
+                updateUserVersion = { userDataVersion++ }
+            )
 
-                },
-                content = { padding ->
+            println("reload Main")
 
-                    BoxWithConstraints(
-                        modifier = Modifier.padding(padding).fillMaxSize()
-                    ) {
+            //init
+            InitForNoComposableRes()
 
-                        val constraints = this.constraints
+            println("reload Main xxxxxxxxxx")
 
-                        CurrentTab()
+            TabNavigator(
+                tab = HomeTab,
+                tabDisposable = {
+                    TabDisposable(
+                        navigator = it,
+                        tabs = listOf(HomeTab, ArticlesTab)
+                    )
+                }
+            ) { _ ->
 
-                        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                            NotificationComponent()
+                Scaffold(
+                    topBar = {
+                        AnimatedVisibility(
+                            visible = true,
+                            enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
+                                    slideInVertically(
+                                        initialOffsetY = { -it },
+                                        animationSpec = tween(durationMillis = 750)
+                                    ),
+                            exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
+                                    slideOutVertically(
+                                        targetOffsetY = { -it },
+                                        animationSpec = tween(durationMillis = 750)
+                                    ),
+                        ) {
+                            MainAppBar()
+                        }
+
+                    },
+                    bottomBar = {
+                        AnimatedVisibility(
+                            visible = true,
+                            enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
+                                    slideInVertically(
+                                        initialOffsetY = { it },
+                                        animationSpec = tween(durationMillis = 750)
+                                    ),
+                            exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
+                                    slideOutVertically(
+                                        targetOffsetY = { it },
+                                        animationSpec = tween(durationMillis = 750)
+                                    ),
+                        ) {
+                            MainAppNavigationBar(
+                                extraNavigationList = platformData.extraNavigationList,
+                            )
+                        }
+
+                    },
+                    content = { padding ->
+
+                        BoxWithConstraints(
+                            modifier = Modifier.padding(padding).fillMaxSize()
+                        ) {
+
+                            val constraints = this.constraints
+
+                            CurrentTab()
+
+                            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                                NotificationComponent()
+                            }
+
                         }
 
                     }
-
-                }
-            )
+                )
 
 
-        }
+            }
 
 //        //navigation graph
 //        val navGraph = navController.createGraph(startDestination = MainNavigationEnum.HOME.name)
@@ -435,7 +436,9 @@ fun MainApp(
 //            )
 //        }
 
+        }
     }
+
 }
 
 

@@ -5,16 +5,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import data.model.ArticleScreenModel
+import org.koin.compose.koinInject
 
 @Composable
 fun MainHomeScreen(
+    screenModel: ArticleScreenModel = koinInject(),
 ) {
 
+    OutlinedButton(
+        onClick = { screenModel.openBottomSheet(!screenModel.openBottomSheet.value) },
+    ) {
+        Text("测试")
+    }
 
     println("reload MainHomeScreen")
     Box(modifier = Modifier.fillMaxSize()) {

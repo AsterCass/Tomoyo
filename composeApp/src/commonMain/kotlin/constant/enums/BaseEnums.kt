@@ -2,12 +2,19 @@ package constant.enums
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Book
+import compose.icons.fontawesomeicons.solid.CandyCane
+import compose.icons.fontawesomeicons.solid.Comments
+import compose.icons.fontawesomeicons.solid.Film
+import compose.icons.fontawesomeicons.solid.ListUl
+import compose.icons.fontawesomeicons.solid.Music
 import org.jetbrains.compose.resources.StringResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
@@ -43,20 +50,13 @@ enum class MainNavigationEnum(
     val tab: Tab,
 ) {
 
-//    HOME("home", Res.string.home, FontAwesomeIcons.Solid.CandyCane, HomeTab),
-//    ARTICLES("articles", Res.string.articles, FontAwesomeIcons.Solid.Book, ArticlesTab),
-//    MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music, HomeTab),
-//    VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film, HomeTab),
-//    CHAT("chat", Res.string.chat, FontAwesomeIcons.Solid.Comments, HomeTab),
-//    SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, HomeTab),
+    HOME("home", Res.string.home, FontAwesomeIcons.Solid.CandyCane, HomeTab),
+    ARTICLES("articles", Res.string.articles, FontAwesomeIcons.Solid.Book, ArticlesTab),
+    MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music, HomeTab),
+    VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film, HomeTab),
+    CHAT("chat", Res.string.chat, FontAwesomeIcons.Solid.Comments, HomeTab),
+    SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, HomeTab),
 
-
-    HOME("home", Res.string.home, Icons.Rounded.PlayArrow, HomeTab),
-    ARTICLES("articles", Res.string.articles, Icons.Rounded.PlayArrow, ArticlesTab),
-    MUSICS("musics", Res.string.musics, Icons.Rounded.PlayArrow, HomeTab),
-    VIDEOS("videos", Res.string.videos, Icons.Rounded.PlayArrow, HomeTab),
-    CHAT("chat", Res.string.chat, Icons.Rounded.PlayArrow, HomeTab),
-    SETTING("settings", Res.string.settings, Icons.Rounded.PlayArrow, HomeTab),
 
 
     MUSIC_PLAYER("music_player", Res.string.none, Icons.Rounded.Done, HomeTab)
