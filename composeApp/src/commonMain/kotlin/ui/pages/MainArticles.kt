@@ -20,30 +20,34 @@ import data.ArticleSimpleModel
 
 @Composable
 fun MainArticleScreen(
-    constraints: Constraints,
-    articleDataList: List<ArticleSimpleModel>,
-    updateArticleList: () -> Unit,
+//    constraints: Constraints,
+//    articleDataList: List<ArticleSimpleModel>,
+//    updateArticleList: () -> Unit,
 ) {
 
     println("reload MainArticleScreen")
 
-    val density = LocalDensity.current
-    val minHeightDp = with(density) { constraints.minHeight.toDp() }
-    println(minHeightDp)
-
-    LazyColumn(
-        modifier = Modifier.height(minHeightDp)
-    ) {
-        items(articleDataList.size) { index ->
-            ArticleListItem(item = articleDataList[index])
-        }
-        item {
-            CircularProgressIndicator(
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
-            )
-            updateArticleList()
-        }
+    Column {
+        Text("这是文章页面")
     }
+
+//    val density = LocalDensity.current
+//    val minHeightDp = with(density) { constraints.minHeight.toDp() }
+//    println(minHeightDp)
+//
+//    LazyColumn(
+//        modifier = Modifier.height(minHeightDp)
+//    ) {
+//        items(articleDataList.size) { index ->
+//            ArticleListItem(item = articleDataList[index])
+//        }
+//        item {
+//            CircularProgressIndicator(
+//                modifier = Modifier.fillMaxWidth().padding(16.dp)
+//            )
+//            updateArticleList()
+//        }
+//    }
 
 
 }

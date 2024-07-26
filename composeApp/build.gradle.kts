@@ -62,9 +62,25 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
 
-            implementation(libs.navigation.compose)
+//            implementation(libs.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+
+            //https://github.com/adrielcafe/voyager
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.tabNavigator)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.koin)
+
+
+            //https://github.com/InsertKoinIO/koin
+            api(libs.koin.core)
+            api(libs.koin.compose)
+
+
+            //https://github.com/mahozad/wavy-slider
+            implementation("ir.mahozad.multiplatform:wavy-slider:2.0.0-alpha")
 
 
 //            implementation("org.hildan.krossbow:krossbow-stomp-core:5.12.0")
@@ -82,7 +98,7 @@ kotlin {
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
 
             //https://github.com/DevSrSouza/compose-icons
-            implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+            //implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
 
 //            implementation("media.kamel:kamel-image:0.9.5")
 

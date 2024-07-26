@@ -3,16 +3,12 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -21,17 +17,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.createGraph
-import api.BaseApi
-import constant.FULL_SCREEN_ROUTES
-import constant.enums.MainNavigationEnum
+import cafe.adriel.voyager.navigator.tab.CurrentTab
+import cafe.adriel.voyager.navigator.tab.TabDisposable
+import cafe.adriel.voyager.navigator.tab.TabNavigator
 import data.ArticleSimpleModel
 import data.ChatRowModel
 import data.MusicSimpleModel
@@ -49,17 +39,13 @@ import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
 import theme.LightColorScheme
 import theme.MainTypography
+import ui.components.ArticlesTab
 import ui.components.AudioPlayer
+import ui.components.HomeTab
 import ui.components.InitForNoComposableRes
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
-import ui.pages.MainArticleScreen
-import ui.pages.MainChatScreen
-import ui.pages.MainHomeScreen
-import ui.pages.MainMusicsScreen
-import ui.pages.MainPageContainerScreen
-import ui.pages.MainSettingsScreen
-import ui.pages.MainVideosScreen
+import ui.components.NotificationComponent
 
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -67,7 +53,6 @@ import ui.pages.MainVideosScreen
 fun MainApp(
     platformData: PlatformInitData = PlatformInitData(),
     updatePlatformData: (PlatformInitData) -> Unit = {},
-    navController: NavHostController = rememberNavController(),
 ) {
 
 
@@ -82,10 +67,10 @@ fun MainApp(
         val apiCoroutine = rememberCoroutineScope()
 
         //navigation
-        val backStackEntry by navController.currentBackStackEntryAsState()
-        val currentScreen = MainNavigationEnum.valueOf(
-            backStackEntry?.destination?.route ?: MainNavigationEnum.HOME.name
-        )
+//        val backStackEntry by navController.currentBackStackEntryAsState()
+//        val currentScreen = MainNavigationEnum.valueOf(
+//            backStackEntry?.destination?.route ?: MainNavigationEnum.HOME.name
+//        )
 
         //socket
         val socketClient = remember { socketClient() }
@@ -189,193 +174,266 @@ fun MainApp(
         //init
         InitForNoComposableRes()
 
-        //navigation graph
-        val navGraph = navController.createGraph(startDestination = MainNavigationEnum.HOME.name)
-        {
+        println("reload Main xxxxxxxxxx")
 
-            composable(
-                route = MainNavigationEnum.HOME.name,
-                enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
-                exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
-            ) {
-                MainPageContainerScreen {
-                    MainHomeScreen(
-                    )
-                }
+        TabNavigator(
+            tab = HomeTab,
+            tabDisposable = {
+                TabDisposable(
+                    navigator = it,
+                    tabs = listOf(HomeTab, ArticlesTab)
+                )
             }
+        ) { _ ->
 
-            if (platformData.extraNavigationList.contains(MainNavigationEnum.ARTICLES)) {
-                composable(
-                    route = MainNavigationEnum.ARTICLES.name,
-                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
-                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
-                ) {
-                    MainPageContainerScreen { constraints ->
-                        MainArticleScreen(
-                            constraints = constraints,
-                            articleDataList = articleDataList,
-                        ) {
-                            apiCoroutine.launch {
-                                articleDataList = articleDataList + BaseApi().getArticleList(
-                                    offset = articleDataList.size,
-                                )
-                            }
+            Scaffold(
+                topBar = {
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
+                                slideInVertically(
+                                    initialOffsetY = { -it },
+                                    animationSpec = tween(durationMillis = 750)
+                                ),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
+                                slideOutVertically(
+                                    targetOffsetY = { -it },
+                                    animationSpec = tween(durationMillis = 750)
+                                ),
+                    ) {
+                        MainAppBar()
+                    }
+
+                },
+                bottomBar = {
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
+                                slideInVertically(
+                                    initialOffsetY = { it },
+                                    animationSpec = tween(durationMillis = 750)
+                                ),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
+                                slideOutVertically(
+                                    targetOffsetY = { it },
+                                    animationSpec = tween(durationMillis = 750)
+                                ),
+                    ) {
+                        MainAppNavigationBar(
+                            extraNavigationList = platformData.extraNavigationList,
+                        )
+                    }
+
+                },
+                content = { padding ->
+
+                    BoxWithConstraints(
+                        modifier = Modifier.padding(padding).fillMaxSize()
+                    ) {
+
+                        val constraints = this.constraints
+
+                        CurrentTab()
+
+                        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                            NotificationComponent()
                         }
-                    }
-                }
-            }
-
-            if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
-                composable(
-                    route = MainNavigationEnum.MUSICS.name,
-                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
-                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
-                ) {
-                    MainPageContainerScreen { constraints ->
-                        MainMusicsScreen(
-                            constraints = constraints,
-                            playList = musicDataList,
-                            currentTime = playerState.currentTime,
-                            totalDuration = playerState.totalDuration,
-                            isPlaying = playerState.isPlaying,
-                            onStart = { url ->
-                                player.start(url)
-                            },
-                            onPlay = {
-                                player.play()
-//                                navController.navigate(MainNavigationEnum.MUSIC_PLAYER.name)
-                            },
-                            onPause = {
-                                player.pause()
-                            },
-                        )
-                    }
-                }
-            }
-
-            if (platformData.extraNavigationList.contains(MainNavigationEnum.CHAT)) {
-                composable(
-                    route = MainNavigationEnum.CHAT.name,
-                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
-                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
-                ) {
-                    MainPageContainerScreen {
-                        MainChatScreen(
-                            userData = userData,
-                            userDataVersion = userDataVersion,
-                            socketSession = socketSession,
-                        )
-                    }
-                }
-            }
-
-            if (platformData.extraNavigationList.contains(MainNavigationEnum.VIDEOS)) {
-                composable(
-                    route = MainNavigationEnum.VIDEOS.name,
-                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
-                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
-                ) {
-                    MainPageContainerScreen {
-                        MainVideosScreen(
-                        )
-                    }
-                }
-            }
-
-            if (platformData.extraNavigationList.contains(MainNavigationEnum.SETTING)) {
-                composable(
-                    route = MainNavigationEnum.SETTING.name,
-                    enterTransition = { fadeIn() },
-                    exitTransition = { fadeOut() },
-                ) {
-                    MainPageContainerScreen {
-                        MainSettingsScreen(
-                            userData = userData,
-                            login = { account: String, passwd: String ->
-                                apiCoroutine.launch {
-                                    userData = BaseApi().login(account, passwd)
-                                }
-                            },
-                        )
 
                     }
+
                 }
-            }
-
-            composable(
-                route = MainNavigationEnum.MUSIC_PLAYER.name,
-                enterTransition = {
-                    fadeIn(animationSpec = tween(durationMillis = 1000)) + scaleIn(
-                        initialScale = 0.2f,
-                        animationSpec = tween(durationMillis = 1000),
-                    )
-                },
-                exitTransition = {
-                    fadeOut(animationSpec = tween(durationMillis = 1000)) + scaleOut(
-                        targetScale = 0.2f,
-                        animationSpec = tween(durationMillis = 1000),
-                    )
-                },
-            ) {
-                Box(modifier = Modifier.fillMaxSize().background(Color.Gray))
-            }
-
-        }
-
-        //main
-        Scaffold(
-            topBar = {
-                AnimatedVisibility(
-                    visible = !FULL_SCREEN_ROUTES.contains(navController.currentDestination?.route),
-                    enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
-                            slideInVertically(
-                                initialOffsetY = { -it },
-                                animationSpec = tween(durationMillis = 750)
-                            ),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
-                            slideOutVertically(
-                                targetOffsetY = { -it },
-                                animationSpec = tween(durationMillis = 750)
-                            ),
-                ) {
-                    MainAppBar(
-                        currentScreen = currentScreen,
-                    )
-                }
-
-            },
-            bottomBar = {
-                AnimatedVisibility(
-                    visible = !FULL_SCREEN_ROUTES.contains(navController.currentDestination?.route),
-                    enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
-                            slideInVertically(
-                                initialOffsetY = { it },
-                                animationSpec = tween(durationMillis = 750)
-                            ),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
-                            slideOutVertically(
-                                targetOffsetY = { it },
-                                animationSpec = tween(durationMillis = 750)
-                            ),
-                ) {
-                    MainAppNavigationBar(
-                        currentScreen = currentScreen,
-                        navigationClicked = { navObj -> navController.navigate(navObj.name) },
-                        extraNavigationList = platformData.extraNavigationList,
-                    )
-                }
-
-            },
-        ) { innerPadding ->
-
-            NavHost(
-                navController, navGraph,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(innerPadding)
             )
+
+
         }
+
+//        //navigation graph
+//        val navGraph = navController.createGraph(startDestination = MainNavigationEnum.HOME.name)
+//        {
+//
+//            composable(
+//                route = MainNavigationEnum.HOME.name,
+//                enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
+//                exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
+//            ) {
+//                MainPageContainerScreen {
+//                    MainHomeScreen(
+//                    )
+//                }
+//            }
+//
+//            if (platformData.extraNavigationList.contains(MainNavigationEnum.ARTICLES)) {
+//                composable(
+//                    route = MainNavigationEnum.ARTICLES.name,
+//                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
+//                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
+//                ) {
+//                    MainPageContainerScreen { constraints ->
+//                        MainArticleScreen(
+//                            constraints = constraints,
+//                            articleDataList = articleDataList,
+//                        ) {
+//                            apiCoroutine.launch {
+//                                articleDataList = articleDataList + BaseApi().getArticleList(
+//                                    offset = articleDataList.size,
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            if (platformData.extraNavigationList.contains(MainNavigationEnum.MUSICS)) {
+//                composable(
+//                    route = MainNavigationEnum.MUSICS.name,
+//                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
+//                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
+//                ) {
+//                    MainPageContainerScreen { constraints ->
+//                        MainMusicsScreen(
+//                            constraints = constraints,
+//                            playList = musicDataList,
+//                            currentTime = playerState.currentTime,
+//                            totalDuration = playerState.totalDuration,
+//                            isPlaying = playerState.isPlaying,
+//                            onStart = { url ->
+//                                player.start(url)
+//                            },
+//                            onPlay = {
+//                                player.play()
+////                                navController.navigate(MainNavigationEnum.MUSIC_PLAYER.name)
+//                            },
+//                            onPause = {
+//                                player.pause()
+//                            },
+//                        )
+//                    }
+//                }
+//            }
+//
+//            if (platformData.extraNavigationList.contains(MainNavigationEnum.CHAT)) {
+//                composable(
+//                    route = MainNavigationEnum.CHAT.name,
+//                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
+//                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
+//                ) {
+//                    MainPageContainerScreen {
+//                        MainChatScreen(
+//                            userData = userData,
+//                            userDataVersion = userDataVersion,
+//                            socketSession = socketSession,
+//                        )
+//                    }
+//                }
+//            }
+//
+//            if (platformData.extraNavigationList.contains(MainNavigationEnum.VIDEOS)) {
+//                composable(
+//                    route = MainNavigationEnum.VIDEOS.name,
+//                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 500)) },
+//                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 500)) },
+//                ) {
+//                    MainPageContainerScreen {
+//                        MainVideosScreen(
+//                        )
+//                    }
+//                }
+//            }
+//
+//            if (platformData.extraNavigationList.contains(MainNavigationEnum.SETTING)) {
+//                composable(
+//                    route = MainNavigationEnum.SETTING.name,
+//                    enterTransition = { fadeIn() },
+//                    exitTransition = { fadeOut() },
+//                ) {
+//                    MainPageContainerScreen {
+//                        MainSettingsScreen(
+//                            userData = userData,
+//                            login = { account: String, passwd: String ->
+//                                apiCoroutine.launch {
+//                                    userData = BaseApi().login(account, passwd)
+//                                }
+//                            },
+//                        )
+//
+//                    }
+//                }
+//            }
+//
+//            composable(
+//                route = MainNavigationEnum.MUSIC_PLAYER.name,
+//                enterTransition = {
+//                    fadeIn(animationSpec = tween(durationMillis = 1000)) + scaleIn(
+//                        initialScale = 0.2f,
+//                        animationSpec = tween(durationMillis = 1000),
+//                    )
+//                },
+//                exitTransition = {
+//                    fadeOut(animationSpec = tween(durationMillis = 1000)) + scaleOut(
+//                        targetScale = 0.2f,
+//                        animationSpec = tween(durationMillis = 1000),
+//                    )
+//                },
+//            ) {
+//                Box(modifier = Modifier.fillMaxSize().background(Color.Gray))
+//            }
+//
+//        }
+
+//        //main
+//        Scaffold(
+//            topBar = {
+//                AnimatedVisibility(
+//                    visible = !FULL_SCREEN_ROUTES.contains(navController.currentDestination?.route),
+//                    enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
+//                            slideInVertically(
+//                                initialOffsetY = { -it },
+//                                animationSpec = tween(durationMillis = 750)
+//                            ),
+//                    exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
+//                            slideOutVertically(
+//                                targetOffsetY = { -it },
+//                                animationSpec = tween(durationMillis = 750)
+//                            ),
+//                ) {
+//                    MainAppBar(
+//                        currentScreen = currentScreen,
+//                    )
+//                }
+//
+//            },
+//            bottomBar = {
+//                AnimatedVisibility(
+//                    visible = !FULL_SCREEN_ROUTES.contains(navController.currentDestination?.route),
+//                    enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
+//                            slideInVertically(
+//                                initialOffsetY = { it },
+//                                animationSpec = tween(durationMillis = 750)
+//                            ),
+//                    exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
+//                            slideOutVertically(
+//                                targetOffsetY = { it },
+//                                animationSpec = tween(durationMillis = 750)
+//                            ),
+//                ) {
+//                    MainAppNavigationBar(
+//                        currentScreen = currentScreen,
+//                        navigationClicked = { navObj -> navController.navigate(navObj.name) },
+//                        extraNavigationList = platformData.extraNavigationList,
+//                    )
+//                }
+//
+//            },
+//        ) { innerPadding ->
+//
+//            NavHost(
+//                navController, navGraph,
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .verticalScroll(rememberScrollState())
+//                    .padding(innerPadding)
+//            )
+//        }
 
     }
 }

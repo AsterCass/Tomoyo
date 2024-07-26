@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import api.ApiResText
 import api.BaseApi
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import constant.enums.MainNavigationEnum
 import constant.enums.NotificationType
 import kotlinx.coroutines.delay
@@ -52,29 +53,28 @@ import tomoyo.composeapp.generated.resources.service_error
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainAppBar(
-    currentScreen: MainNavigationEnum,
+
 ) {
 
-    when (currentScreen.code) {
-        MainNavigationEnum.HOME.code -> {}
-        MainNavigationEnum.SETTING.code -> {}
+//    when (currentScreen.code) {
+//        MainNavigationEnum.HOME.code -> {}
+//        MainNavigationEnum.SETTING.code -> {}
+//
+//        else -> {}
+//    }
 
-        else -> {}
-    }
-
+    val title = LocalTabNavigator.current.current.options.title
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
-        title = { Text(stringResource(currentScreen.title)) },
+        title = { Text(title) },
     )
 }
 
 @Composable
 fun MainAppNavigationBar(
-    currentScreen: MainNavigationEnum,
-    navigationClicked: (MainNavigationEnum) -> Unit,
     extraNavigationList: List<MainNavigationEnum> = emptyList(),
 ) {
 
@@ -82,6 +82,10 @@ fun MainAppNavigationBar(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface).height(50.dp)
     ) {
         MainNavigationEnum.entries.toTypedArray().forEach { nav ->
+
+            val tabNavigator = LocalTabNavigator.current
+            val isSelected = tabNavigator.current == nav.tab
+
             if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
                 NavigationBarItem(
                     modifier = Modifier.padding(0.dp)
@@ -105,8 +109,8 @@ fun MainAppNavigationBar(
                             )
                         }
                     },
-                    selected = currentScreen == nav,
-                    onClick = { navigationClicked(nav) },
+                    selected = isSelected,
+                    onClick = { tabNavigator.current = nav.tab },
                 )
             }
         }
