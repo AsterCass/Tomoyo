@@ -21,6 +21,12 @@ import ui.components.MainNotification
 import ui.components.NotificationManager
 
 
+val baseJsonConf = Json {
+    prettyPrint = true
+    isLenient = true
+    ignoreUnknownKeys = true
+}
+
 data class ApiResText(
     val serviceErrorDes: String = "",
     val loginSuccessDes: String = "",
@@ -39,11 +45,7 @@ class BaseApi {
 
     private val client = HttpClient {
         install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
+            json(baseJsonConf)
         }
     }
 

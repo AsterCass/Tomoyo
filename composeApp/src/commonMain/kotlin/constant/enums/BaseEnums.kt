@@ -25,7 +25,11 @@ import tomoyo.composeapp.generated.resources.none
 import tomoyo.composeapp.generated.resources.settings
 import tomoyo.composeapp.generated.resources.videos
 import ui.components.ArticlesTab
+import ui.components.ChatTab
 import ui.components.HomeTab
+import ui.components.MusicsTab
+import ui.components.SettingTab
+import ui.components.VideosTab
 
 
 enum class MusicPlayModel {
@@ -52,10 +56,10 @@ enum class MainNavigationEnum(
 
     HOME("home", Res.string.home, FontAwesomeIcons.Solid.CandyCane, HomeTab),
     ARTICLES("articles", Res.string.articles, FontAwesomeIcons.Solid.Book, ArticlesTab),
-    MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music, HomeTab),
-    VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film, HomeTab),
-    CHAT("chat", Res.string.chat, FontAwesomeIcons.Solid.Comments, HomeTab),
-    SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, HomeTab),
+    MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music, MusicsTab),
+    VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film, VideosTab),
+    CHAT("chat", Res.string.chat, FontAwesomeIcons.Solid.Comments, ChatTab),
+    SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, SettingTab),
 
 
 

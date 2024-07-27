@@ -1,5 +1,9 @@
 package data
 
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,11 +14,13 @@ data class UserDataModel(
     var avatar: String? = null,
     var nickName: String? = null,
     var token: String? = null,
-
-
-    var chatId: String? = null,
-    var chatRowList: List<ChatRowModel> = emptyList()
 )
+
+@Stable
+class UserState {
+    var token by mutableStateOf("")
+    var userData by mutableStateOf(UserDataModel())
+}
 
 @Serializable
 data class LoginParam(

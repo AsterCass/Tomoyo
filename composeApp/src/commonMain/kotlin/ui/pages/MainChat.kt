@@ -16,6 +16,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,19 +26,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import data.ChatRowModel
-import data.UserDataModel
+import data.model.MainScreenModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.sendText
+import org.koin.compose.koinInject
 
 @Composable
 fun MainChatScreen(
-    userData: UserDataModel = UserDataModel(),
-    userDataVersion: Int = 0,
-    socketSession: StompSession?,
+    mainModel: MainScreenModel = koinInject(),
 ) {
+
+    //data
+    val userState = mainModel.userState.collectAsState().value
+    val socketSession = mainModel.socketSession.collectAsState().value
+    val chatId = mainModel.currentChatId.collectAsState().value
+    val chatRowList = mainModel.currentChatRowList.collectAsState().value
+
+    val userData = userState.userData
+
 
     if (userData.token.isNullOrBlank()) {
         return
@@ -46,7 +54,7 @@ fun MainChatScreen(
     //coroutine
     val sendMsgCoroutine = rememberCoroutineScope()
 
-    var chatMessage by rememberSaveable { mutableStateOf(userDataVersion.toString()) }
+    var chatMessage by rememberSaveable { mutableStateOf("") }
 
     Column(
     ) {
@@ -62,7 +70,7 @@ fun MainChatScreen(
                     CoroutineScope(Dispatchers.IO).launch {
                         socketSession?.sendText(
                             "/socket/message/send",
-                            "{\"chatId\": \"${userData.chatId}\", " +
+                            "{\"chatId\": \"${chatId}\", " +
                                     "\"message\": \"$chatMessage\"}"
                         )
                     }
@@ -85,8 +93,8 @@ fun MainChatScreen(
             item {
 
             }
-            items(userData.chatRowList.size) { index ->
-                MessageCard(item = userData.chatRowList[index])
+            items(chatRowList.size) { index ->
+                MessageCard(item = chatRowList[index])
             }
         }
 

@@ -6,20 +6,30 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import data.UserDataModel
+import data.model.MainScreenModel
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun MainSettingsScreen(
-    userData: UserDataModel = UserDataModel(),
-    login: (String, String) -> Unit = { _: String, _: String -> },
+    mainModel: MainScreenModel = koinInject(),
 ) {
 
     println("reload MainSettingsScreen")
+
+    //coroutine
+    val settingApiCoroutine = rememberCoroutineScope()
+
+    //data
+    val userState = mainModel.userState.collectAsState().value
+    val userData = userState.userData
 
     var account by rememberSaveable { mutableStateOf("") }
     var passwd by rememberSaveable { mutableStateOf("") }
@@ -41,7 +51,9 @@ fun MainSettingsScreen(
             )
             Button(
                 onClick = {
-                    login(account, passwd)
+                    settingApiCoroutine.launch {
+                        mainModel.login(account, passwd)
+                    }
                 }
             ) {
                 Text("登录")
@@ -49,7 +61,7 @@ fun MainSettingsScreen(
         }
 
         Text(
-            text = if (userData.account.isNullOrBlank()) "未登录" else "已登录",
+            text = if (userData.account.isNullOrBlank()) "未登录" else "已登录${userData.nickName}",
         )
 
     }

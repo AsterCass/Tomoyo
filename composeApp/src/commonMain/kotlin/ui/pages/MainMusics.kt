@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,10 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import data.MusicSimpleModel
+import data.model.MainScreenModel
+import data.model.MusicScreenModel
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
@@ -47,16 +50,15 @@ import ui.components.MainBaseCardBox
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMusicsScreen(
-    constraints: Constraints,
-    playList: List<MusicSimpleModel>,
-    currentTime: Double,
-    totalDuration: Double,
-    isPlaying: Boolean,
-    onStart: (String) -> Unit,
-    onPause: () -> Unit,
-    onPlay: () -> Unit,
-    currentId: String? = null,
+    screenModel: MusicScreenModel = koinInject(),
+    mainModel: MainScreenModel = koinInject(),
 ) {
+    //data
+    val playList = screenModel.musicPlayList.collectAsState().value
+    val currentTime = screenModel.playerState.collectAsState().value.currentTime
+    val totalDuration = screenModel.playerState.collectAsState().value.totalDuration
+    val isPlaying = screenModel.playerState.collectAsState().value.isPlaying
+    val constraints = mainModel.mainPageContainerConstraints.value
 
     val density = LocalDensity.current
     val minHeightDp = with(density) { constraints.minHeight.toDp() }
@@ -76,15 +78,12 @@ fun MainMusicsScreen(
             modifier = Modifier.fillMaxSize()
                 .padding(start = 10.dp, end = 10.dp)
         ) {
-            //search
-
-
             LazyColumn {
 
                 items(playList.size) { index ->
                     MusicListItem(
                         item = playList[index],
-                        onStart = onStart
+                        onStart = screenModel.onStart
                     )
                 }
 
@@ -95,14 +94,8 @@ fun MainMusicsScreen(
                         Text("底部背景图，没想好放什么")
                     }
                 }
-
             }
-
-
         }
-
-
-
 
         Box(
             modifier = Modifier.align(Alignment.BottomCenter)
@@ -124,8 +117,8 @@ fun MainMusicsScreen(
                     MusicPlayItem(
                         item = playList[0],
                         isPlaying = isPlaying,
-                        onPause = onPause,
-                        onPlay = onPlay,
+                        onPause = screenModel.onPause,
+                        onPlay = screenModel.onPlay,
                     )
 
                     Slider(
@@ -163,7 +156,6 @@ fun MusicListItem(
             }
             .padding(10.dp)
     ) {
-
 
         Image(
             painter = painterResource(Res.drawable.nezuko),
