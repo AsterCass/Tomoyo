@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 class ArticleScreenModel : ScreenModel {
 
     private val _articleDataKey = MutableStateFlow("")
+    val articleDataKey = _articleDataKey.asStateFlow()
     private val _articleIsLoadAll = MutableStateFlow(false)
     val articleIsLoadAll = _articleIsLoadAll.asStateFlow()
 

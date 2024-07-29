@@ -58,11 +58,12 @@ fun MainArticleScreen(
     val articleDataList = screenModel.articleDataList.collectAsState().value
     val constraints = mainModel.mainPageContainerConstraints.value
     val articleIsLoadAll = screenModel.articleIsLoadAll.collectAsState().value
+    val articleDataKey = screenModel.articleDataKey.collectAsState().value
 
     val density = LocalDensity.current
     val minHeightDp = with(density) { constraints.minHeight.toDp() }
 
-    var searchArticleKey by remember { mutableStateOf("") }
+    var searchArticleKey by remember { mutableStateOf(articleDataKey) }
 
 
     //data
@@ -113,8 +114,14 @@ fun MainArticleScreen(
                                 screenModel.clearResetKeyword(searchArticleKey)
                                 searchArticleKey = ""
                                 keyboardController?.hide()
+                            },
+                            onDone = {
+                                screenModel.clearResetKeyword(searchArticleKey)
+                                searchArticleKey = ""
+                                keyboardController?.hide()
                             }
-                        )
+                        ),
+                        maxLines = 1,
                     )
 
                 }
