@@ -1,11 +1,10 @@
-package ui.components
+package biz
 
 import data.MusicPlayerState
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import javafx.util.Duration
 import java.net.URL
-
 
 actual class AudioPlayer actual constructor(private val musicPlayerState: MusicPlayerState) {
 

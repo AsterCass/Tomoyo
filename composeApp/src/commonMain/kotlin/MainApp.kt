@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import biz.StatusBar
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabDisposable
 import cafe.adriel.voyager.navigator.tab.TabNavigator
@@ -45,10 +46,10 @@ fun MainApp(
             typography = MainTypography(),
         ) {
             //init
+            StatusBar().updateColor(MaterialTheme.colorScheme.background, true)
             InitForNoComposableRes()
 
-            println("reload Main")
-
+            //navigation
             TabNavigator(
                 tab = HomeTab,
                 tabDisposable = {

@@ -13,7 +13,7 @@ import tomoyo.composeapp.generated.resources.RobotoSlab_VariableFont_wght
 
 val androidx.compose.material3.ColorScheme.unselectedColor: Color
     get() = if (this.background == LightColorScheme.background)
-        Color(0XFF979797) else Color.Transparent
+        Color(0XFFc8c8c8) else Color.Transparent
 
 val androidx.compose.material3.ColorScheme.subTextColor: Color
     get() = if (this.background == LightColorScheme.background)
@@ -31,14 +31,17 @@ val DarkColorScheme = darkColorScheme(
 val LightColorScheme = lightColorScheme(
     background = Color(0xFFEBEBEB),
     onBackground = Color(0XFF191919),
+
     surface = Color(0xFFF2F2F2),
     onSurface = Color(0XFF191919),
     onSurfaceVariant = Color(0XFF191919),
 
-    primary = Color(0xFF2D4836),
+    primary = Color(0XFF379B9B),
     onPrimary = Color(0xFFE9E9E9),
 
-    onSecondaryContainer = Color(0XFF191919),
+    secondary = Color.Red,
+    onSecondary = Color.Blue,
+    onSecondaryContainer = Color(0XFF379B9B),
     secondaryContainer = Color.Transparent,
 
 

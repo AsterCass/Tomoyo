@@ -1,4 +1,4 @@
-package ui.components
+package biz
 
 import data.MusicPlayerState
 

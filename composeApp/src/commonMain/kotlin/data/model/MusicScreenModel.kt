@@ -5,7 +5,7 @@ import data.MusicPlayerState
 import data.MusicSimpleModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ui.components.AudioPlayer
+import biz.AudioPlayer
 
 class MusicScreenModel : ScreenModel {
 
