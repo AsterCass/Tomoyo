@@ -219,32 +219,32 @@ fun MainBaseCardBox(
                     shape = RoundedCornerShape(roundSize)
                 )
                 .border(
-                    border = BorderStroke(realBorderSize, Color.Black),
+                    border = BorderStroke(borderSize, Color.Black),
                     shape = RoundedCornerShape(roundSize)
                 )
 
-        ) {}
-
-        Box(
-            modifier = Modifier
-                .padding(
-                    bottom = bottomBorderSize,
-                    start = borderSize,
-                    top = borderSize,
-                    end = borderSize
-                )
-                .fillMaxSize()
-                .background(
-                    color = MaterialTheme.colorScheme.background,
-                    shape = RoundedCornerShape(roundSize - borderSize)
-                )
-                .border(
-                    border = BorderStroke(realBorderSize, Color.Transparent),
-                    shape = RoundedCornerShape(roundSize)
-                )
         ) {
-            content()
+            Box(
+                modifier = Modifier
+                    .padding(
+                        bottom = bottomBorderSize,
+                    )
+                    .fillMaxSize()
+                    .background(
+                        color = MaterialTheme.colorScheme.background,
+                        shape = RoundedCornerShape(roundSize - borderSize)
+                    )
+                    .border(
+                        border = BorderStroke(realBorderSize, Color.Transparent),
+                        shape = RoundedCornerShape(roundSize)
+                    )
+            ) {
+                content()
+            }
+
+
         }
+
 
     }
 }
