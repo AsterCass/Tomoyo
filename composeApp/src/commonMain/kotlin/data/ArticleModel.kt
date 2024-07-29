@@ -9,6 +9,7 @@ data class ArticleSimpleModel(
     val id: String? = null,
     val authorId: String? = null,
     val authorName: String? = null,
+    val createTime: String? = null,
     val authorAvatar: String? = null,
     val articleTitle: String? = null,
     val articleTagList: List<Long>? = null,

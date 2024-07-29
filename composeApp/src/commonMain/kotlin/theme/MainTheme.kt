@@ -33,7 +33,11 @@ val LightColorScheme = lightColorScheme(
 
     surface = Color(0xFFF2F2F2),
     onSurface = Color(0XFF191919),
+
+    surfaceVariant = Color(0XFFe0e0e0),
     onSurfaceVariant = Color(0XFF191919),
+
+    surfaceContainer = Color.Transparent,
 
     primary = Color(0XFF379B9B),
     onPrimary = Color(0xFFE9E9E9),
