@@ -8,19 +8,24 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class ArticleScreenModel : ScreenModel {
 
-
-    private val _openBottomSheet = MutableStateFlow(false)
-    val openBottomSheet = _openBottomSheet.asStateFlow()
-    fun openBottomSheet(value: Boolean) {
-        _openBottomSheet.value = value
-    }
+    private val _articleDataKey = MutableStateFlow("")
+    private val _articleIsLoadAll = MutableStateFlow(false)
+    val articleIsLoadAll = _articleIsLoadAll.asStateFlow()
 
     private val _articleDataList = MutableStateFlow(emptyList<ArticleSimpleModel>())
     val articleDataList = _articleDataList.asStateFlow()
     suspend fun updateArticleList() {
-        _articleDataList.value += BaseApi().getArticleList(
+        val newData = BaseApi().getArticleList(
             offset = _articleDataList.value.size,
+            keyword = _articleDataKey.value
         )
+        _articleIsLoadAll.value = newData.isEmpty()
+        _articleDataList.value += newData
+    }
+
+    fun clearResetKeyword(keyword: String = "") {
+        _articleDataKey.value = keyword
+        _articleDataList.value = emptyList()
     }
 
 

@@ -7,7 +7,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.RobotoSlab_VariableFont_wght
 
@@ -99,7 +98,7 @@ fun MainTypography(): Typography {
         ),
         bodyLarge = MaterialTheme.typography.bodyLarge.copy(
             fontFamily = defaultFontFamily,
-            fontWeight = FontWeight.Bold,
+            //fontWeight = FontWeight.Bold,
         ),
         titleSmall = MaterialTheme.typography.titleSmall.copy(
             fontFamily = defaultFontFamily,

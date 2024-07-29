@@ -207,7 +207,6 @@ fun MainBaseCardBox(
     ) {
 
         val roundSize = 15.dp
-        val realBorderSize = 10.dp
         val borderSize = 2.dp
         val bottomBorderSize = 5.dp
 
@@ -234,8 +233,7 @@ fun MainBaseCardBox(
                         color = MaterialTheme.colorScheme.background,
                         shape = RoundedCornerShape(roundSize - borderSize)
                     )
-                    .border(
-                        border = BorderStroke(realBorderSize, Color.Transparent),
+                    .clip(
                         shape = RoundedCornerShape(roundSize)
                     )
             ) {
