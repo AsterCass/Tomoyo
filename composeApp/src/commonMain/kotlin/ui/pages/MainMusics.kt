@@ -114,12 +114,15 @@ fun MainMusicsScreen(
                     }
                 ) {
 
-                    MusicPlayItem(
-                        item = playList[0],
-                        isPlaying = isPlaying,
-                        onPause = screenModel.onPause,
-                        onPlay = screenModel.onPlay,
-                    )
+                    Box(modifier = Modifier.weight(0.8f).fillMaxSize()) {
+                        MusicPlayItem(
+                            item = playList[0],
+                            isPlaying = isPlaying,
+                            onPause = screenModel.onPause,
+                            onPlay = screenModel.onPlay,
+                        )
+                    }
+
 
                     Slider(
                         value = curPosition.toFloat(),
@@ -128,8 +131,12 @@ fun MainMusicsScreen(
                         enabled = false,
                         thumb = {},
                         modifier = Modifier
+                            .weight(0.2f)
                             .fillMaxWidth()
-                            .align(Alignment.CenterHorizontally).padding(5.dp)
+                            .align(Alignment.CenterHorizontally).padding(
+                                top = 2.dp, start = 5.dp, end = 5.dp, bottom = 10.dp
+                            )
+
                     )
 
 
@@ -214,9 +221,8 @@ fun MusicPlayItem(
 
     Row(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 0.dp)
     ) {
-
 
         Image(
             painter = painterResource(Res.drawable.nezuko),
