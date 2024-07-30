@@ -29,6 +29,8 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        maven("https://jogamp.org/deployment/maven")
+
 //        maven(url = "https://mirrors.cloud.tencent.com/gradle/")
 
 //        maven(url = "https://maven.aliyun.com/repository/public/")

@@ -50,6 +50,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(compose.material)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -115,6 +116,8 @@ kotlin {
 //            runtimeOnly(libs.kotlin.reflect)
 //            api(libs.koin.core)
 //            implementation(libs.koin.compose.multiplatform)
+
+            api("io.github.kevinnzou:compose-webview-multiplatform:1.9.20")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

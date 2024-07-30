@@ -3,11 +3,12 @@ package ui.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import constant.enums.MainNavigationEnum
 import org.jetbrains.compose.resources.stringResource
-import ui.pages.MainArticleScreen
+import ui.pages.MainArticlesScreen
 import ui.pages.MainChatScreen
 import ui.pages.MainHomeScreen
 import ui.pages.MainMusicsScreen
@@ -60,7 +61,7 @@ object ArticlesTab : Tab {
 
     @Composable
     override fun Content() {
-        MainArticleScreen()
+        Navigator(screen = MainArticlesScreen)
     }
 
 }

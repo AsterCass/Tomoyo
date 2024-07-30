@@ -45,6 +45,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import data.ArticleSimpleModel
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
@@ -54,13 +57,31 @@ import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
+import ui.components.ArticleScreen
 import ui.components.MainBaseCardBox
 
+
+object MainArticlesScreen : Screen {
+
+    private fun readResolve(): Any = MainArticlesScreen
+
+    @Composable
+    override fun Content() {
+        MainArticlesScreen()
+    }
+
+}
+
 @Composable
-fun MainArticleScreen(
+fun MainArticlesScreen(
     screenModel: ArticleScreenModel = koinInject(),
     mainModel: MainScreenModel = koinInject(),
 ) {
+    //navigation
+    mainModel.updateShowNavBar(true)
+    val navigator = LocalNavigator.currentOrThrow
+    val loadingScreen = mainModel.loadingScreen.collectAsState().value
+    if (loadingScreen) return
 
     //soft keyboard
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -145,7 +166,11 @@ fun MainArticleScreen(
         }
 
         items(articleDataList.size) { index ->
-            ArticleListItem(item = articleDataList[index])
+            ArticleListItem(item = articleDataList[index],
+                toDetail = {
+                    navigator.push(ArticleScreen(it, mainModel))
+                    mainModel.updateShowNavBar(false)
+                })
         }
 
         item {
@@ -171,7 +196,11 @@ fun MainArticleScreen(
 
 
 @Composable
-fun ArticleListItem(item: ArticleSimpleModel) {
+fun ArticleListItem(
+    item: ArticleSimpleModel,
+    toDetail: (String) -> Unit,
+) {
+
     MainBaseCardBox(
         modifier = Modifier
             .wrapContentHeight()
@@ -182,7 +211,7 @@ fun ArticleListItem(item: ArticleSimpleModel) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .clickable { println("显示文章详情") }
+                .clickable { toDetail(item.id ?: "") }
                 .padding(15.dp)
         ) {
             //保证子组件高度相同

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import biz.StatusBar
@@ -40,6 +41,8 @@ fun MainApp(
     mainModel: MainScreenModel = koinInject(),
 ) {
 
+    val showNavBar = mainModel.showNavBar.collectAsState().value
+
     KoinContext {
         MaterialTheme(
             colorScheme = LightColorScheme,
@@ -59,22 +62,22 @@ fun MainApp(
                             HomeTab, ArticlesTab, MusicsTab, VideosTab, ChatTab, SettingTab
                         )
                     )
-                }
+                },
             ) { _ ->
 
                 Scaffold(
                     topBar = {
                         AnimatedVisibility(
-                            visible = true,
-                            enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
+                            visible = showNavBar,
+                            enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
                                     slideInVertically(
                                         initialOffsetY = { -it },
-                                        animationSpec = tween(durationMillis = 750)
+                                        animationSpec = tween(durationMillis = 500)
                                     ),
-                            exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
+                            exit = fadeOut(animationSpec = tween(durationMillis = 500)) +
                                     slideOutVertically(
                                         targetOffsetY = { -it },
-                                        animationSpec = tween(durationMillis = 750)
+                                        animationSpec = tween(durationMillis = 500)
                                     ),
                         ) {
                             MainAppBar()
@@ -83,16 +86,16 @@ fun MainApp(
                     },
                     bottomBar = {
                         AnimatedVisibility(
-                            visible = true,
-                            enter = fadeIn(animationSpec = tween(durationMillis = 750)) +
+                            visible = showNavBar,
+                            enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
                                     slideInVertically(
                                         initialOffsetY = { it },
-                                        animationSpec = tween(durationMillis = 750)
+                                        animationSpec = tween(durationMillis = 500)
                                     ),
-                            exit = fadeOut(animationSpec = tween(durationMillis = 750)) +
+                            exit = fadeOut(animationSpec = tween(durationMillis = 500)) +
                                     slideOutVertically(
                                         targetOffsetY = { it },
-                                        animationSpec = tween(durationMillis = 750)
+                                        animationSpec = tween(durationMillis = 500)
                                     ),
                         ) {
                             MainAppNavigationBar(

@@ -4,10 +4,12 @@ import androidx.compose.ui.unit.Constraints
 import api.BaseApi
 import api.baseJsonConf
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
 import data.UserState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +21,25 @@ import org.hildan.krossbow.websocket.sockjs.SockJSClient
 
 
 class MainScreenModel : ScreenModel {
+
+    //coroutine
+    private val _commonCoroutine = screenModelScope
+
+    //navigation
+    private val _loadingScreen = MutableStateFlow(false)
+    val loadingScreen = _loadingScreen.asStateFlow()
+    private val _showNavBar = MutableStateFlow(true)
+    val showNavBar = _showNavBar.asStateFlow()
+    fun updateShowNavBar(value: Boolean) {
+        if (value != _showNavBar.value) {
+            _showNavBar.value = value
+            _loadingScreen.value = true
+            _commonCoroutine.launch {
+                delay(500)
+                _loadingScreen.value = false
+            }
+        }
+    }
 
     //screen
     private val _mainPageContainerConstraints = MutableStateFlow(Constraints())
