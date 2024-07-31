@@ -87,7 +87,7 @@ object MusicsTab : Tab {
 
     @Composable
     override fun Content() {
-        MainMusicsScreen()
+        Navigator(screen = MainMusicsScreen)
     }
 
 }

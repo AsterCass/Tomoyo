@@ -10,9 +10,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -91,9 +91,12 @@ class BaseApi {
         return if (body.data.isNullOrEmpty()) emptyList() else body.data!!
     }
 
-    suspend fun getArticleDetail(id: String): String {
-        val response = client.get(getUrl("/kotomi/article/$id/content"))
-        return response.bodyAsText()
+    suspend fun getArticleDetail(id: String, token: String): String {
+        val response = client.get(getUrl("/kotomi/article/$id/content/auth")) {
+            header("User-Token", token)
+        }
+        val body = response.body<ResultObj<String?>>()
+        return if (body.data.isNullOrEmpty()) "" else body.data!!
     }
 
 

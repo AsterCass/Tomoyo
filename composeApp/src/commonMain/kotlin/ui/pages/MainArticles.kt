@@ -57,7 +57,7 @@ import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
-import ui.components.ArticleScreen
+import ui.components.ArticleDetailScreen
 import ui.components.MainBaseCardBox
 
 
@@ -168,7 +168,7 @@ fun MainArticlesScreen(
         items(articleDataList.size) { index ->
             ArticleListItem(item = articleDataList[index],
                 toDetail = {
-                    navigator.push(ArticleScreen(it, mainModel))
+                    navigator.push(ArticleDetailScreen(it))
                     mainModel.updateShowNavBar(false)
                 })
         }
@@ -198,7 +198,7 @@ fun MainArticlesScreen(
 @Composable
 fun ArticleListItem(
     item: ArticleSimpleModel,
-    toDetail: (String) -> Unit,
+    toDetail: (ArticleSimpleModel) -> Unit,
 ) {
 
     MainBaseCardBox(
@@ -211,7 +211,7 @@ fun ArticleListItem(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .clickable { toDetail(item.id ?: "") }
+                .clickable { toDetail(item) }
                 .padding(15.dp)
         ) {
             //保证子组件高度相同

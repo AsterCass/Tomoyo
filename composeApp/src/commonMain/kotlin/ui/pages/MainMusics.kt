@@ -36,6 +36,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import data.MusicSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
@@ -45,6 +48,19 @@ import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
 import ui.components.MainBaseCardBox
+import ui.components.MusicsPlayerScreen
+
+
+object MainMusicsScreen : Screen {
+
+    private fun readResolve(): Any = MainMusicsScreen
+
+    @Composable
+    override fun Content() {
+        MainMusicsScreen()
+    }
+
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,6 +69,9 @@ fun MainMusicsScreen(
     screenModel: MusicScreenModel = koinInject(),
     mainModel: MainScreenModel = koinInject(),
 ) {
+    //navigation
+    val navigator = LocalNavigator.currentOrThrow
+
     //data
     val playList = screenModel.musicPlayList.collectAsState().value
     val currentTime = screenModel.playerState.collectAsState().value.currentTime
@@ -110,7 +129,7 @@ fun MainMusicsScreen(
 
                 Column(
                     modifier = Modifier.clickable {
-                        println("进入详情页")
+                        navigator.push(MusicsPlayerScreen())
                     }
                 ) {
 

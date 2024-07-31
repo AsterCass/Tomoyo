@@ -1,3 +1,4 @@
+import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -12,6 +13,16 @@ plugins {
 
     kotlin("plugin.serialization") version "2.0.0"
 }
+
+val os: OperatingSystem = OperatingSystem.current()
+
+val platform = when {
+    os.isWindows -> "win"
+    os.isMacOsX -> "mac"
+    else -> "linux"
+}
+
+val jdkVersion = "17"
 
 kotlin {
 
@@ -81,55 +92,46 @@ kotlin {
             api(libs.koin.core)
             api(libs.koin.compose)
 
-
-            //https://github.com/mahozad/wavy-slider
-            //implementation("ir.mahozad.multiplatform:wavy-slider:2.0.0-alpha")
-
-
-//            implementation("org.hildan.krossbow:krossbow-stomp-core:5.12.0")
-//            implementation("org.hildan.krossbow:krossbow-websocket-sockjs:5.12.0")
-//            runtimeOnly("org.glassfish.tyrus.bundles:tyrus-standalone-client:2.0.7")
-//            runtimeOnly("com.fasterxml.jackson.core:jackson-databind:2.15.4")
-
-
+            //https://github.com/joffrey-bion/krossbow
             implementation("org.hildan.krossbow:krossbow-stomp-core:4.5.0")
             implementation("org.hildan.krossbow:krossbow-websocket-sockjs:4.5.0")
             implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.19")
             implementation("com.fasterxml.jackson.core:jackson-databind:2.13.5")
 
-
+            //https://developer.android.com/codelabs/basic-android-kotlin-compose-load-images
+            //https://coil-kt.github.io/coil/upgrading_to_coil3/#multiplatform
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
 
             //https://github.com/DevSrSouza/compose-icons
             implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
 
+            //https://github.com/MohamedRejeb/Compose-Rich-Editor/blob/main/docs/getting_started.md
+            //https://github.com/MohamedRejeb/Compose-Rich-Editor/issues/306
+            //还有很多东西不支持，先不做吧
+            //implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc05-k2")
 
+            //https://github.com/KevinnZou/compose-webview-multiplatform
+            //高版本的桌面版需要下载，低版本的比如1.2使用javafx实现，但是桌面端会报错，原因没找到，
+            //而且我也不是很想用嵌入html的方式来展示markdown文档
+            //implementation("io.github.KevinnZou:compose-webview:0.33.3")
 
-//            implementation("media.kamel:kamel-image:0.9.5")
+            //https://github.com/mahozad/wavy-slider
+            //桌面端报错
+            //implementation("ir.mahozad.multiplatform:wavy-slider:2.0.0-alpha")
 
-
-//            runtimeOnly("org.springframework.boot:spring-boot-starter-websocket:3.2.6")
-//            implementation("org.apache.tomcat.embed:tomcat-embed-websocket:10.1.26")
-
-
-//            implementation(libs.fastjson2)
-//            runtimeOnly(libs.kotlin.reflect)
-//            api(libs.koin.core)
-//            implementation(libs.koin.compose.multiplatform)
-
-            api("io.github.kevinnzou:compose-webview-multiplatform:1.9.20")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.swing)
 
-            val fxSuffix = "win"
-            implementation("org.openjfx:javafx-media:21.0.3:$fxSuffix")
-            implementation("org.openjfx:javafx-base:21.0.3:$fxSuffix")
-            implementation("org.openjfx:javafx-swing:21.0.3:$fxSuffix")
-            implementation("org.openjfx:javafx-graphics:21.0.3:$fxSuffix")
-//            implementation("org.openjfx:javafx-controls:21.0.3:$fxSuffix")
-//            implementation("org.openjfx:javafx-fxml:22.0.1:$fxSuffix")
+            implementation("org.openjfx:javafx-base:$jdkVersion:${platform}")
+            implementation("org.openjfx:javafx-graphics:$jdkVersion:${platform}")
+            implementation("org.openjfx:javafx-media:$jdkVersion:${platform}")
+            implementation("org.openjfx:javafx-swing:$jdkVersion:${platform}")
+            //implementation("org.openjfx:javafx-web:$jdkVersion:${platform}")
+            //implementation("org.openjfx:javafx-controls:innerJdkVersion:${platform}")
+            //implementation("org.openjfx:javafx-fxml:innerJdkVersion:${platform}")
         }
     }
 }
@@ -193,7 +195,7 @@ compose.desktop {
             includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.1.6"
+            packageVersion = "1.1.9"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."
