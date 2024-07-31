@@ -168,7 +168,8 @@ fun MainArticlesScreen(
         items(articleDataList.size) { index ->
             ArticleListItem(item = articleDataList[index],
                 toDetail = {
-                    navigator.push(ArticleDetailScreen(it))
+                    screenModel.updateReadingMeta(it)
+                    navigator.push(ArticleDetailScreen())
                     mainModel.updateShowNavBar(false)
                 })
         }

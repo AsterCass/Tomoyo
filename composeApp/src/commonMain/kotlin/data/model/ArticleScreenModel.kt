@@ -30,8 +30,13 @@ class ArticleScreenModel : ScreenModel {
     }
 
     private val _readingArticleId = MutableStateFlow("")
+    private val _readingArticleMeta = MutableStateFlow(ArticleSimpleModel())
+    val readingArticleMeta = _readingArticleMeta.asStateFlow()
     private val _readingArticleData = MutableStateFlow("")
     val readingArticleData = _readingArticleData.asStateFlow()
+    fun updateReadingMeta(data: ArticleSimpleModel) {
+        _readingArticleMeta.value = data
+    }
     suspend fun updateReadingArticleData(articleId: String, token: String) {
         if (_readingArticleId.value == articleId) {
             return

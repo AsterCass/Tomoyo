@@ -43,7 +43,6 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import data.ArticleSimpleModel
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
@@ -54,9 +53,7 @@ import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
 
 
-data class ArticleDetailScreen(
-    val articleData: ArticleSimpleModel,
-) : Screen {
+class ArticleDetailScreen : Screen {
 
     override val key: ScreenKey = uniqueScreenKey
 
@@ -74,6 +71,9 @@ data class ArticleDetailScreen(
 
         //coroutine
         val articleApiCoroutine = rememberCoroutineScope()
+
+        //data
+        val articleData = articleScreenModel.readingArticleMeta.value
 
         articleApiCoroutine.launch {
             articleScreenModel.updateReadingArticleData(articleData.id ?: "", token)
