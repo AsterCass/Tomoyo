@@ -87,7 +87,6 @@ actual class AudioPlayer actual constructor(
     }
 
     override fun run() {
-        println("do something")
         musicPlayerState.currentTime = (mediaPlayer.currentPosition / 1000).toDouble()
         handler.postDelayed(this, 1000)
     }

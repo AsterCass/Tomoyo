@@ -70,6 +70,7 @@ fun MainMusicsScreen(
     mainModel: MainScreenModel = koinInject(),
 ) {
     //navigation
+    mainModel.updateShowNavBar(true)
     val navigator = LocalNavigator.currentOrThrow
 
     //data
@@ -102,7 +103,7 @@ fun MainMusicsScreen(
                 items(playList.size) { index ->
                     MusicListItem(
                         item = playList[index],
-                        onStart = screenModel.onStart
+                        onStart = { screenModel.onStart(index, it) }
                     )
                 }
 
@@ -130,6 +131,7 @@ fun MainMusicsScreen(
                 Column(
                     modifier = Modifier.clickable {
                         navigator.push(MusicsPlayerScreen())
+                        mainModel.updateShowNavBar(false)
                     }
                 ) {
 
@@ -137,8 +139,8 @@ fun MainMusicsScreen(
                         MusicPlayItem(
                             item = playList[0],
                             isPlaying = isPlaying,
-                            onPause = screenModel.onPause,
-                            onPlay = screenModel.onPlay,
+                            onPause = { screenModel.onPause() },
+                            onPlay = { screenModel.onPlay() },
                         )
                     }
 

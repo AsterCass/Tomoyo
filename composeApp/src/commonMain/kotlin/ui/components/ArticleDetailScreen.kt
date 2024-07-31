@@ -94,7 +94,6 @@ class ArticleDetailScreen : Screen {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Button(
-//                        modifier = Modifier.weight(),
                         shape = RoundedCornerShape(15.dp),
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant,
