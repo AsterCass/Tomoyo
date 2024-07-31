@@ -43,6 +43,7 @@ class MusicScreenModel : ScreenModel {
     fun onStart(index: Int, url: String) {
         _playingIndex.value = index
         _player.value.start(url)
+        updateNextAndPrev(index)
     }
 
     fun onPlay() {
@@ -57,11 +58,13 @@ class MusicScreenModel : ScreenModel {
         _player.value.seekTo(time)
     }
 
-    fun onNext() {
-        if (_musicPlayList.value.isNotEmpty()) {
-            val newIndex = _playingIndex.value.plus(1).rem(_musicPlayList.value.size)
-            onStart(newIndex, _musicPlayList.value[newIndex].musicUrl ?: "")
-        }
+
+    private fun updateNextAndPrev(index: Int) {
+        //todo when
+        val nextIndex = index.plus(1).rem(_musicPlayList.value.size)
+
+        _playerState.value.nextIndex = Pair(nextIndex, _musicPlayList.value[nextIndex].musicUrl ?: "")
+        _playerState.value.preIndex = Pair(index, _musicPlayList.value[index].musicUrl ?: "")
     }
 
 

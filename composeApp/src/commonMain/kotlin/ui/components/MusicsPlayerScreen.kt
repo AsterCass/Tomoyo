@@ -52,11 +52,6 @@ class MusicsPlayerScreen : Screen {
         val totalDuration = musicScreenModel.playerState.collectAsState().value.totalDuration
         var curPosition = musicScreenModel.playerState.collectAsState().value.currentTime
 
-        //next
-        if (curPosition >= totalDuration) {
-            musicScreenModel.onNext()
-        }
-
 
         AnimatedVisibility(
             visible = !loadingScreen,

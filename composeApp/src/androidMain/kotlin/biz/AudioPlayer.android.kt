@@ -28,6 +28,9 @@ actual class AudioPlayer actual constructor(
                 }
 
                 Player.STATE_ENDED -> {
+                    if (musicPlayerState.nextIndex.first >= 0) {
+                        mediaPlayer.setMediaItem(MediaItem.fromUri(musicPlayerState.nextIndex.second))
+                    }
                 }
 
                 Player.STATE_READY -> {

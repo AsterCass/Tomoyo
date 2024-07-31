@@ -24,6 +24,9 @@ class MusicPlayerState {
     var currentTime by mutableStateOf(0.0)
     var totalDuration by mutableStateOf(0.0)
 
+    var nextIndex = Pair(-1, "")
+    var preIndex = Pair(-1, "")
+
     fun toBack() {
         isPlaying = false
         isBuffering = false
