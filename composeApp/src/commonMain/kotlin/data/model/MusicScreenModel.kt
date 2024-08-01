@@ -12,10 +12,12 @@ class MusicScreenModel : ScreenModel {
     private val _playerState = MutableStateFlow(MusicPlayerState())
     val playerState = _playerState.asStateFlow()
 
+    private val _playingListId = MutableStateFlow("")
     private val _playingIndex = MutableStateFlow(0)
     private val _player = MutableStateFlow(AudioPlayer(_playerState.value))
-    private val _musicPlayList = MutableStateFlow(
-        listOf<MusicSimpleModel>(
+    private val _musicPlayList = MutableStateFlow<List<MusicSimpleModel>>(
+//        emptyList()
+        listOf(
             MusicSimpleModel(
                 id = "1",
                 musicName = "歌曲1",
@@ -40,10 +42,18 @@ class MusicScreenModel : ScreenModel {
 
     val musicPlayList = _musicPlayList.asStateFlow()
 
-    fun onStart(index: Int, url: String) {
+    fun onStart(
+        index: Int, playListId: String,
+        playList: List<MusicSimpleModel> = emptyList()
+    ) {
+        if (playListId != _playingListId.value && playList.isNotEmpty()) {
+            _player.value.clearSongs()
+            _player.value.addSongList(playList.map { it.musicUrl ?: "" })
+            _playingListId.value = playListId
+            _musicPlayList.value = playList
+        }
         _playingIndex.value = index
-        _player.value.start(url)
-        updateNextAndPrev(index)
+        _player.value.start(index)
     }
 
     fun onPlay() {
@@ -58,14 +68,6 @@ class MusicScreenModel : ScreenModel {
         _player.value.seekTo(time)
     }
 
-
-    private fun updateNextAndPrev(index: Int) {
-        //todo when
-        val nextIndex = index.plus(1).rem(_musicPlayList.value.size)
-
-        _playerState.value.nextIndex = Pair(nextIndex, _musicPlayList.value[nextIndex].musicUrl ?: "")
-        _playerState.value.preIndex = Pair(index, _musicPlayList.value[index].musicUrl ?: "")
-    }
 
 
 }

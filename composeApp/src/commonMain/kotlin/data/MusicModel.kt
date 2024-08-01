@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import constant.enums.MusicPlayModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,8 +25,8 @@ class MusicPlayerState {
     var currentTime by mutableStateOf(0.0)
     var totalDuration by mutableStateOf(0.0)
 
-    var nextIndex = Pair(-1, "")
-    var preIndex = Pair(-1, "")
+    var currentIndex: Int = -1
+    var playModel: MusicPlayModel = MusicPlayModel.ORDER
 
     fun toBack() {
         isPlaying = false

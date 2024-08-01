@@ -12,12 +12,12 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
 
     private var mediaPlayer: MediaPlayer? = null
 
-    actual fun start(url: String) {
+    actual fun start(index: Int) {
         //close
         musicPlayerState.toBack()
         mediaPlayer?.stop()
         //start
-        val thisUrl = URL(url)
+        val thisUrl = URL("todo")
         media = Media(thisUrl.toString())
         mediaPlayer = MediaPlayer(media)
         mediaPlayer?.statusProperty()?.addListener { _, oldStatus, newStatus ->
@@ -68,15 +68,15 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
 
     }
 
-    actual fun play(songIndex: Int) {
-    }
-
     actual fun seekTo(time: Double) {
         musicPlayerState.currentTime = time
         mediaPlayer?.seek(Duration.seconds(time))
     }
 
-    actual fun addSongsUrls(songsUrl: List<String>) {
+    actual fun addSongList(songsUrl: List<String>) {
+    }
+
+    actual fun clearSongs() {
     }
 
     actual fun cleanUp() {

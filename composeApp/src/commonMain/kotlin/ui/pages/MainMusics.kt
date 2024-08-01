@@ -103,7 +103,31 @@ fun MainMusicsScreen(
                 items(playList.size) { index ->
                     MusicListItem(
                         item = playList[index],
-                        onStart = { screenModel.onStart(index, it) }
+                        onStart = {
+                            screenModel.onStart(
+                                index, "1",
+                                listOf(
+                                    MusicSimpleModel(
+                                        id = "1",
+                                        musicName = "歌曲1",
+                                        musicAuthor = "张三1",
+                                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.m4a",
+                                    ),
+                                    MusicSimpleModel(
+                                        id = "2",
+                                        musicName = "歌曲2",
+                                        musicAuthor = "张三2",
+                                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/2.m4a",
+                                    ),
+                                    MusicSimpleModel(
+                                        id = "3",
+                                        musicName = "歌曲3",
+                                        musicAuthor = "张三3",
+                                        musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
+                                    ),
+                                )
+                            )
+                        }
                     )
                 }
 
@@ -117,54 +141,58 @@ fun MainMusicsScreen(
             }
         }
 
-        Box(
-            modifier = Modifier.align(Alignment.BottomCenter)
-                .padding(15.dp)
-                .height(110.dp)
-                .width(minWidthDp - 50.dp)
-        ) {
-            MainBaseCardBox(
-                modifier = Modifier.fillMaxSize()
-                    .padding(5.dp)
+        if (playList.isNotEmpty()) {
+            Box(
+                modifier = Modifier.align(Alignment.BottomCenter)
+                    .padding(15.dp)
+                    .height(110.dp)
+                    .width(minWidthDp - 50.dp)
             ) {
-
-                Column(
-                    modifier = Modifier.clickable {
-                        navigator.push(MusicsPlayerScreen())
-                        mainModel.updateShowNavBar(false)
-                    }
+                MainBaseCardBox(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(5.dp)
                 ) {
 
-                    Box(modifier = Modifier.weight(0.8f).fillMaxSize()) {
-                        MusicPlayItem(
-                            item = playList[0],
-                            isPlaying = isPlaying,
-                            onPause = { screenModel.onPause() },
-                            onPlay = { screenModel.onPlay() },
+                    Column(
+                        modifier = Modifier.clickable {
+                            navigator.push(MusicsPlayerScreen())
+                            mainModel.updateShowNavBar(false)
+                        }
+                    ) {
+
+                        Box(modifier = Modifier.weight(0.8f).fillMaxSize()) {
+                            MusicPlayItem(
+                                item = playList[0],
+                                isPlaying = isPlaying,
+                                onPause = { screenModel.onPause() },
+                                onPlay = { screenModel.onPlay() },
+                            )
+                        }
+
+
+                        Slider(
+                            value = curPosition.toFloat(),
+                            onValueChange = { curPosition = it.toDouble() },
+                            valueRange = 0f..totalDuration.toFloat(),
+                            enabled = false,
+                            thumb = {},
+                            modifier = Modifier
+                                .weight(0.2f)
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally).padding(
+                                    top = 2.dp, start = 5.dp, end = 5.dp, bottom = 10.dp
+                                )
+
                         )
+
+
                     }
 
-
-                    Slider(
-                        value = curPosition.toFloat(),
-                        onValueChange = { curPosition = it.toDouble() },
-                        valueRange = 0f..totalDuration.toFloat(),
-                        enabled = false,
-                        thumb = {},
-                        modifier = Modifier
-                            .weight(0.2f)
-                            .fillMaxWidth()
-                            .align(Alignment.CenterHorizontally).padding(
-                                top = 2.dp, start = 5.dp, end = 5.dp, bottom = 10.dp
-                            )
-
-                    )
-
-
                 }
-
             }
         }
+
+
     }
 
 }

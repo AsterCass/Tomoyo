@@ -6,6 +6,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.aster.yuno.tomoyo.MainActivity
+import constant.enums.MusicPlayModel
 import data.MusicPlayerState
 
 actual class AudioPlayer actual constructor(
@@ -15,6 +16,10 @@ actual class AudioPlayer actual constructor(
     private val handler = Handler(Looper.getMainLooper())
 
     private val mediaPlayer = ExoPlayer.Builder(MainActivity.mainContext!!).build()
+
+    private val mediaItems = mutableListOf<MediaItem>()
+
+    private var currentItemIndex = -1
 
     private val listener = object : Player.Listener {
 
@@ -28,8 +33,8 @@ actual class AudioPlayer actual constructor(
                 }
 
                 Player.STATE_ENDED -> {
-                    if (musicPlayerState.nextIndex.first >= 0) {
-                        mediaPlayer.setMediaItem(MediaItem.fromUri(musicPlayerState.nextIndex.second))
+                    if (musicPlayerState.isPlaying) {
+                        next()
                     }
                 }
 
@@ -52,11 +57,10 @@ actual class AudioPlayer actual constructor(
         mediaPlayer.prepare()
     }
 
-
-
-    actual fun start(url: String) {
-        mediaPlayer.setMediaItem(MediaItem.fromUri(url))
-        play()
+    actual fun start(index: Int) {
+        if (index >= mediaItems.size) return
+        currentItemIndex = index
+        playWithIndex(index)
     }
 
     actual fun play() {
@@ -70,28 +74,45 @@ actual class AudioPlayer actual constructor(
     }
 
     actual fun next() {
+        when (musicPlayerState.playModel) {
+            MusicPlayModel.ORDER -> {
+                currentItemIndex = currentItemIndex.plus(1).rem(mediaItems.size)
+            }
+
+            else -> {}
+        }
+        playWithIndex(currentItemIndex)
     }
 
     actual fun prev() {
-    }
 
-    actual fun play(songIndex: Int) {
     }
 
     actual fun seekTo(time: Double) {
         musicPlayerState.currentTime = time
-        mediaPlayer.seekTo((time * 1000).toLong())
+        if (musicPlayerState.totalDuration - musicPlayerState.currentTime < 1) {
+            next()
+        } else {
+            mediaPlayer.seekTo((time * 1000).toLong())
+        }
     }
 
-    actual fun addSongsUrls(songsUrl: List<String>) {
+    actual fun addSongList(songsUrl: List<String>) {
+        mediaItems += songsUrl.map { MediaItem.fromUri(it) }
     }
 
     actual fun cleanUp() {
+        mediaPlayer.release()
+        mediaPlayer.removeListener(listener)
+    }
+
+    actual fun clearSongs() {
+        mediaItems.clear()
     }
 
     override fun run() {
         musicPlayerState.currentTime = (mediaPlayer.currentPosition / 1000).toDouble()
-        handler.postDelayed(this, 1000)
+        handler.postDelayed(this, 500)
     }
 
     private fun stopUpdate() {
@@ -101,6 +122,15 @@ actual class AudioPlayer actual constructor(
     private fun scheduleUpdate() {
         stopUpdate()
         handler.postDelayed(this, 100)
+    }
+
+    private fun playWithIndex(index: Int) {
+        musicPlayerState.currentIndex = index
+        if (index >= 0) {
+            val playItem = mediaItems[index]
+            mediaPlayer.setMediaItem(playItem)
+            mediaPlayer.play()
+        }
     }
 
 }
