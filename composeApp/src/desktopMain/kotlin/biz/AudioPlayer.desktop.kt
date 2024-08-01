@@ -1,5 +1,6 @@
 package biz
 
+import constant.enums.MusicPlayModel
 import data.MusicPlayerState
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
@@ -12,33 +13,15 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
 
     private var mediaPlayer: MediaPlayer? = null
 
+    private var currentItemIndex = -1
+
+    private val mediaItems = mutableListOf<String>()
+
     actual fun start(index: Int) {
-        //close
-        musicPlayerState.toBack()
-        mediaPlayer?.stop()
-        //start
-        val thisUrl = URL("todo")
-        media = Media(thisUrl.toString())
-        mediaPlayer = MediaPlayer(media)
-        mediaPlayer?.statusProperty()?.addListener { _, oldStatus, newStatus ->
-            if (newStatus === MediaPlayer.Status.READY) {
-                musicPlayerState.totalDuration = mediaPlayer?.totalDuration?.toSeconds() ?: 0.0
-                play()
-            }
-            if (newStatus === MediaPlayer.Status.STALLED) {
-                musicPlayerState.isBuffering = true
-            }
-            if (oldStatus === MediaPlayer.Status.STALLED
-                && newStatus !== MediaPlayer.Status.STALLED
-            ) {
-                musicPlayerState.isBuffering = false
-            }
-        }
-        mediaPlayer?.currentTimeProperty()?.addListener { _, _, newTime ->
-            if (newTime.toSeconds() > musicPlayerState.currentTime + 1) {
-                musicPlayerState.currentTime = newTime.toSeconds()
-            }
-        }
+        //check
+        if (index >= mediaItems.size || index < 0) return
+        currentItemIndex = index
+        playWithIndex(index)
     }
 
     actual fun play() {
@@ -62,6 +45,14 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
     }
 
     actual fun next() {
+        when (musicPlayerState.playModel) {
+            MusicPlayModel.ORDER -> {
+                currentItemIndex = currentItemIndex.plus(1).rem(mediaItems.size)
+            }
+
+            else -> {}
+        }
+        playWithIndex(currentItemIndex)
     }
 
     actual fun prev() {
@@ -74,12 +65,53 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
     }
 
     actual fun addSongList(songsUrl: List<String>) {
+        mediaItems += songsUrl
     }
 
     actual fun clearSongs() {
+        mediaItems.clear()
     }
 
     actual fun cleanUp() {
+        musicPlayerState.toBack()
+        mediaPlayer?.stop()
+    }
+
+    private fun playWithIndex(index: Int) {
+        musicPlayerState.currentIndex = index
+        if (index >= mediaItems.size || index < 0) return
+        val playItem = mediaItems[index]
+        //close
+        musicPlayerState.toBack()
+        mediaPlayer?.stop()
+        //start
+        val thisUrl = URL(playItem)
+        media = Media(thisUrl.toString())
+        mediaPlayer = MediaPlayer(media)
+        mediaPlayer?.statusProperty()?.addListener { _, oldStatus, newStatus ->
+            if (newStatus === MediaPlayer.Status.READY) {
+                musicPlayerState.totalDuration = mediaPlayer?.totalDuration?.toSeconds() ?: 0.0
+                play()
+            }
+            if (newStatus === MediaPlayer.Status.STALLED) {
+                musicPlayerState.isBuffering = true
+            }
+            if (oldStatus === MediaPlayer.Status.STALLED
+                && newStatus !== MediaPlayer.Status.STALLED
+            ) {
+                musicPlayerState.isBuffering = false
+            }
+        }
+
+        mediaPlayer?.currentTimeProperty()?.addListener { _, _, newTime ->
+            if (newTime.toSeconds() > musicPlayerState.currentTime + 1) {
+                musicPlayerState.currentTime = newTime.toSeconds()
+            }
+        }
+
+        mediaPlayer?.onEndOfMedia = Runnable {
+            next()
+        }
     }
 
 

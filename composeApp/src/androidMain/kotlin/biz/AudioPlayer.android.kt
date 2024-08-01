@@ -9,6 +9,54 @@ import com.aster.yuno.tomoyo.MainActivity
 import constant.enums.MusicPlayModel
 import data.MusicPlayerState
 
+
+//class MediaPlaybackService : Service() {
+//
+//    private lateinit var exoPlayer: ExoPlayer
+//
+//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//        // Setup ExoPlayer
+//        exoPlayer = ExoPlayer.Builder(this).build()
+//        exoPlayer.setAudioAttributes(
+//            AudioAttributes.Builder()
+//                .setContentType(C.CONTENT_TYPE_MUSIC)
+//                .setUsage(C.USAGE_MEDIA)
+//                .build(),
+//            true
+//        )
+//
+//        // Create and show a notification
+//        val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+//            .setContentTitle("Playing media")
+//            .setContentText("Media is playing in the background")
+//            .setSmallIcon(R.drawable.ic_notification)
+//            .build()
+//
+//        startForeground(NOTIFICATION_ID, notification)
+//
+//        // Start playing media
+//        exoPlayer.setMediaItem(/* Your media item here */)
+//        exoPlayer.prepare()
+//        exoPlayer.play()
+//
+//        return START_STICKY
+//    }
+//
+//    override fun onDestroy() {
+//        exoPlayer.release()
+//        super.onDestroy()
+//    }
+//
+//    override fun onBind(intent: Intent?): IBinder? {
+//        return null
+//    }
+//
+//    companion object {
+//        const val CHANNEL_ID = "MediaPlaybackChannel"
+//        const val NOTIFICATION_ID = 1
+//    }
+//}
+
 actual class AudioPlayer actual constructor(
     private val musicPlayerState: MusicPlayerState,
 ) : Runnable {
@@ -33,12 +81,15 @@ actual class AudioPlayer actual constructor(
                 }
 
                 Player.STATE_ENDED -> {
+                    println("============================= play end $currentItemIndex")
                     if (musicPlayerState.isPlaying) {
                         next()
                     }
                 }
 
                 Player.STATE_READY -> {
+                    println("============================= play read $currentItemIndex")
+
                     musicPlayerState.isBuffering = false
                     musicPlayerState.totalDuration = (mediaPlayer.duration / 1000).toDouble()
                 }
@@ -58,7 +109,10 @@ actual class AudioPlayer actual constructor(
     }
 
     actual fun start(index: Int) {
-        if (index >= mediaItems.size) return
+
+        println("============================= start $index")
+
+        if (index >= mediaItems.size || index < 0) return
         currentItemIndex = index
         playWithIndex(index)
     }
@@ -74,6 +128,9 @@ actual class AudioPlayer actual constructor(
     }
 
     actual fun next() {
+
+        println("============================= next")
+
         when (musicPlayerState.playModel) {
             MusicPlayModel.ORDER -> {
                 currentItemIndex = currentItemIndex.plus(1).rem(mediaItems.size)
@@ -125,11 +182,17 @@ actual class AudioPlayer actual constructor(
     }
 
     private fun playWithIndex(index: Int) {
+
+        println("============================= playWithIndex $index ${mediaItems.size}")
+
         musicPlayerState.currentIndex = index
-        if (index >= 0) {
+        if (index >= 0 && mediaItems.size > index) {
+            println("============================= for $index")
             val playItem = mediaItems[index]
             mediaPlayer.setMediaItem(playItem)
+            println("============================= to play $playItem")
             mediaPlayer.play()
+            println("============================= to play $index")
         }
     }
 
