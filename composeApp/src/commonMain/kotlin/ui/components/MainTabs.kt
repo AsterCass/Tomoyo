@@ -24,10 +24,11 @@ object HomeTab : Tab {
         get() {
             val title = stringResource(MainNavigationEnum.HOME.title)
             val icon = rememberVectorPainter(MainNavigationEnum.HOME.icon)
+            val index = MainNavigationEnum.HOME.ordinal.toUShort()
 
             return remember {
                 TabOptions(
-                    index = 0u,
+                    index = index,
                     title = title,
                     icon = icon,
                 )
@@ -49,10 +50,11 @@ object ArticlesTab : Tab {
         get() {
             val title = stringResource(MainNavigationEnum.ARTICLES.title)
             val icon = rememberVectorPainter(MainNavigationEnum.ARTICLES.icon)
+            val index = MainNavigationEnum.ARTICLES.ordinal.toUShort()
 
             return remember {
                 TabOptions(
-                    index = 0u,
+                    index = index,
                     title = title,
                     icon = icon,
                 )
@@ -75,10 +77,11 @@ object MusicsTab : Tab {
         get() {
             val title = stringResource(MainNavigationEnum.MUSICS.title)
             val icon = rememberVectorPainter(MainNavigationEnum.MUSICS.icon)
+            val index = MainNavigationEnum.MUSICS.ordinal.toUShort()
 
             return remember {
                 TabOptions(
-                    index = 0u,
+                    index = index,
                     title = title,
                     icon = icon,
                 )
@@ -100,10 +103,11 @@ object VideosTab : Tab {
         get() {
             val title = stringResource(MainNavigationEnum.VIDEOS.title)
             val icon = rememberVectorPainter(MainNavigationEnum.VIDEOS.icon)
+            val index = MainNavigationEnum.VIDEOS.ordinal.toUShort()
 
             return remember {
                 TabOptions(
-                    index = 0u,
+                    index = index,
                     title = title,
                     icon = icon,
                 )
@@ -125,10 +129,11 @@ object ChatTab : Tab {
         get() {
             val title = stringResource(MainNavigationEnum.CHAT.title)
             val icon = rememberVectorPainter(MainNavigationEnum.CHAT.icon)
+            val index = MainNavigationEnum.CHAT.ordinal.toUShort()
 
             return remember {
                 TabOptions(
-                    index = 0u,
+                    index = index,
                     title = title,
                     icon = icon,
                 )
@@ -151,10 +156,11 @@ object SettingTab : Tab {
         get() {
             val title = stringResource(MainNavigationEnum.SETTING.title)
             val icon = rememberVectorPainter(MainNavigationEnum.SETTING.icon)
+            val index = MainNavigationEnum.SETTING.ordinal.toUShort()
 
             return remember {
                 TabOptions(
-                    index = 0u,
+                    index = index,
                     title = title,
                     icon = icon,
                 )

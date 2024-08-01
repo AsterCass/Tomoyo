@@ -13,27 +13,26 @@ class MusicScreenModel : ScreenModel {
     val playerState = _playerState.asStateFlow()
 
     private val _playingListId = MutableStateFlow("")
-    private val _playingIndex = MutableStateFlow(0)
     private val _player = MutableStateFlow(AudioPlayer(_playerState.value))
     private val _musicPlayList = MutableStateFlow<List<MusicSimpleModel>>(
 //        emptyList()
         listOf(
             MusicSimpleModel(
                 id = "1",
-                musicName = "歌曲1",
-                musicAuthor = "张三1",
+                musicName = "有人",
+                musicAuthor = "不大萌",
                 musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.m4a",
             ),
             MusicSimpleModel(
                 id = "2",
-                musicName = "歌曲2",
-                musicAuthor = "张三2",
+                musicName = "生僻字",
+                musicAuthor = "陈柯",
                 musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/2.m4a",
             ),
             MusicSimpleModel(
                 id = "3",
-                musicName = "歌曲3",
-                musicAuthor = "张三3",
+                musicName = "起风了",
+                musicAuthor = "Mukoyo木西",
                 musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
             ),
         )
@@ -52,7 +51,6 @@ class MusicScreenModel : ScreenModel {
             _playingListId.value = playListId
             _musicPlayList.value = playList
         }
-        _playingIndex.value = index
         _player.value.start(index)
     }
 

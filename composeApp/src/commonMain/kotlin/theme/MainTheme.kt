@@ -18,6 +18,10 @@ val androidx.compose.material3.ColorScheme.subTextColor: Color
     get() = if (this.background == LightColorScheme.background)
         Color(0XFF979797) else Color.Transparent
 
+val androidx.compose.material3.ColorScheme.deepIconColor: Color
+    get() = if (this.background == LightColorScheme.background)
+        Color(0XFF333333) else Color.Transparent
+
 
 
 
@@ -36,11 +40,11 @@ val LightColorScheme = lightColorScheme(
 
     surfaceVariant = Color(0XFFe0e0e0),
     onSurfaceVariant = Color(0XFF191919),
-
     surfaceContainer = Color.Transparent,
 
     primary = Color(0XFF379B9B),
     onPrimary = Color(0xFFE9E9E9),
+    inversePrimary = Color(0XFF96C8C8),
 
     secondary = Color.Red,
     onSecondary = Color.Blue,

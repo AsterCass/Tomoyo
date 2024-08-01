@@ -4,9 +4,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,15 +16,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,16 +40,24 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Pause
+import compose.icons.fontawesomeicons.solid.Play
+import constant.enums.NotificationType
 import data.MusicSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import theme.deepIconColor
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
 import ui.components.MainBaseCardBox
+import ui.components.MainNotification
 import ui.components.MusicsPlayerScreen
+import ui.components.NotificationManager
 
 
 object MainMusicsScreen : Screen {
@@ -78,6 +87,7 @@ fun MainMusicsScreen(
     val currentTime = screenModel.playerState.collectAsState().value.currentTime
     val totalDuration = screenModel.playerState.collectAsState().value.totalDuration
     val isPlaying = screenModel.playerState.collectAsState().value.isPlaying
+    val playingIndex = screenModel.playerState.collectAsState().value.currentIndex
     val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
 
     val density = LocalDensity.current
@@ -102,6 +112,7 @@ fun MainMusicsScreen(
 
                 items(playList.size) { index ->
                     MusicListItem(
+                        isPlaying = index == playingIndex,
                         item = playList[index],
                         onStart = {
                             screenModel.onStart(
@@ -109,31 +120,36 @@ fun MainMusicsScreen(
                                 listOf(
                                     MusicSimpleModel(
                                         id = "1",
-                                        musicName = "歌曲1",
-                                        musicAuthor = "张三1",
+                                        musicName = "有人",
+                                        musicAuthor = "不大萌",
                                         musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.m4a",
                                     ),
                                     MusicSimpleModel(
                                         id = "2",
-                                        musicName = "歌曲2",
-                                        musicAuthor = "张三2",
+                                        musicName = "生僻字",
+                                        musicAuthor = "陈柯",
                                         musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/2.m4a",
                                     ),
                                     MusicSimpleModel(
                                         id = "3",
-                                        musicName = "歌曲3",
-                                        musicAuthor = "张三3",
+                                        musicName = "起风了",
+                                        musicAuthor = "Mukoyo木西",
                                         musicUrl = "https://astercasc-web-admin-1256368017.cos.ap-shanghai.myqcloud.com/test/1.mp3",
                                     ),
                                 )
                             )
+                            if (it) {
+                                navigator.push(MusicsPlayerScreen())
+                                mainModel.updateShowNavBar(false)
+                            }
                         }
                     )
                 }
 
                 item {
-                    Column(
-                        modifier = Modifier.height(150.dp)
+                    Row(
+                        modifier = Modifier.height(150.dp).fillMaxSize().padding(10.dp),
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         Text("底部背景图，没想好放什么")
                     }
@@ -141,7 +157,7 @@ fun MainMusicsScreen(
             }
         }
 
-        if (playList.isNotEmpty()) {
+        if (playList.isNotEmpty() && playingIndex >= 0) {
             Box(
                 modifier = Modifier.align(Alignment.BottomCenter)
                     .padding(15.dp)
@@ -149,6 +165,7 @@ fun MainMusicsScreen(
                     .width(minWidthDp - 50.dp)
             ) {
                 MainBaseCardBox(
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.fillMaxSize()
                         .padding(5.dp)
                 ) {
@@ -162,7 +179,7 @@ fun MainMusicsScreen(
 
                         Box(modifier = Modifier.weight(0.8f).fillMaxSize()) {
                             MusicPlayItem(
-                                item = playList[0],
+                                item = playList[playingIndex],
                                 isPlaying = isPlaying,
                                 onPause = { screenModel.onPause() },
                                 onPlay = { screenModel.onPlay() },
@@ -181,7 +198,19 @@ fun MainMusicsScreen(
                                 .fillMaxWidth()
                                 .align(Alignment.CenterHorizontally).padding(
                                     top = 2.dp, start = 5.dp, end = 5.dp, bottom = 10.dp
-                                )
+                                ),
+                            colors = SliderColors(
+                                thumbColor = Color.Transparent,
+                                activeTrackColor = Color.Transparent,
+                                activeTickColor = Color.Transparent,
+                                inactiveTrackColor = Color.Transparent,
+                                inactiveTickColor = Color.Transparent,
+                                disabledThumbColor = Color.Transparent,
+                                disabledActiveTrackColor = MaterialTheme.colorScheme.primary,
+                                disabledActiveTickColor = Color.Transparent,
+                                disabledInactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
+                                disabledInactiveTickColor = Color.Transparent,
+                            )
 
                         )
 
@@ -200,17 +229,20 @@ fun MainMusicsScreen(
 
 @Composable
 fun MusicListItem(
+    isPlaying: Boolean,
     item: MusicSimpleModel,
-    onStart: (String) -> Unit,
+    onStart: (Boolean) -> Unit,
 ) {
 
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(15.dp))
             .clickable {
-                onStart(item.musicUrl ?: "")
+                onStart(true)
             }
             .padding(10.dp)
+            .fillMaxHeight(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
 
         Image(
@@ -221,40 +253,74 @@ fun MusicListItem(
                 .align(Alignment.CenterVertically)
                 .clip(RoundedCornerShape(15.dp))
                 .border(
-                    border = BorderStroke(2.dp, Color.Black),
-                    shape = RoundedCornerShape(15.dp)
+                    border = BorderStroke(
+                        2.dp,
+                        if (isPlaying) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onBackground
+                    ),
+                    shape = RoundedCornerShape(15.dp),
                 )
         )
 
         Column(
-            modifier = Modifier.weight(0.75f)
+            modifier = Modifier.weight(0.55f)
                 .align(Alignment.CenterVertically)
                 .padding(start = 20.dp)
         ) {
             Text(
                 modifier = Modifier.padding(start = 2.dp, bottom = 3.dp),
                 text = item.musicName ?: "",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                color = if (isPlaying) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onBackground,
             )
             Text(
                 modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
                 text = item.musicAuthor ?: "",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.subTextColor
+                color = if (isPlaying) MaterialTheme.colorScheme.inversePrimary
+                else MaterialTheme.colorScheme.subTextColor,
             )
 
         }
 
-        Icon(
-            imageVector = Icons.Outlined.FavoriteBorder,
-            contentDescription = null,
-            modifier = Modifier
-                .weight(0.1f)
-                .clip(CircleShape)
-                .clickable { println("播放音乐2") }
-                .align(Alignment.CenterVertically)
-                .size(30.dp)
-        )
+        Row(
+            modifier = Modifier.weight(0.3f),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.FavoriteBorder,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(5.dp))
+                    .clickable {
+                        NotificationManager.showNotification(
+                            MainNotification(
+                                "开发中",
+                                NotificationType.SUCCESS
+                            )
+                        )
+                    }
+                    .size(35.dp)
+                    .padding(5.dp),
+                tint = if (isPlaying) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.deepIconColor
+            )
+            Icon(
+                imageVector = if (isPlaying) FontAwesomeIcons.Solid.Pause
+                else FontAwesomeIcons.Solid.Play,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(5.dp))
+                    .clickable { onStart(false) }
+                    .size(35.dp)
+                    .padding(8.dp),
+                tint = if (isPlaying) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.deepIconColor
+            )
+        }
+
+
 
     }
 
@@ -281,46 +347,55 @@ fun MusicPlayItem(
                 .align(Alignment.CenterVertically)
                 .clip(RoundedCornerShape(15.dp))
                 .border(
-                    border = BorderStroke(2.dp, Color.Black),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(15.dp)
                 )
         )
 
         Column(
-            modifier = Modifier.weight(0.75f)
+            modifier = Modifier.weight(0.73f)
                 .align(Alignment.CenterVertically)
                 .padding(start = 20.dp)
         ) {
             Text(
                 modifier = Modifier.padding(start = 2.dp, bottom = 3.dp),
                 text = item.musicName ?: "",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
                 text = item.musicAuthor ?: "",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.subTextColor
+                color = MaterialTheme.colorScheme.inversePrimary,
             )
 
         }
 
-        Icon(
-            imageVector = Icons.Rounded.PlayArrow,
-            contentDescription = null,
-            modifier = Modifier
-                .weight(0.1f)
-                .clip(CircleShape)
-                .clickable {
-                    if (isPlaying) {
-                        onPause()
-                    } else {
-                        onPlay()
+        Row(
+            modifier = Modifier.weight(0.12f)
+                .fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = if (isPlaying) FontAwesomeIcons.Solid.Pause
+                else FontAwesomeIcons.Solid.Play,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(5.dp))
+                    .clickable {
+                        if (isPlaying) {
+                            onPause()
+                        } else {
+                            onPlay()
+                        }
                     }
-                }
-                .align(Alignment.CenterVertically)
-                .size(30.dp)
-        )
+                    .size(30.dp)
+                    .padding(5.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+
 
     }
 

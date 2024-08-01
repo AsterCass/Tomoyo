@@ -26,7 +26,7 @@ fun MainHomeScreen(
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp),
                 text = "没想好放什么",
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.bodyMedium
             )
 
         }

@@ -62,8 +62,21 @@ enum class MainNavigationEnum(
     SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, SettingTab),
 
 
+    MUSIC_PLAYER("music_player", Res.string.none, Icons.Rounded.Done, HomeTab);
 
-    MUSIC_PLAYER("music_player", Res.string.none, Icons.Rounded.Done, HomeTab)
+
+    companion object {
+        fun getEnumByCode(code: String): MainNavigationEnum {
+            var ret = HOME
+            for (thisEnum in entries) {
+                if (thisEnum.code == code) {
+                    ret = thisEnum
+                    break
+                }
+            }
+            return ret
+        }
+    }
 }
 
 

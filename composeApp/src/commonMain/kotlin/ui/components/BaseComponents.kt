@@ -7,8 +7,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,16 +41,21 @@ import androidx.compose.ui.unit.dp
 import api.ApiResText
 import api.BaseApi
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Regular
+import compose.icons.fontawesomeicons.regular.Envelope
 import constant.enums.MainNavigationEnum
 import constant.enums.NotificationType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import theme.unselectedColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
+import tomoyo.composeapp.generated.resources.nezuko
 import tomoyo.composeapp.generated.resources.service_error
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +77,54 @@ fun MainAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
-        title = { Text(title) },
+        title = {
+            Row(
+                modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.nezuko),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(35.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .border(
+                            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .clickable {
+                            NotificationManager.showNotification(
+                                MainNotification(
+                                    "开发中",
+                                    NotificationType.SUCCESS
+                                )
+                            )
+                        }
+                )
+
+                Text(title)
+
+                Icon(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .clickable {
+                            NotificationManager.showNotification(
+                                MainNotification(
+                                    "开发中",
+                                    NotificationType.SUCCESS
+                                )
+                            )
+                        }
+                        .size(35.dp)
+                        .padding(5.dp),
+                    imageVector = FontAwesomeIcons.Regular.Envelope,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground,
+                )
+
+            }
+        },
     )
 }
 
@@ -198,6 +253,7 @@ fun InitForNoComposableRes() {
 
 @Composable
 fun MainBaseCardBox(
+    color: Color = MaterialTheme.colorScheme.onBackground,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -214,11 +270,11 @@ fun MainBaseCardBox(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    color = Color.Black,
+                    color = color,
                     shape = RoundedCornerShape(roundSize)
                 )
                 .border(
-                    border = BorderStroke(borderSize, Color.Black),
+                    border = BorderStroke(borderSize, color),
                     shape = RoundedCornerShape(roundSize)
                 )
 
