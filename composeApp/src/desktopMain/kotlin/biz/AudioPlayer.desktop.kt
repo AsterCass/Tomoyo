@@ -89,8 +89,11 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
         media = Media(thisUrl.toString())
         mediaPlayer = MediaPlayer(media)
         mediaPlayer?.statusProperty()?.addListener { _, oldStatus, newStatus ->
-            if (newStatus === MediaPlayer.Status.READY) {
-                musicPlayerState.totalDuration = mediaPlayer?.totalDuration?.toSeconds() ?: 0.0
+            if (newStatus === MediaPlayer.Status.READY
+                && mediaPlayer?.totalDuration?.toSeconds()?.isNaN() != true
+            ) {
+                musicPlayerState.totalDuration =
+                    mediaPlayer?.totalDuration?.toSeconds() ?: Short.MAX_VALUE.toDouble()
                 play()
             }
             if (newStatus === MediaPlayer.Status.STALLED) {
