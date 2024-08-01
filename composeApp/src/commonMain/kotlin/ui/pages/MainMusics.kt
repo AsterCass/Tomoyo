@@ -78,7 +78,7 @@ fun MainMusicsScreen(
     val currentTime = screenModel.playerState.collectAsState().value.currentTime
     val totalDuration = screenModel.playerState.collectAsState().value.totalDuration
     val isPlaying = screenModel.playerState.collectAsState().value.isPlaying
-    val constraints = mainModel.mainPageContainerConstraints.value
+    val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
 
     val density = LocalDensity.current
     val minHeightDp = with(density) { constraints.minHeight.toDp() }

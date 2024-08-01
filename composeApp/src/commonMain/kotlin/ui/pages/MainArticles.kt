@@ -91,7 +91,7 @@ fun MainArticlesScreen(
 
     //data
     val articleDataList = screenModel.articleDataList.collectAsState().value
-    val constraints = mainModel.mainPageContainerConstraints.value
+    val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
     val articleIsLoadAll = screenModel.articleIsLoadAll.collectAsState().value
     val articleDataKey = screenModel.articleDataKey.collectAsState().value
 
