@@ -77,7 +77,7 @@ fun main() {
             onCloseRequest = { visible = false },
             visible = visible,
             title = "Tomoyo",
-            icon = MyAppIcon,
+//            icon = MyAppIcon,
             state = winState,
         ) {
             MainApp(
@@ -94,18 +94,18 @@ fun main() {
     }
 }
 
-object MyAppIcon : Painter() {
-    override val intrinsicSize = Size(256f, 256f)
-
-    override fun DrawScope.onDraw() {
-        drawOval(Color.Green, Offset(size.width / 4, 0f), Size(size.width / 2f, size.height))
-        drawOval(Color.Blue, Offset(0f, size.height / 4), Size(size.width, size.height / 2f))
-        drawOval(
-            Color.Red,
-            Offset(size.width / 4, size.height / 4),
-            Size(size.width / 2f, size.height / 2f)
-        )
-    }
-}
+//object MyAppIcon : Painter() {
+//    override val intrinsicSize = Size(256f, 256f)
+//
+//    override fun DrawScope.onDraw() {
+//        drawOval(Color.Green, Offset(size.width / 4, 0f), Size(size.width / 2f, size.height))
+//        drawOval(Color.Blue, Offset(0f, size.height / 4), Size(size.width, size.height / 2f))
+//        drawOval(
+//            Color.Red,
+//            Offset(size.width / 4, size.height / 4),
+//            Size(size.width / 2f, size.height / 2f)
+//        )
+//    }
+//}
 
 
