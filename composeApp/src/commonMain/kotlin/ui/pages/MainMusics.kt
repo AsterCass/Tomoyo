@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,9 +46,10 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Pause
 import compose.icons.fontawesomeicons.solid.Play
 import constant.enums.NotificationType
-import data.MusicSimpleModel
+import data.AudioSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import theme.deepIconColor
@@ -82,6 +84,9 @@ fun MainMusicsScreen(
     mainModel.updateShowNavBar(true)
     val navigator = LocalNavigator.currentOrThrow
 
+    //coroutine
+    val musicApiCoroutine = rememberCoroutineScope()
+
     //data
     val playList = screenModel.musicPlayList.collectAsState().value
     val currentTime = screenModel.playerState.collectAsState().value.currentTime
@@ -90,6 +95,10 @@ fun MainMusicsScreen(
     val playingIndex = screenModel.playerState.collectAsState().value.currentIndex
     val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
 
+    //update data
+    musicApiCoroutine.launch { screenModel.updateAllAudioList() }
+
+    //layout
     val density = LocalDensity.current
     val minHeightDp = with(density) { constraints.minHeight.toDp() }
     val minWidthDp = with(density) { constraints.minWidth.toDp() }
@@ -115,29 +124,7 @@ fun MainMusicsScreen(
                         isPlaying = index == playingIndex,
                         item = playList[index],
                         onStart = {
-                            screenModel.onStart(
-                                index, "1",
-                                listOf(
-                                    MusicSimpleModel(
-                                        id = "1",
-                                        musicName = "有人",
-                                        musicAuthor = "不大萌",
-                                        musicUrl = "https://api.astercasc.com/ushio/video-pro/audios/1723108411781?expiry=1&signature=1",
-                                    ),
-                                    MusicSimpleModel(
-                                        id = "2",
-                                        musicName = "生僻字",
-                                        musicAuthor = "陈柯",
-                                        musicUrl = "https://api.astercasc.com/ushio/video-pro/audios/1722178591590?expiry=1&signature=1",
-                                    ),
-                                    MusicSimpleModel(
-                                        id = "3",
-                                        musicName = "起风了",
-                                        musicAuthor = "Mukoyo木西",
-                                        musicUrl = "https://api.astercasc.com/ushio/video-pro/audios/1720841179970?expiry=1&signature=1",
-                                    ),
-                                )
-                            )
+                            screenModel.onStart(index, playList[index].id)
                             if (it) {
                                 navigator.push(MusicsPlayerScreen())
                                 mainModel.updateShowNavBar(false)
@@ -230,7 +217,7 @@ fun MainMusicsScreen(
 @Composable
 fun MusicListItem(
     isPlaying: Boolean,
-    item: MusicSimpleModel,
+    item: AudioSimpleModel,
     onStart: (Boolean) -> Unit,
 ) {
 
@@ -269,14 +256,14 @@ fun MusicListItem(
         ) {
             Text(
                 modifier = Modifier.padding(start = 2.dp, bottom = 3.dp),
-                text = item.musicName ?: "",
+                text = item.audioName,
                 style = MaterialTheme.typography.bodyLarge,
                 color = if (isPlaying) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.onBackground,
             )
             Text(
                 modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
-                text = item.musicAuthor ?: "",
+                text = item.audioAuthor,
                 style = MaterialTheme.typography.bodySmall,
                 color = if (isPlaying) MaterialTheme.colorScheme.inversePrimary
                 else MaterialTheme.colorScheme.subTextColor,
@@ -328,7 +315,7 @@ fun MusicListItem(
 
 @Composable
 fun MusicPlayItem(
-    item: MusicSimpleModel,
+    item: AudioSimpleModel,
     isPlaying: Boolean,
     onPause: () -> Unit,
     onPlay: () -> Unit,
@@ -359,13 +346,13 @@ fun MusicPlayItem(
         ) {
             Text(
                 modifier = Modifier.padding(start = 2.dp, bottom = 3.dp),
-                text = item.musicName ?: "",
+                text = item.audioName,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
                 modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
-                text = item.musicAuthor ?: "",
+                text = item.audioAuthor,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.inversePrimary,
             )

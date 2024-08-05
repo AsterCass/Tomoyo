@@ -7,14 +7,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import constant.enums.MusicPlayModel
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+
 @Serializable
-data class MusicSimpleModel(
-    val id: String? = null,
-    val musicName: String? = null,
-    val musicAuthor: String? = null,
-    val musicUrl: String? = null,
+data class AudioSimpleModel(
+    @SerialName("id")
+    val id: String = "",
+    val audioCollectionId: String? = null,
+    val audioOrder: Int = 1,
+    val audioName: String = "",
+    val audioImg: String? = null,
+    val audioBrief: String? = null,
+    val audioAuthor: String = "",
 )
 
 @Stable

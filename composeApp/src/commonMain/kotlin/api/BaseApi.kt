@@ -3,6 +3,7 @@ package api
 import constant.BASE_SERVER_ADDRESS
 import constant.enums.NotificationType
 import data.ArticleSimpleModel
+import data.AudioSimpleModel
 import data.LoginParam
 import data.ResultObj
 import data.UserDataModel
@@ -97,6 +98,12 @@ class BaseApi {
         }
         val body = response.body<ResultObj<String?>>()
         return if (body.data.isNullOrEmpty()) "" else body.data!!
+    }
+
+
+    suspend fun getAllAudio(): List<AudioSimpleModel> {
+        val response = client.get(getUrl("/ushio/video-pro/audios"))
+        return response.body<List<AudioSimpleModel>?>() ?: emptyList()
     }
 
 
