@@ -79,6 +79,13 @@ class BaseApi {
         return body.data ?: UserDataModel()
     }
 
+    suspend fun logout(token: String) {
+        client.post(getUrl("/yui/user/logout/auth"))
+        {
+            header("User-Token", token)
+        }
+    }
+
     suspend fun getArticleList(offset: Int = 0, keyword: String = ""): List<ArticleSimpleModel> {
         //delay(2000)
         val body = client.get(getUrl("/kotomi/article/list"))

@@ -11,7 +11,7 @@ import com.russhwolf.settings.coroutines.getStringOrNullFlow
 import com.russhwolf.settings.set
 import kotlinx.coroutines.flow.Flow
 
-class PreferenceManager(private val settings: Settings) {
+class DataStorageManager(private val settings: Settings) {
 
     private val observableSettings: ObservableSettings by lazy { settings as ObservableSettings }
 
@@ -22,6 +22,11 @@ class PreferenceManager(private val settings: Settings) {
     fun getNonFlowString(key: String) = observableSettings.getString(
         key = key,
         defaultValue = "",
+    )
+
+    fun getNonFlowBoolean(key: String, defaultValue: Boolean) = observableSettings.getBoolean(
+        key = key,
+        defaultValue = defaultValue,
     )
 
     @OptIn(ExperimentalSettingsApi::class)
@@ -68,9 +73,7 @@ class PreferenceManager(private val settings: Settings) {
     }
 
     companion object {
-        const val USER_ACCOUNT = "user_account_key"
-        const val USER_PASSWD = "user_password_key"
-        const val AUTO_LOGIN = "auto_login_key"
+        const val USER_DATA = "user_data"
     }
 
 }

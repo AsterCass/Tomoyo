@@ -6,6 +6,7 @@ import api.baseJsonConf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
+import data.UserDataModel
 import data.UserState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,13 +55,35 @@ class MainScreenModel : ScreenModel {
     val socketSession = _socketSession.asStateFlow()
 
     //user data
+    private val _firstTryLinkSocket = MutableStateFlow(true)
+    val firstTryLinkSocket = _firstTryLinkSocket.asStateFlow()
+    fun triedLinkSocket() {
+        _firstTryLinkSocket.value = false
+    }
+
+    private val _syncUserData = MutableStateFlow(false)
+    val syncUserData = _syncUserData.asStateFlow()
+    fun syncedUserData() {
+        _syncUserData.value = false
+    }
     private val _userState = MutableStateFlow(UserState())
     val userState = _userState.asStateFlow()
 
-    suspend fun login(account: String, passwd: String) {
-        _userState.value.userData = BaseApi().login(account, passwd)
+    suspend fun login(
+        account: String = "", passwd: String = "",
+        dbData: UserDataModel? = null
+    ) {
+        if (null == dbData) {
+            _userState.value.userData = BaseApi().login(account, passwd)
+            if (!_userState.value.userData.token.isNullOrBlank()) {
+                _syncUserData.value = true
+            }
+        } else {
+            _userState.value.userData = dbData
+        }
         _userState.value.token = _userState.value.userData.token ?: ""
 
+        if (_userState.value.token.isBlank()) return
 
         CoroutineScope(Dispatchers.IO).launch {
             _socketSession.value?.disconnect()
@@ -76,6 +99,16 @@ class MainScreenModel : ScreenModel {
                 _currentChatId.value = chatRow.fromChatId
                 _currentChatRowList.value += chatRow
             }
+        }
+    }
+
+    suspend fun logout() {
+        BaseApi().logout(_userState.value.token)
+        _userState.value.userData = UserDataModel()
+        _userState.value.token = ""
+        _syncUserData.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            _socketSession.value?.disconnect()
         }
     }
 

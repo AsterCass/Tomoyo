@@ -12,14 +12,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import api.baseJsonConf
 import biz.StatusBar
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabDisposable
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import data.PlatformInitData
+import data.UserDataModel
 import data.model.MainScreenModel
+import data.store.DataStorageManager
+import kotlinx.coroutines.launch
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import theme.LightColorScheme
@@ -39,9 +44,15 @@ import ui.components.VideosTab
 fun MainApp(
     platformData: PlatformInitData = PlatformInitData(),
     mainModel: MainScreenModel = koinInject(),
+    dataStorageManager: DataStorageManager = koinInject(),
 ) {
-
+    //data
     val showNavBar = mainModel.showNavBar.collectAsState().value
+    val firstTryLinkSocket = mainModel.firstTryLinkSocket.value
+    val userDataStringDb = dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
+
+    //coroutine
+    val commonApiCoroutine = rememberCoroutineScope()
 
     KoinContext {
         MaterialTheme(
@@ -51,6 +62,19 @@ fun MainApp(
             //init
             StatusBar().updateColor(MaterialTheme.colorScheme.background, true)
             InitForNoComposableRes()
+
+            //user status
+            if (userDataStringDb.isNotBlank() && firstTryLinkSocket) {
+                mainModel.triedLinkSocket()
+                val userDataDb: UserDataModel = baseJsonConf.decodeFromString(userDataStringDb)
+                if (!userDataDb.token.isNullOrBlank()) {
+                    commonApiCoroutine.launch {
+                        mainModel.login(
+                            dbData = userDataDb
+                        )
+                    }
+                }
+            }
 
             //navigation
             TabNavigator(
