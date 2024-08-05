@@ -62,3 +62,4 @@ Run command `./gradlew :composeApp:run`
 - [Exoplayer](https://github.com/google/ExoPlayer)
 - [Voyager](https://github.com/adrielcafe/voyager)
 - [JavaFx](https://openjfx.io/)
+- [Multiplatform Setting](https://github.com/russhwolf/multiplatform-settings)
