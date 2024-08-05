@@ -32,7 +32,7 @@ class MusicPlayerState {
     var totalDuration by mutableStateOf(0.0)
 
     var currentIndex by mutableStateOf(-1)
-    var playModel: MusicPlayModel = MusicPlayModel.ORDER
+    var playModel by mutableStateOf(MusicPlayModel.ORDER.ordinal)
 
     fun toBack() {
         isPlaying = false

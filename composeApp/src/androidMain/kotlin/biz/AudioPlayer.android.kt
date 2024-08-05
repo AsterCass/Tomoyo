@@ -19,6 +19,7 @@ import com.aster.yuno.tomoyo.MainActivity
 import com.aster.yuno.tomoyo.R
 import constant.enums.MusicPlayModel
 import data.MusicPlayerState
+import kotlin.random.Random
 
 val mediaPlayer = ExoPlayer.Builder(MainActivity.mainContext!!).build()
 
@@ -144,10 +145,17 @@ actual class AudioPlayer actual constructor(
 
     actual fun next() {
         when (musicPlayerState.playModel) {
-            MusicPlayModel.ORDER -> {
+            MusicPlayModel.ORDER.ordinal -> {
                 currentItemIndex = currentItemIndex.plus(1).rem(mediaItems.size)
             }
 
+            MusicPlayModel.RANDOM.ordinal -> {
+                currentItemIndex = Random.nextInt(mediaItems.size)
+            }
+
+            MusicPlayModel.CIRCULATION.ordinal -> {
+
+            }
             else -> {}
         }
         playWithIndex(currentItemIndex)

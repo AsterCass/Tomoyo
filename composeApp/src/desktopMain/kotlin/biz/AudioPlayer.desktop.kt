@@ -6,6 +6,7 @@ import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import javafx.util.Duration
 import java.net.URL
+import kotlin.random.Random
 
 actual class AudioPlayer actual constructor(private val musicPlayerState: MusicPlayerState) {
 
@@ -46,10 +47,17 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
 
     actual fun next() {
         when (musicPlayerState.playModel) {
-            MusicPlayModel.ORDER -> {
+            MusicPlayModel.ORDER.ordinal -> {
                 currentItemIndex = currentItemIndex.plus(1).rem(mediaItems.size)
             }
 
+            MusicPlayModel.RANDOM.ordinal -> {
+                currentItemIndex = Random.nextInt(mediaItems.size)
+            }
+
+            MusicPlayModel.CIRCULATION.ordinal -> {
+
+            }
             else -> {}
         }
         playWithIndex(currentItemIndex)

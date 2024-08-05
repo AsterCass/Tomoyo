@@ -7,8 +7,11 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -29,8 +32,14 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.StepBackward
+import compose.icons.fontawesomeicons.solid.StepForward
+import constant.enums.MusicPlayModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class MusicsPlayerScreen : Screen {
@@ -51,6 +60,9 @@ class MusicsPlayerScreen : Screen {
         val isPlaying = musicScreenModel.playerState.collectAsState().value.isPlaying
         val totalDuration = musicScreenModel.playerState.collectAsState().value.totalDuration
         var curPosition = musicScreenModel.playerState.collectAsState().value.currentTime
+        val playModel = musicScreenModel.playerState.collectAsState().value.playModel
+
+        println("reload $playModel")
 
 
         AnimatedVisibility(
@@ -113,6 +125,45 @@ class MusicsPlayerScreen : Screen {
                         modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)
                             .width(500.dp),
                     )
+
+                    Button(
+                        modifier = Modifier.height(50.dp).width(200.dp),
+                        onClick = {
+                            musicScreenModel.nextPlayModel()
+                        },
+                    ) {
+                        Row {
+                            Text(stringResource(MusicPlayModel.entries[playModel].desc))
+                            Icon(
+                                imageVector = MusicPlayModel.entries[playModel].imageVector,
+                                contentDescription = null,
+                                modifier = Modifier.size(50.dp)
+                            )
+                        }
+                    }
+
+                    Button(
+                        modifier = Modifier.size(50.dp),
+                        onClick = {
+                            musicScreenModel.onNext()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Solid.StepForward,
+                            contentDescription = null,
+                        )
+                    }
+                    Button(
+                        modifier = Modifier.size(50.dp),
+                        onClick = {
+                            musicScreenModel.onPrev()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Solid.StepBackward,
+                            contentDescription = null,
+                        )
+                    }
 
                 }
 

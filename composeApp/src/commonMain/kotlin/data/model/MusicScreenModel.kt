@@ -3,6 +3,7 @@ package data.model
 import api.BaseApi
 import biz.AudioPlayer
 import cafe.adriel.voyager.core.model.ScreenModel
+import constant.enums.MusicPlayModel
 import data.AudioSimpleModel
 import data.MusicPlayerState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +25,11 @@ class MusicScreenModel : ScreenModel {
         _musicPlayList.value = BaseApi().getAllAudio()
     }
 
+    fun nextPlayModel() {
+        _playerState.value.playModel = _playerState.value.playModel
+            .plus(1).rem(MusicPlayModel.entries.size)
+    }
+
     fun onStart(
         index: Int, playListId: String,
         playList: List<AudioSimpleModel> = _musicPlayList.value
@@ -32,7 +38,7 @@ class MusicScreenModel : ScreenModel {
             _player.value.clearSongs()
             //todo get auth url
             _player.value.addSongList(playList.map {
-                "https://api.astercasc.com/ushio/video-pro/audios/${playListId}?expiry=1&signature=1"
+                "https://api.astercasc.com/ushio/video-pro/audios/${it.id}?expiry=1&signature=1"
             })
             _playingListId.value = playListId
             _musicPlayList.value = playList
@@ -50,6 +56,14 @@ class MusicScreenModel : ScreenModel {
 
     fun onSeek(time: Double) {
         _player.value.seekTo(time)
+    }
+
+    fun onNext() {
+        _player.value.next()
+    }
+
+    fun onPrev() {
+        _player.value.prev()
     }
 
 

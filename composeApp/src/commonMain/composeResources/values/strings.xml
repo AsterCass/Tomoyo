@@ -40,4 +40,8 @@
     <string name="login_success">Login successful</string>
     <string name="login_passwd_error">Passwd not match</string>
 
+    <string name="play_model_random">Shuffle</string>
+    <string name="play_model_order">Repeat All</string>
+    <string name="play_model_circle">Repeat One</string>
+
 </resources>
