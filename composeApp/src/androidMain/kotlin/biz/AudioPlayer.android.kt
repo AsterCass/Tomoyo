@@ -10,14 +10,17 @@ import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import androidx.annotation.OptIn
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.aster.yuno.tomoyo.MainActivity
 import com.aster.yuno.tomoyo.R
 import constant.enums.MusicPlayModel
+import data.AudioSimpleModel
 import data.MusicPlayerState
 import kotlin.random.Random
 
@@ -82,7 +85,7 @@ actual class AudioPlayer actual constructor(
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private val mediaItems = mutableListOf<MediaItem>()
+    private val mediaItems = mutableMapOf<String, AudioSimpleModel>()
 
     private var currentItemIndex = -1
 
@@ -127,10 +130,11 @@ actual class AudioPlayer actual constructor(
         ContextCompat.startForegroundService(context, intent)
     }
 
-    actual fun start(index: Int) {
-        if (index >= mediaItems.size || index < 0) return
-        currentItemIndex = index
-        playWithIndex(index)
+    actual fun start(id: String) {
+        //check
+        if (!mediaItems.containsKey(id)) return
+        currentItemIndex = mediaItems.keys.indexOf(id)
+        playWithIndex(currentItemIndex)
     }
 
     actual fun play() {
@@ -174,8 +178,9 @@ actual class AudioPlayer actual constructor(
         }
     }
 
-    actual fun addSongList(songsUrl: List<String>) {
-        mediaItems += songsUrl.map { MediaItem.fromUri(it) }
+    @OptIn(UnstableApi::class)
+    actual fun addSongList(songs: Map<String, AudioSimpleModel>) {
+        mediaItems += songs
     }
 
     actual fun cleanUp() {
@@ -202,12 +207,15 @@ actual class AudioPlayer actual constructor(
     }
 
     private fun playWithIndex(index: Int) {
-        musicPlayerState.currentIndex = index
-        if (index >= 0 && mediaItems.size > index) {
-            val playItem = mediaItems[index]
-            mediaPlayer.setMediaItem(playItem)
-            mediaPlayer.play()
-        }
+        if (index >= mediaItems.size || index < 0) return
+        //convert
+        val currentItem = mediaItems.entries.toList()[index]
+        musicPlayerState.currentPlayId = currentItem.key
+        val playUrl = currentItem.value.audioUrl
+        //start
+        val playItem = MediaItem.fromUri(playUrl)
+        mediaPlayer.setMediaItem(playItem)
+        mediaPlayer.play()
     }
 
 }

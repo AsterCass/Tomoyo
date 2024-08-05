@@ -88,11 +88,11 @@ fun MainMusicsScreen(
     val musicApiCoroutine = rememberCoroutineScope()
 
     //data
-    val playList = screenModel.musicPlayList.collectAsState().value
+    val musicPlayMap = screenModel.musicPlayMap.collectAsState().value
     val currentTime = screenModel.playerState.collectAsState().value.currentTime
     val totalDuration = screenModel.playerState.collectAsState().value.totalDuration
     val isPlaying = screenModel.playerState.collectAsState().value.isPlaying
-    val playingIndex = screenModel.playerState.collectAsState().value.currentIndex
+    val currentPlayId = screenModel.playerState.collectAsState().value.currentPlayId
     val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
 
     //update data
@@ -119,12 +119,13 @@ fun MainMusicsScreen(
         ) {
             LazyColumn {
 
-                items(playList.size) { index ->
+                items(musicPlayMap.size) { index ->
+                    val playingItem = musicPlayMap.values.toList()[index]
                     MusicListItem(
-                        isPlaying = index == playingIndex,
-                        item = playList[index],
+                        isPlaying = currentPlayId == playingItem.id,
+                        item = playingItem,
                         onStart = {
-                            screenModel.onStart(index, playList[index].id)
+                            screenModel.onStart(playingItem.id)
                             if (it) {
                                 navigator.push(MusicsPlayerScreen())
                                 mainModel.updateShowNavBar(false)
@@ -144,7 +145,7 @@ fun MainMusicsScreen(
             }
         }
 
-        if (playList.isNotEmpty() && playingIndex >= 0) {
+        if (musicPlayMap.isNotEmpty() && currentPlayId.isNotBlank()) {
             Box(
                 modifier = Modifier.align(Alignment.BottomCenter)
                     .padding(15.dp)
@@ -166,7 +167,7 @@ fun MainMusicsScreen(
 
                         Box(modifier = Modifier.weight(0.8f).fillMaxSize()) {
                             MusicPlayItem(
-                                item = playList[playingIndex],
+                                item = musicPlayMap[currentPlayId],
                                 isPlaying = isPlaying,
                                 onPause = { screenModel.onPause() },
                                 onPlay = { screenModel.onPlay() },
@@ -315,11 +316,13 @@ fun MusicListItem(
 
 @Composable
 fun MusicPlayItem(
-    item: AudioSimpleModel,
+    item: AudioSimpleModel?,
     isPlaying: Boolean,
     onPause: () -> Unit,
     onPlay: () -> Unit,
 ) {
+
+    if (null == item) return
 
     Row(
         modifier = Modifier

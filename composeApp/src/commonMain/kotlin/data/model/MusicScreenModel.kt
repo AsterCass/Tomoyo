@@ -16,13 +16,13 @@ class MusicScreenModel : ScreenModel {
 
     private val _playingListId = MutableStateFlow("")
     private val _player = MutableStateFlow(AudioPlayer(_playerState.value))
-    private val _musicPlayList = MutableStateFlow<List<AudioSimpleModel>>(emptyList())
-    val musicPlayList = _musicPlayList.asStateFlow()
+    private val _musicPlayMap = MutableStateFlow<Map<String, AudioSimpleModel>>(emptyMap())
+    val musicPlayMap = _musicPlayMap.asStateFlow()
     suspend fun updateAllAudioList() {
-        if (_musicPlayList.value.isNotEmpty()) {
+        if (_musicPlayMap.value.isNotEmpty()) {
             return
         }
-        _musicPlayList.value = BaseApi().getAllAudio()
+        _musicPlayMap.value = BaseApi().getAllAudio().associateBy { it.id }
     }
 
     fun nextPlayModel() {
@@ -31,19 +31,17 @@ class MusicScreenModel : ScreenModel {
     }
 
     fun onStart(
-        index: Int, playListId: String,
-        playList: List<AudioSimpleModel> = _musicPlayList.value
+        playListId: String,
+        musicPlayMap: Map<String, AudioSimpleModel> = _musicPlayMap.value
     ) {
-        if (playListId != _playingListId.value && playList.isNotEmpty()) {
+        //todo login check
+        if (playListId != _playingListId.value && musicPlayMap.isNotEmpty()) {
             _player.value.clearSongs()
-            //todo get auth url
-            _player.value.addSongList(playList.map {
-                "https://api.astercasc.com/ushio/video-pro/audios/${it.id}?expiry=1&signature=1"
-            })
+            _player.value.addSongList(musicPlayMap)
             _playingListId.value = playListId
-            _musicPlayList.value = playList
+            _musicPlayMap.value = musicPlayMap
         }
-        _player.value.start(index)
+        _player.value.start(playListId)
     }
 
     fun onPlay() {

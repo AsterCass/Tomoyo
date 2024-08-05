@@ -1,9 +1,10 @@
 package biz
 
+import data.AudioSimpleModel
 import data.MusicPlayerState
 
 expect class AudioPlayer(musicPlayerState: MusicPlayerState) {
-    fun start(index: Int)
+    fun start(id: String)
     fun play()
     fun pause()
     fun next()
@@ -12,5 +13,5 @@ expect class AudioPlayer(musicPlayerState: MusicPlayerState) {
     fun cleanUp()
 
     fun clearSongs()
-    fun addSongList(songsUrl: List<String>)
+    fun addSongList(songs: Map<String, AudioSimpleModel>)
 }

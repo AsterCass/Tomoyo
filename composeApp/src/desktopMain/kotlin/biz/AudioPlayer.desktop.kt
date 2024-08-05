@@ -1,6 +1,7 @@
 package biz
 
 import constant.enums.MusicPlayModel
+import data.AudioSimpleModel
 import data.MusicPlayerState
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
@@ -16,13 +17,13 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
 
     private var currentItemIndex = -1
 
-    private val mediaItems = mutableListOf<String>()
+    private val mediaItems = mutableMapOf<String, AudioSimpleModel>()
 
-    actual fun start(index: Int) {
+    actual fun start(id: String) {
         //check
-        if (index >= mediaItems.size || index < 0) return
-        currentItemIndex = index
-        playWithIndex(index)
+        if (!mediaItems.containsKey(id)) return
+        currentItemIndex = mediaItems.keys.indexOf(id)
+        playWithIndex(currentItemIndex)
     }
 
     actual fun play() {
@@ -72,8 +73,8 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
         mediaPlayer?.seek(Duration.seconds(time))
     }
 
-    actual fun addSongList(songsUrl: List<String>) {
-        mediaItems += songsUrl
+    actual fun addSongList(songs: Map<String, AudioSimpleModel>) {
+        mediaItems += songs
     }
 
     actual fun clearSongs() {
@@ -86,14 +87,16 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
     }
 
     private fun playWithIndex(index: Int) {
-        musicPlayerState.currentIndex = index
         if (index >= mediaItems.size || index < 0) return
-        val playItem = mediaItems[index]
+        //convert
+        val currentItem = mediaItems.entries.toList()[index]
+        musicPlayerState.currentPlayId = currentItem.key
+        val playUrl = currentItem.value.audioUrl
         //close
         musicPlayerState.toBack()
         mediaPlayer?.stop()
         //start
-        val thisUrl = URL(playItem)
+        val thisUrl = URL(playUrl)
         media = Media(thisUrl.toString())
         mediaPlayer = MediaPlayer(media)
         mediaPlayer?.statusProperty()?.addListener { _, oldStatus, newStatus ->

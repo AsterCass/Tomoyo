@@ -21,6 +21,7 @@ data class AudioSimpleModel(
     val audioImg: String? = null,
     val audioBrief: String? = null,
     val audioAuthor: String = "",
+    val audioUrl: String = "",
 )
 
 @Stable
@@ -31,7 +32,7 @@ class MusicPlayerState {
     var currentTime by mutableStateOf(0.0)
     var totalDuration by mutableStateOf(0.0)
 
-    var currentIndex by mutableStateOf(-1)
+    var currentPlayId by mutableStateOf("")
     var playModel by mutableStateOf(MusicPlayModel.ORDER.ordinal)
 
     fun toBack() {

@@ -143,7 +143,7 @@ class MusicsPlayerScreen : Screen {
                     }
 
                     Button(
-                        modifier = Modifier.size(50.dp),
+                        modifier = Modifier.height(80.dp).width(80.dp),
                         onClick = {
                             musicScreenModel.onNext()
                         }
@@ -151,10 +151,11 @@ class MusicsPlayerScreen : Screen {
                         Icon(
                             imageVector = FontAwesomeIcons.Solid.StepForward,
                             contentDescription = null,
+                            modifier = Modifier.size(40.dp),
                         )
                     }
                     Button(
-                        modifier = Modifier.size(50.dp),
+                        modifier = Modifier.height(80.dp).width(80.dp),
                         onClick = {
                             musicScreenModel.onPrev()
                         }
@@ -162,6 +163,7 @@ class MusicsPlayerScreen : Screen {
                         Icon(
                             imageVector = FontAwesomeIcons.Solid.StepBackward,
                             contentDescription = null,
+                            modifier = Modifier.size(40.dp),
                         )
                     }
 
