@@ -104,6 +104,10 @@ kotlin {
             //https://github.com/DevSrSouza/compose-icons
             implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
 
+            //https://github.com/russhwolf/multiplatform-settings
+            implementation("com.russhwolf:multiplatform-settings:1.1.1")
+            implementation("com.russhwolf:multiplatform-settings-coroutines:1.1.1")
+
             //https://github.com/MohamedRejeb/Compose-Rich-Editor/blob/main/docs/getting_started.md
             //https://github.com/MohamedRejeb/Compose-Rich-Editor/issues/306
             //还有很多东西不支持，先不做吧

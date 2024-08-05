@@ -10,6 +10,7 @@ class KoinInit {
             modules(
                 listOf(
                     commonModule(),
+                    platformModule(),
                 ),
             )
             appDeclaration()
