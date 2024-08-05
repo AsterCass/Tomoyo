@@ -1,18 +1,29 @@
 package ui.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -20,12 +31,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
@@ -33,14 +45,16 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.StepBackward
-import compose.icons.fontawesomeicons.solid.StepForward
-import constant.enums.MusicPlayModel
+import compose.icons.fontawesomeicons.Regular
+import compose.icons.fontawesomeicons.regular.ArrowAltCircleDown
+import compose.icons.fontawesomeicons.regular.ShareSquare
+import compose.icons.fontawesomeicons.regular.ThumbsUp
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
-import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.nezuko
 
 class MusicsPlayerScreen : Screen {
 
@@ -62,7 +76,16 @@ class MusicsPlayerScreen : Screen {
         var curPosition = musicScreenModel.playerState.collectAsState().value.currentTime
         val playModel = musicScreenModel.playerState.collectAsState().value.playModel
 
-        println("reload $playModel")
+        //animation
+        val infiniteTransition = rememberInfiniteTransition()
+        val rotationAngle by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(20000, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            )
+        )
 
 
         AnimatedVisibility(
@@ -73,10 +96,10 @@ class MusicsPlayerScreen : Screen {
         ) {
             Column(
                 Modifier.fillMaxSize()
-                    .padding(vertical = 4.dp, horizontal = 20.dp),
+                    .padding(top = 4.dp),
             ) {
                 Box(
-                    Modifier.weight(0.07f),
+                    Modifier.weight(0.07f).padding(horizontal = 20.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Button(
@@ -103,69 +126,132 @@ class MusicsPlayerScreen : Screen {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    Button(onClick = {
-                        if (isPlaying) {
-                            musicScreenModel.onPause()
-                        } else {
-                            musicScreenModel.onPlay()
-                        }
-                    }, modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)) {
-                        Text(
-                            if (isPlaying) "Pause" else "Play"
-                        )
-                    }
 
-                    Slider(
-                        value = curPosition.toFloat(),
-                        onValueChange = {
-                            curPosition = it.toDouble()
-                            musicScreenModel.onSeek(curPosition)
-                        },
-                        valueRange = 0f..totalDuration.toFloat(),
-                        modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)
-                            .width(500.dp),
+                    Image(
+                        painter = painterResource(Res.drawable.nezuko),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(vertical = 30.dp, horizontal = 20.dp)
+                            .size(300.dp)
+                            .rotate(rotationAngle)
+                            .clip(CircleShape)
+                            .border(
+                                border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
+                                shape = CircleShape
+                            )
                     )
 
-                    Button(
-                        modifier = Modifier.height(50.dp).width(200.dp),
-                        onClick = {
-                            musicScreenModel.nextPlayModel()
-                        },
+                    MainBaseCardBox(
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
+                            .height(50.dp)
+                            .width(150.dp)
+
                     ) {
-                        Row {
-                            Text(stringResource(MusicPlayModel.entries[playModel].desc))
+                        Row(
+                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp)
+                                .fillMaxSize(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
                             Icon(
-                                imageVector = MusicPlayModel.entries[playModel].imageVector,
+                                imageVector = FontAwesomeIcons.Regular.ShareSquare,
                                 contentDescription = null,
-                                modifier = Modifier.size(50.dp)
+                                modifier = Modifier.fillMaxHeight(),
+                                tint = MaterialTheme.colorScheme.onBackground,
+                            )
+                            Icon(
+                                imageVector = FontAwesomeIcons.Regular.ThumbsUp,
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxHeight(),
+                            )
+                            Icon(
+                                imageVector = FontAwesomeIcons.Regular.ArrowAltCircleDown,
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxHeight(),
                             )
                         }
+
                     }
 
-                    Button(
-                        modifier = Modifier.height(80.dp).width(80.dp),
-                        onClick = {
-                            musicScreenModel.onNext()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = FontAwesomeIcons.Solid.StepForward,
-                            contentDescription = null,
-                            modifier = Modifier.size(40.dp),
-                        )
-                    }
-                    Button(
-                        modifier = Modifier.height(80.dp).width(80.dp),
-                        onClick = {
-                            musicScreenModel.onPrev()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = FontAwesomeIcons.Solid.StepBackward,
-                            contentDescription = null,
-                            modifier = Modifier.size(40.dp),
-                        )
-                    }
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(top = 30.dp)
+                            .clip(
+                                RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                            )
+                            .border(
+                                border = BorderStroke(
+                                    2.dp,
+                                    MaterialTheme.colorScheme.onBackground
+                                ),
+                                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+                            )
+                    ) {}
+
+
+//                    Button(onClick = {
+//                        if (isPlaying) {
+//                            musicScreenModel.onPause()
+//                        } else {
+//                            musicScreenModel.onPlay()
+//                        }
+//                    }, modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)) {
+//                        Text(
+//                            if (isPlaying) "Pause" else "Play"
+//                        )
+//                    }
+//
+//                    Slider(
+//                        value = curPosition.toFloat(),
+//                        onValueChange = {
+//                            curPosition = it.toDouble()
+//                            musicScreenModel.onSeek(curPosition)
+//                        },
+//                        valueRange = 0f..totalDuration.toFloat(),
+//                        modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)
+//                            .width(500.dp),
+//                    )
+//
+//                    Button(
+//                        modifier = Modifier.height(50.dp).width(200.dp),
+//                        onClick = {
+//                            musicScreenModel.nextPlayModel()
+//                        },
+//                    ) {
+//                        Row {
+//                            Text(stringResource(MusicPlayModel.entries[playModel].desc))
+//                            Icon(
+//                                imageVector = MusicPlayModel.entries[playModel].imageVector,
+//                                contentDescription = null,
+//                                modifier = Modifier.size(50.dp)
+//                            )
+//                        }
+//                    }
+//
+//                    Button(
+//                        modifier = Modifier.height(80.dp).width(80.dp),
+//                        onClick = {
+//                            musicScreenModel.onNext()
+//                        }
+//                    ) {
+//                        Icon(
+//                            imageVector = FontAwesomeIcons.Solid.StepForward,
+//                            contentDescription = null,
+//                            modifier = Modifier.size(40.dp),
+//                        )
+//                    }
+//                    Button(
+//                        modifier = Modifier.height(80.dp).width(80.dp),
+//                        onClick = {
+//                            musicScreenModel.onPrev()
+//                        }
+//                    ) {
+//                        Icon(
+//                            imageVector = FontAwesomeIcons.Solid.StepBackward,
+//                            contentDescription = null,
+//                            modifier = Modifier.size(40.dp),
+//                        )
+//                    }
 
                 }
 
