@@ -17,6 +17,10 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
 
     private var currentItemIndex = -1
 
+    private val maxPlaySize: Int = 50;
+
+    private val playedItems = mutableListOf<AudioSimpleModel>()
+
     private val mediaItems = mutableMapOf<String, AudioSimpleModel>()
 
     actual fun start(id: String) {
@@ -65,7 +69,10 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
     }
 
     actual fun prev() {
-
+        if (playedItems.isEmpty()) return
+        val lastItem = playedItems.removeLast()
+        currentItemIndex = mediaItems.keys.indexOf(lastItem.id)
+        playWithIndex(currentItemIndex, false)
     }
 
     actual fun seekTo(time: Double) {
@@ -86,8 +93,18 @@ actual class AudioPlayer actual constructor(private val musicPlayerState: MusicP
         mediaPlayer?.stop()
     }
 
-    private fun playWithIndex(index: Int) {
+    private fun playWithIndex(index: Int, maintainLast: Boolean = true) {
         if (index >= mediaItems.size || index < 0) return
+        //maintain played map
+        if (maintainLast) {
+            val lastItem = mediaItems[musicPlayerState.currentPlayId]
+            if (null != lastItem) {
+                playedItems.add(lastItem)
+                if (playedItems.size > maxPlaySize) {
+                    playedItems.removeFirstOrNull()
+                }
+            }
+        }
         //convert
         val currentItem = mediaItems.entries.toList()[index]
         musicPlayerState.currentPlayId = currentItem.key
