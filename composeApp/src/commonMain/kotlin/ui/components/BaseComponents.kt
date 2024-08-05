@@ -64,13 +64,6 @@ fun MainAppBar(
 
 ) {
 
-//    when (currentScreen.code) {
-//        MainNavigationEnum.HOME.code -> {}
-//        MainNavigationEnum.SETTING.code -> {}
-//
-//        else -> {}
-//    }
-
     val title = LocalTabNavigator.current.current.options.title
 
     CenterAlignedTopAppBar(

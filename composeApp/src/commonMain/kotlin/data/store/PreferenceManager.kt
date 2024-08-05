@@ -11,7 +11,7 @@ import com.russhwolf.settings.coroutines.getStringOrNullFlow
 import com.russhwolf.settings.set
 import kotlinx.coroutines.flow.Flow
 
-class PreferenceManager constructor(private val settings: Settings) {
+class PreferenceManager(private val settings: Settings) {
 
     private val observableSettings: ObservableSettings by lazy { settings as ObservableSettings }
 
