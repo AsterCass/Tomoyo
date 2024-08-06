@@ -41,9 +41,6 @@ import androidx.compose.ui.unit.dp
 import api.ApiResText
 import api.BaseApi
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Regular
-import compose.icons.fontawesomeicons.regular.Envelope
 import constant.enums.MainNavigationEnum
 import constant.enums.NotificationType
 import kotlinx.coroutines.delay
@@ -51,8 +48,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import theme.unselectedColor
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.envelope_alt
 import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
 import tomoyo.composeapp.generated.resources.nezuko
@@ -109,9 +108,8 @@ fun MainAppBar(
                                 )
                             )
                         }
-                        .size(35.dp)
-                        .padding(5.dp),
-                    imageVector = FontAwesomeIcons.Regular.Envelope,
+                        .size(28.dp),
+                    imageVector = vectorResource(Res.drawable.envelope_alt),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onBackground,
                 )

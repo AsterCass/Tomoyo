@@ -36,6 +36,9 @@ class MusicScreenModel : ScreenModel {
         playListId: String,
         musicPlayMap: Map<String, AudioSimpleModel> = _musicPlayMap.value
     ) {
+        if (playListId == _playerState.value.currentPlayId) {
+            return
+        }
         //todo login check
         if (musicPlayMap.isNotEmpty()) {
             _player.value.clearSongs()

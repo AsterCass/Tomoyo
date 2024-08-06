@@ -30,9 +30,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import biz.formatSeconds
 import cafe.adriel.voyager.core.screen.Screen
@@ -55,26 +58,30 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.regular.ArrowAltCircleDown
-import compose.icons.fontawesomeicons.regular.CommentDots
-import compose.icons.fontawesomeicons.regular.PauseCircle
-import compose.icons.fontawesomeicons.regular.PlayCircle
 import compose.icons.fontawesomeicons.regular.ShareSquare
 import compose.icons.fontawesomeicons.regular.ThumbsUp
-import compose.icons.fontawesomeicons.solid.StepBackward
-import compose.icons.fontawesomeicons.solid.StepForward
+import compose.icons.fontawesomeicons.solid.CandyCane
 import constant.enums.MusicPlayModel
+import constant.enums.NotificationType
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.media_audio
+import tomoyo.composeapp.generated.resources.media_circle_pause
+import tomoyo.composeapp.generated.resources.media_circle_play
+import tomoyo.composeapp.generated.resources.media_next
+import tomoyo.composeapp.generated.resources.media_previous
 import tomoyo.composeapp.generated.resources.nezuko
 
 class MusicsPlayerScreen : Screen {
 
     override val key: ScreenKey = uniqueScreenKey
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val mainModel: MainScreenModel = koinInject()
@@ -97,14 +104,12 @@ class MusicsPlayerScreen : Screen {
         val infiniteTransition = rememberInfiniteTransition()
         val rotationAngle by infiniteTransition.animateFloat(
             initialValue = lastAngle,
-            targetValue = if (isPlaying) 360f else lastAngle,
+            targetValue = if (isPlaying) (360f + lastAngle) else lastAngle,
             animationSpec = infiniteRepeatable(
                 animation = tween(20000, easing = LinearEasing),
                 repeatMode = RepeatMode.Restart
             )
         )
-
-        println("reload xxxxxxxxxx" + System.currentTimeMillis())
 
         AnimatedVisibility(
             visible = !loadingScreen,
@@ -167,25 +172,57 @@ class MusicsPlayerScreen : Screen {
 
                     ) {
                         Row(
-                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp)
+                            modifier = Modifier.padding(vertical = 6.dp, horizontal = 10.dp)
                                 .fillMaxSize(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Icon(
                                 imageVector = FontAwesomeIcons.Regular.ShareSquare,
                                 contentDescription = null,
-                                modifier = Modifier.fillMaxHeight().clickable { },
-                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .clickable {
+                                        NotificationManager.showNotification(
+                                            MainNotification(
+                                                "开发中",
+                                                NotificationType.SUCCESS
+                                            )
+                                        )
+                                    }
+                                    .padding(5.dp)
+                                    .fillMaxHeight(),
                             )
                             Icon(
                                 imageVector = FontAwesomeIcons.Regular.ThumbsUp,
                                 contentDescription = null,
-                                modifier = Modifier.fillMaxHeight().clickable { },
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .clickable {
+                                        NotificationManager.showNotification(
+                                            MainNotification(
+                                                "开发中",
+                                                NotificationType.SUCCESS
+                                            )
+                                        )
+                                    }
+                                    .padding(5.dp)
+                                    .fillMaxHeight(),
                             )
                             Icon(
                                 imageVector = FontAwesomeIcons.Regular.ArrowAltCircleDown,
                                 contentDescription = null,
-                                modifier = Modifier.fillMaxHeight().clickable { },
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .clickable {
+                                        NotificationManager.showNotification(
+                                            MainNotification(
+                                                "开发中",
+                                                NotificationType.SUCCESS
+                                            )
+                                        )
+                                    }
+                                    .padding(5.dp)
+                                    .fillMaxHeight(),
                             )
                         }
 
@@ -194,16 +231,6 @@ class MusicsPlayerScreen : Screen {
                     Column(
                         modifier = Modifier.fillMaxSize()
                             .padding(top = 30.dp)
-                            .clip(
-                                RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-                            )
-                            .border(
-                                border = BorderStroke(
-                                    2.dp,
-                                    MaterialTheme.colorScheme.onBackground
-                                ),
-                                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                            )
                             .padding(15.dp)
                     ) {
 
@@ -229,13 +256,33 @@ class MusicsPlayerScreen : Screen {
                                 lastAngle = rotationAngle
                             },
                             valueRange = 0f..totalDuration.toFloat(),
-                            modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)
-                                .width(500.dp),
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            thumb =
+                            {
+                                Icon(
+                                    imageVector = FontAwesomeIcons.Solid.CandyCane,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            },
+                            colors = SliderColors(
+                                thumbColor = Color.Transparent,
+                                activeTrackColor = MaterialTheme.colorScheme.primary,
+                                activeTickColor = Color.Transparent,
+                                inactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
+                                inactiveTickColor = Color.Transparent,
+                                disabledThumbColor = Color.Transparent,
+                                disabledActiveTrackColor = MaterialTheme.colorScheme.primary,
+                                disabledActiveTickColor = Color.Transparent,
+                                disabledInactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
+                                disabledInactiveTickColor = Color.Transparent,
+                            ),
 
                             )
 
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(formatSeconds(curPosition.toInt()))
@@ -249,107 +296,72 @@ class MusicsPlayerScreen : Screen {
                         ) {
 
                             Icon(
-                                imageVector = MusicPlayModel.entries[playModel].imageVector,
+                                imageVector = vectorResource(MusicPlayModel.entries[playModel].imageVector),
                                 contentDescription = null,
-                                modifier = Modifier.size(25.dp).clickable {
-                                    musicScreenModel.nextPlayModel()
-                                },
-                                tint = MaterialTheme.colorScheme.onBackground,
-                            )
-                            Icon(
-                                imageVector = FontAwesomeIcons.Solid.StepBackward,
-                                contentDescription = null,
-                                modifier = Modifier.size(25.dp).clickable {
-                                    musicScreenModel.onPrev()
-                                },
-                            )
-                            Icon(
-                                imageVector = if (isPlaying) FontAwesomeIcons.Regular.PauseCircle
-                                else FontAwesomeIcons.Regular.PlayCircle,
-                                contentDescription = null,
-                                modifier = Modifier.size(50.dp).clickable {
-                                    if (isPlaying) {
-                                        musicScreenModel.onPause()
-                                        lastAngle = rotationAngle
-                                    } else {
-                                        musicScreenModel.onPlay()
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable {
+                                        musicScreenModel.nextPlayModel()
                                     }
-                                },
+                                    .size(30.dp),
                             )
                             Icon(
-                                imageVector = FontAwesomeIcons.Solid.StepForward,
+                                imageVector = vectorResource(Res.drawable.media_previous),
                                 contentDescription = null,
-                                modifier = Modifier.size(25.dp).clickable {
-                                    musicScreenModel.onNext()
-                                },
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable {
+                                        musicScreenModel.onPrev()
+                                    }
+                                    .size(30.dp),
                             )
                             Icon(
-                                imageVector = FontAwesomeIcons.Regular.CommentDots,
+                                imageVector = if (isPlaying) vectorResource(Res.drawable.media_circle_pause)
+                                else vectorResource(Res.drawable.media_circle_play),
                                 contentDescription = null,
-                                modifier = Modifier.size(25.dp).clickable { },
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable {
+                                        if (isPlaying) {
+                                            musicScreenModel.onPause()
+                                            lastAngle = rotationAngle
+                                        } else {
+                                            musicScreenModel.onPlay()
+                                        }
+                                    }
+                                    .size(60.dp),
+                                tint = MaterialTheme.colorScheme.primary
                             )
-
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.media_next),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable {
+                                        musicScreenModel.onNext()
+                                    }
+                                    .size(30.dp),
+                            )
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.media_audio),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable {
+                                        NotificationManager.showNotification(
+                                            MainNotification(
+                                                "开发中",
+                                                NotificationType.SUCCESS
+                                            )
+                                        )
+                                    }
+                                    .size(30.dp),
+                            )
 
                         }
 
 
                     }
-
-
-//                    Button(onClick = {
-//                        if (isPlaying) {
-//                            musicScreenModel.onPause()
-//                        } else {
-//                            musicScreenModel.onPlay()
-//                        }
-//                    }, modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)) {
-//                        Text(
-//                            if (isPlaying) "Pause" else "Play"
-//                        )
-//                    }
-//
-
-//
-//                    Button(
-//                        modifier = Modifier.height(50.dp).width(200.dp),
-//                        onClick = {
-//                            musicScreenModel.nextPlayModel()
-//                        },
-//                    ) {
-//                        Row {
-//                            Text(stringResource(MusicPlayModel.entries[playModel].desc))
-//                            Icon(
-//                                imageVector = MusicPlayModel.entries[playModel].imageVector,
-//                                contentDescription = null,
-//                                modifier = Modifier.size(50.dp)
-//                            )
-//                        }
-//                    }
-//
-//                    Button(
-//                        modifier = Modifier.height(80.dp).width(80.dp),
-//                        onClick = {
-//                            musicScreenModel.onNext()
-//                        }
-//                    ) {
-//                        Icon(
-//                            imageVector = FontAwesomeIcons.Solid.StepForward,
-//                            contentDescription = null,
-//                            modifier = Modifier.size(40.dp),
-//                        )
-//                    }
-//                    Button(
-//                        modifier = Modifier.height(80.dp).width(80.dp),
-//                        onClick = {
-//                            musicScreenModel.onPrev()
-//                        }
-//                    ) {
-//                        Icon(
-//                            imageVector = FontAwesomeIcons.Solid.StepBackward,
-//                            contentDescription = null,
-//                            modifier = Modifier.size(40.dp),
-//                        )
-//                    }
 
                 }
 

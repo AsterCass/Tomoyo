@@ -17,13 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,26 +32,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.Pause
-import compose.icons.fontawesomeicons.solid.Play
 import constant.enums.NotificationType
 import data.AudioSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import theme.deepIconColor
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.media_audio
+import tomoyo.composeapp.generated.resources.media_pause
+import tomoyo.composeapp.generated.resources.media_play
 import tomoyo.composeapp.generated.resources.nezuko
 import ui.components.MainBaseCardBox
 import ui.components.MainNotification
@@ -153,7 +149,6 @@ fun MainMusicsScreen(
                     .width(minWidthDp - 50.dp)
             ) {
                 MainBaseCardBox(
-                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.fillMaxSize()
                         .padding(5.dp)
                 ) {
@@ -187,19 +182,6 @@ fun MainMusicsScreen(
                                 .align(Alignment.CenterHorizontally).padding(
                                     top = 2.dp, start = 5.dp, end = 5.dp, bottom = 10.dp
                                 ),
-                            colors = SliderColors(
-                                thumbColor = Color.Transparent,
-                                activeTrackColor = Color.Transparent,
-                                activeTickColor = Color.Transparent,
-                                inactiveTrackColor = Color.Transparent,
-                                inactiveTickColor = Color.Transparent,
-                                disabledThumbColor = Color.Transparent,
-                                disabledActiveTrackColor = MaterialTheme.colorScheme.primary,
-                                disabledActiveTickColor = Color.Transparent,
-                                disabledInactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
-                                disabledInactiveTickColor = Color.Transparent,
-                            )
-
                         )
 
 
@@ -277,10 +259,11 @@ fun MusicListItem(
             horizontalArrangement = Arrangement.End
         ) {
             Icon(
-                imageVector = Icons.Outlined.FavoriteBorder,
+                imageVector = vectorResource(Res.drawable.media_audio),
                 contentDescription = null,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
+                    .padding(2.dp)
+                    .clip(RoundedCornerShape(10.dp))
                     .clickable {
                         NotificationManager.showNotification(
                             MainNotification(
@@ -289,20 +272,19 @@ fun MusicListItem(
                             )
                         )
                     }
-                    .size(35.dp)
-                    .padding(5.dp),
+                    .size(28.dp),
                 tint = if (isPlaying) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.deepIconColor
             )
             Icon(
-                imageVector = if (isPlaying) FontAwesomeIcons.Solid.Pause
-                else FontAwesomeIcons.Solid.Play,
+                imageVector = if (isPlaying) vectorResource(Res.drawable.media_pause)
+                else vectorResource(Res.drawable.media_play),
                 contentDescription = null,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
+                    .padding(2.dp)
+                    .clip(RoundedCornerShape(10.dp))
                     .clickable { onStart(false) }
-                    .size(35.dp)
-                    .padding(8.dp),
+                    .size(28.dp),
                 tint = if (isPlaying) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.deepIconColor
             )
@@ -337,7 +319,7 @@ fun MusicPlayItem(
                 .align(Alignment.CenterVertically)
                 .clip(RoundedCornerShape(15.dp))
                 .border(
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
                     shape = RoundedCornerShape(15.dp)
                 )
         )
@@ -351,13 +333,13 @@ fun MusicPlayItem(
                 modifier = Modifier.padding(start = 2.dp, bottom = 3.dp),
                 text = item.audioName,
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
                 text = item.audioAuthor,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.inversePrimary,
+                color = MaterialTheme.colorScheme.subTextColor,
             )
 
         }
@@ -368,11 +350,11 @@ fun MusicPlayItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = if (isPlaying) FontAwesomeIcons.Solid.Pause
-                else FontAwesomeIcons.Solid.Play,
+                imageVector = if (isPlaying) vectorResource(Res.drawable.media_pause)
+                else vectorResource(Res.drawable.media_play),
                 contentDescription = null,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
+                    .clip(RoundedCornerShape(10.dp))
                     .clickable {
                         if (isPlaying) {
                             onPause()
@@ -380,9 +362,8 @@ fun MusicPlayItem(
                             onPlay()
                         }
                     }
-                    .size(30.dp)
-                    .padding(5.dp),
-                tint = MaterialTheme.colorScheme.primary
+                    .size(28.dp),
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
 

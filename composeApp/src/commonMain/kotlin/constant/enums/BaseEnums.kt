@@ -15,14 +15,15 @@ import compose.icons.fontawesomeicons.solid.Comments
 import compose.icons.fontawesomeicons.solid.Film
 import compose.icons.fontawesomeicons.solid.ListUl
 import compose.icons.fontawesomeicons.solid.Music
-import compose.icons.fontawesomeicons.solid.Random
-import compose.icons.fontawesomeicons.solid.Recycle
-import compose.icons.fontawesomeicons.solid.Redo
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.chat
 import tomoyo.composeapp.generated.resources.home
+import tomoyo.composeapp.generated.resources.media_repeat_all
+import tomoyo.composeapp.generated.resources.media_repeat_one
+import tomoyo.composeapp.generated.resources.media_shuffle
 import tomoyo.composeapp.generated.resources.musics
 import tomoyo.composeapp.generated.resources.none
 import tomoyo.composeapp.generated.resources.play_model_circle
@@ -39,12 +40,12 @@ import ui.components.VideosTab
 
 
 enum class MusicPlayModel(
-    val imageVector: ImageVector,
+    val imageVector: DrawableResource,
     val desc: StringResource,
 ) {
-    ORDER(FontAwesomeIcons.Solid.Recycle, Res.string.play_model_order),
-    CIRCULATION(FontAwesomeIcons.Solid.Redo, Res.string.play_model_circle),
-    RANDOM(FontAwesomeIcons.Solid.Random, Res.string.play_model_random),
+    ORDER(Res.drawable.media_repeat_all, Res.string.play_model_order),
+    CIRCULATION(Res.drawable.media_repeat_one, Res.string.play_model_circle),
+    RANDOM(Res.drawable.media_shuffle, Res.string.play_model_random),
 }
 
 enum class NotificationType(

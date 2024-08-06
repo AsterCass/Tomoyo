@@ -118,10 +118,6 @@ kotlin {
             //而且我也不是很想用嵌入html的方式来展示markdown文档
             //implementation("io.github.KevinnZou:compose-webview:0.33.3")
 
-            //https://github.com/mahozad/wavy-slider
-            //桌面端报错
-            //implementation("ir.mahozad.multiplatform:wavy-slider:2.0.0-alpha")
-
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
