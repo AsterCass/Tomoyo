@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Regular
+import compose.icons.fontawesomeicons.regular.DotCircle
 import constant.enums.NotificationType
 import data.AudioSimpleModel
 import data.model.MainScreenModel
@@ -94,6 +98,9 @@ fun MainMusicsScreen(
     //update data
     musicApiCoroutine.launch { screenModel.updateAllAudioList() }
 
+    //jump
+    val listState = rememberLazyListState()
+
     //layout
     val density = LocalDensity.current
     val minHeightDp = with(density) { constraints.minHeight.toDp() }
@@ -113,7 +120,7 @@ fun MainMusicsScreen(
             modifier = Modifier.fillMaxSize()
                 .padding(start = 10.dp, end = 10.dp)
         ) {
-            LazyColumn {
+            LazyColumn(state = listState) {
 
                 items(musicPlayMap.size) { index ->
                     val playingItem = musicPlayMap.values.toList()[index]
@@ -166,6 +173,15 @@ fun MainMusicsScreen(
                                 isPlaying = isPlaying,
                                 onPause = { screenModel.onPause() },
                                 onPlay = { screenModel.onPlay() },
+                                toPlaying = {
+                                    musicApiCoroutine.launch {
+                                        listState.scrollToItem(
+                                            musicPlayMap.keys.indexOf(
+                                                currentPlayId
+                                            )
+                                        )
+                                    }
+                                }
                             )
                         }
 
@@ -302,6 +318,7 @@ fun MusicPlayItem(
     isPlaying: Boolean,
     onPause: () -> Unit,
     onPlay: () -> Unit,
+    toPlaying: () -> Unit,
 ) {
 
     if (null == item) return
@@ -325,7 +342,7 @@ fun MusicPlayItem(
         )
 
         Column(
-            modifier = Modifier.weight(0.73f)
+            modifier = Modifier.weight(0.65f)
                 .align(Alignment.CenterVertically)
                 .padding(start = 20.dp)
         ) {
@@ -345,10 +362,23 @@ fun MusicPlayItem(
         }
 
         Row(
-            modifier = Modifier.weight(0.12f)
+            modifier = Modifier.weight(0.2f)
                 .fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                imageVector = FontAwesomeIcons.Regular.DotCircle,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable {
+                        toPlaying()
+                    }
+                    .padding(horizontal = 2.dp)
+                    .size(25.dp)
+                    .padding(2.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
             Icon(
                 imageVector = if (isPlaying) vectorResource(Res.drawable.media_pause)
                 else vectorResource(Res.drawable.media_play),
