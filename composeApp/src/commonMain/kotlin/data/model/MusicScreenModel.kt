@@ -14,7 +14,6 @@ class MusicScreenModel : ScreenModel {
     private val _playerState = MutableStateFlow(MusicPlayerState())
     val playerState = _playerState.asStateFlow()
 
-    private val _playingListId = MutableStateFlow("")
     private val _player = MutableStateFlow(AudioPlayer(_playerState.value))
     private val _musicPlayMap = MutableStateFlow<Map<String, AudioSimpleModel>>(emptyMap())
     val musicPlayMap = _musicPlayMap.asStateFlow()
@@ -24,6 +23,9 @@ class MusicScreenModel : ScreenModel {
         }
         _musicPlayMap.value = BaseApi().getAllAudio().associateBy { it.id }
     }
+
+    fun getCurrentMusicData() =
+        _musicPlayMap.value.getOrDefault(_playerState.value.currentPlayId, AudioSimpleModel())
 
     fun nextPlayModel() {
         _playerState.value.playModel = _playerState.value.playModel
@@ -35,10 +37,9 @@ class MusicScreenModel : ScreenModel {
         musicPlayMap: Map<String, AudioSimpleModel> = _musicPlayMap.value
     ) {
         //todo login check
-        if (playListId != _playingListId.value && musicPlayMap.isNotEmpty()) {
+        if (musicPlayMap.isNotEmpty()) {
             _player.value.clearSongs()
             _player.value.addSongList(musicPlayMap)
-            _playingListId.value = playListId
             _musicPlayMap.value = musicPlayMap
         }
         _player.value.start(playListId)
@@ -63,7 +64,6 @@ class MusicScreenModel : ScreenModel {
     fun onPrev() {
         _player.value.prev()
     }
-
 
 
 }

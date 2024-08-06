@@ -117,6 +117,16 @@ fun MainTypography(): Typography {
         titleLarge = MaterialTheme.typography.titleLarge.copy(
             fontFamily = defaultFontFamily,
         ),
+        headlineSmall = MaterialTheme.typography.headlineSmall.copy(
+            fontFamily = defaultFontFamily,
+        ),
+        headlineMedium = MaterialTheme.typography.headlineMedium.copy(
+            fontFamily = defaultFontFamily,
+        ),
+        headlineLarge = MaterialTheme.typography.headlineLarge.copy(
+            fontFamily = defaultFontFamily,
+        ),
+
 
         )
 }
