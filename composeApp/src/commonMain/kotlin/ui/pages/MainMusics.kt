@@ -364,7 +364,8 @@ fun MusicPlayItem(
         Row(
             modifier = Modifier.weight(0.2f)
                 .fillMaxHeight(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End,
         ) {
             Icon(
                 imageVector = FontAwesomeIcons.Regular.DotCircle,
