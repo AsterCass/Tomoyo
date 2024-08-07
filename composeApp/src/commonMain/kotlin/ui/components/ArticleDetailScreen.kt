@@ -75,6 +75,12 @@ class ArticleDetailScreen : Screen {
         //data
         val articleData = articleScreenModel.readingArticleMeta.value
 
+
+        if (token.isBlank()) {
+            navigator.push(UserLoginScreen())
+            return
+        }
+
         articleApiCoroutine.launch {
             articleScreenModel.updateReadingArticleData(articleData.id ?: "", token)
         }

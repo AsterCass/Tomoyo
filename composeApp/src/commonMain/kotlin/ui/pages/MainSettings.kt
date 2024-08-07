@@ -1,32 +1,33 @@
 package ui.pages
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import api.baseJsonConf
 import data.model.MainScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.logout_btn
 
 @Composable
 fun MainSettingsScreen(
     mainModel: MainScreenModel = koinInject(),
     dataStorageManager: DataStorageManager = koinInject(),
 ) {
-
-    println("reload MainSettingsScreen")
 
     //coroutine
     val settingApiCoroutine = rememberCoroutineScope()
@@ -35,6 +36,7 @@ fun MainSettingsScreen(
     val userState = mainModel.userState.collectAsState().value
     val syncUserData = mainModel.syncUserData.collectAsState().value
     val userData = userState.userData
+    val token = userState.token
 
     //save data
     if (syncUserData) {
@@ -45,50 +47,31 @@ fun MainSettingsScreen(
         )
     }
 
-    var account by rememberSaveable { mutableStateOf("") }
-    var passwd by rememberSaveable { mutableStateOf("") }
-
     Column(
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier = Modifier.fillMaxWidth().padding(20.dp),
     ) {
 
-        if (userData.token.isNullOrBlank()) {
-            TextField(
-                value = account,
-                onValueChange = { account = it }
-            )
-            TextField(
-                value = passwd,
-                visualTransformation = PasswordVisualTransformation(),
-                onValueChange = { passwd = it }
-            )
+
+        if (token.isNotBlank()) {
             Button(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxWidth()
+                    .height(50.dp),
                 onClick = {
                     settingApiCoroutine.launch {
-                        mainModel.login(account, passwd)
+                        mainModel.logout()
                     }
-                }
+                },
+                colors = ButtonDefaults.buttonColors().copy(
+
+                )
             ) {
-                Text("登录")
+                Text(
+                    text = stringResource(Res.string.logout_btn),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
             }
-        }
-
-        if (userData.account.isNullOrBlank()) {
-            Text("未登录")
-        } else {
-            Column {
-                Text("已登录${userData.nickName}")
-                Button(
-                    onClick = {
-                        settingApiCoroutine.launch {
-                            mainModel.logout()
-                        }
-                    }
-                ) {
-                    Text("登出")
-                }
-            }
-
         }
 
 

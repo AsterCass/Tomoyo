@@ -10,6 +10,7 @@ import data.UserDataModel
 import data.UserState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,6 +51,7 @@ class MainScreenModel : ScreenModel {
     }
 
     //socket
+    private val _collectorJob = MutableStateFlow<Job?>(null)
     private val _socketClient = MutableStateFlow(StompClient(SockJSClient()))
     private val _socketSession = MutableStateFlow<StompSession?>(null)
     val socketSession = _socketSession.asStateFlow()
@@ -79,6 +81,7 @@ class MainScreenModel : ScreenModel {
                 _syncUserData.value = true
             }
         } else {
+            //todo check data is login
             _userState.value.userData = dbData
         }
         _userState.value.token = _userState.value.userData.token ?: ""
@@ -86,18 +89,27 @@ class MainScreenModel : ScreenModel {
         if (_userState.value.token.isBlank()) return
 
         CoroutineScope(Dispatchers.IO).launch {
-            _socketSession.value?.disconnect()
-            _socketSession.value = _socketClient.value.connect(
-                "https://api.astercasc.com/yui/chat-websocket/socketAuthNoError?" +
-                        "User-Token=${_userState.value.token}"
-            )
-            val subscription: Flow<String> = _socketSession.value!!.subscribeText(
-                "/user/${_userState.value.token}/message/receive"
-            )
-            subscription.collect { msg ->
-                val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
-                _currentChatId.value = chatRow.fromChatId
-                _currentChatRowList.value += chatRow
+            try {
+                _collectorJob.value?.cancel()
+                _socketSession.value?.disconnect()
+                _collectorJob.value = null
+                _socketSession.value = null
+                _socketSession.value = _socketClient.value.connect(
+                    "https://api.astercasc.com/yui/chat-websocket/socketAuthNoError?" +
+                            "User-Token=${_userState.value.token}"
+                )
+                val subscription: Flow<String> = _socketSession.value!!.subscribeText(
+                    "/user/${_userState.value.token}/message/receive"
+                )
+                _collectorJob.value = _commonCoroutine.launch {
+                    subscription.collect { msg ->
+                        val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
+                        _currentChatId.value = chatRow.fromChatId
+                        _currentChatRowList.value += chatRow
+                    }
+                }
+            } catch (ex: Exception) {
+                logout()
             }
         }
     }
@@ -107,9 +119,6 @@ class MainScreenModel : ScreenModel {
         _userState.value.userData = UserDataModel()
         _userState.value.token = ""
         _syncUserData.value = true
-        CoroutineScope(Dispatchers.IO).launch {
-            _socketSession.value?.disconnect()
-        }
     }
 
     //chat

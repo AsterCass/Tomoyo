@@ -44,4 +44,20 @@
     <string name="play_model_order">Repeat All</string>
     <string name="play_model_circle">Repeat One</string>
 
+    <string name="login_title">Log In to Your Account</string>
+    <string name="login_subtitle">Please enter the email and password you used during registration. If you don't have an account, please go to `www.astercasc.com` to register. This application does not currently offer a registration option.</string>
+    <string name="login_account_placeholder"> you@example.com </string>
+    <string name="login_passwd_placeholder"> Enter your password </string>
+    <string name="login_btn"> Sign In </string>
+    <string name="login_check_privacy_terms_prefix">I agree to</string>
+    <string name="login_check_privacy_terms"> privacy policy and terms </string>
+    <string name="login_more"> or </string>
+    <string name="login_create_account_prefix"> Don't have any account yet?</string>
+    <string name="login_create_account"> Create account instead </string>
+    <string name="login_notification_check"> Please check the user agreement and privacy protection guidelines</string>
+    <string name="login_notification_account"> Please enter your account </string>
+    <string name="login_notification_passwd"> Please enter your password </string>
+
+    <string name="logout_btn"> Log Out </string>
+
 </resources>

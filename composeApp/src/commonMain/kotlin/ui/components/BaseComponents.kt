@@ -246,6 +246,7 @@ fun InitForNoComposableRes() {
 fun MainBaseCardBox(
     color: Color = MaterialTheme.colorScheme.onBackground,
     modifier: Modifier = Modifier,
+    alignment: Alignment = Alignment.TopStart,
     content: @Composable () -> Unit,
 ) {
 
@@ -282,7 +283,8 @@ fun MainBaseCardBox(
                     )
                     .clip(
                         shape = RoundedCornerShape(roundSize)
-                    )
+                    ),
+                contentAlignment = alignment,
             ) {
                 content()
             }

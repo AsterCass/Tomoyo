@@ -45,4 +45,21 @@
     <string name="play_model_circle">单曲循环</string>
 
 
+    <string name="login_title">用户登录</string>
+    <string name="login_subtitle">请输入注册时使用的邮箱和密码。如果没有账户，请前往`www.astercasc.com`进行注册，本应用程序暂时不提供注册</string>
+    <string name="login_account_placeholder"> you@example.com </string>
+    <string name="login_passwd_placeholder"> 输入密码 </string>
+    <string name="login_btn"> 登录 </string>
+    <string name="login_check_privacy_terms_prefix"> 我同意</string>
+    <string name="login_check_privacy_terms">隐私保护指引和用户服务协议 </string>
+    <string name="login_more"> 其他登录方式 </string>
+    <string name="login_create_account_prefix"> 还没有账户？</string>
+    <string name="login_create_account"> 去创建 </string>
+    <string name="login_notification_check"> 请勾选用户协议以及隐私保护指引 </string>
+    <string name="login_notification_account"> 请输入账号 </string>
+    <string name="login_notification_passwd"> 请输入密码 </string>
+
+    <string name="logout_btn"> 登出 </string>
+
+
 </resources>
