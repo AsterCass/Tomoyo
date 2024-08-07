@@ -7,6 +7,7 @@ import data.AudioSimpleModel
 import data.LoginParam
 import data.ResultObj
 import data.UserDataModel
+import data.model.GlobalDataModel
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -18,6 +19,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.java.KoinJavaComponent.inject
 import ui.components.MainNotification
 import ui.components.NotificationManager
 
@@ -37,6 +39,8 @@ data class ApiResText(
 private var apiResText: ApiResText = ApiResText()
 
 class BaseApi {
+
+    private val globalDataModel: GlobalDataModel by inject(GlobalDataModel::class.java)
 
     companion object {
         fun buildStringRes(res: ApiResText) {
@@ -86,6 +90,14 @@ class BaseApi {
         }
     }
 
+    suspend fun isLogin(token: String): Boolean {
+        val body = client.get(getUrl("/yui/user/isLogin/authNoError"))
+        {
+            header("User-Token", token)
+        }.body<ResultObj<Boolean>>()
+        return body.data ?: false
+    }
+
     suspend fun getArticleList(offset: Int = 0, keyword: String = ""): List<ArticleSimpleModel> {
         //delay(2000)
         val body = client.get(getUrl("/kotomi/article/list"))
@@ -104,6 +116,7 @@ class BaseApi {
             header("User-Token", token)
         }
         val body = response.body<ResultObj<String?>>()
+        if (600 == body.status) globalDataModel.clearLocalUserState()
         return if (body.data.isNullOrEmpty()) "" else body.data!!
     }
 

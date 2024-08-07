@@ -7,7 +7,6 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
 import data.UserDataModel
-import data.UserState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,9 +19,14 @@ import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
+import org.koin.java.KoinJavaComponent.inject
 
 
 class MainScreenModel : ScreenModel {
+
+    private val globalDataModel: GlobalDataModel by inject(GlobalDataModel::class.java)
+    private val _userState = globalDataModel.userState
+    val userState = _userState
 
     //coroutine
     private val _commonCoroutine = screenModelScope
@@ -68,8 +72,6 @@ class MainScreenModel : ScreenModel {
     fun syncedUserData() {
         _syncUserData.value = false
     }
-    private val _userState = MutableStateFlow(UserState())
-    val userState = _userState.asStateFlow()
 
     suspend fun login(
         account: String = "", passwd: String = "",
@@ -81,12 +83,19 @@ class MainScreenModel : ScreenModel {
                 _syncUserData.value = true
             }
         } else {
-            //todo check data is login
             _userState.value.userData = dbData
         }
         _userState.value.token = _userState.value.userData.token ?: ""
 
         if (_userState.value.token.isBlank()) return
+
+        if (null != dbData) {
+            val isLogin = BaseApi().isLogin(_userState.value.token)
+            if (!isLogin) {
+                globalDataModel.clearLocalUserState()
+                return
+            }
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -116,8 +125,7 @@ class MainScreenModel : ScreenModel {
 
     suspend fun logout() {
         BaseApi().logout(_userState.value.token)
-        _userState.value.userData = UserDataModel()
-        _userState.value.token = ""
+        globalDataModel.clearLocalUserState()
         _syncUserData.value = true
     }
 
