@@ -173,7 +173,7 @@ class UserLoginScreen : Screen {
                 }
 
                 Text(
-                    modifier = Modifier.padding(top = 40.dp, start = 10.dp),
+                    modifier = Modifier.padding(top = 30.dp, start = 10.dp),
                     text = stringResource(Res.string.login_title),
                     style = MaterialTheme.typography.headlineMedium,
                 )
@@ -350,7 +350,7 @@ class UserLoginScreen : Screen {
 
 
                     Row(
-                        modifier = Modifier.padding(top = 50.dp),
+                        modifier = Modifier.padding(top = 40.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -453,7 +453,7 @@ class UserLoginScreen : Screen {
 
                     Row(
                         modifier = Modifier.padding(
-                            top = 40.dp,
+                            top = 30.dp,
                             start = 20.dp,
                             end = 20.dp,
                             bottom = 20.dp

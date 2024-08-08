@@ -52,8 +52,8 @@
     <string name="login_check_privacy_terms_prefix">I agree to</string>
     <string name="login_check_privacy_terms"> privacy policy and terms </string>
     <string name="login_more"> or </string>
-    <string name="login_create_account_prefix"> Don't have any account yet?</string>
-    <string name="login_create_account"> Create account instead </string>
+    <string name="login_create_account_prefix"> Don't have any account?</string>
+    <string name="login_create_account"> Create account </string>
     <string name="login_notification_check"> Please check the user agreement and privacy protection guidelines</string>
     <string name="login_notification_account"> Please enter your account </string>
     <string name="login_notification_passwd"> Please enter your password </string>

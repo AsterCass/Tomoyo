@@ -46,7 +46,7 @@
 
 
     <string name="login_title">用户登录</string>
-    <string name="login_subtitle">请输入注册时使用的邮箱和密码。如果没有账户，请前往`www.astercasc.com`进行注册，本应用程序暂时不提供注册</string>
+    <string name="login_subtitle">请输入注册时使用的邮箱和密码。如果没有账户，请前往`www.astercasc.com`进行注册，本应用程序暂时不提供注册（对您产生的困扰深表歉意,后续版本会增加应用程序的注册）</string>
     <string name="login_account_placeholder"> you@example.com </string>
     <string name="login_passwd_placeholder"> 输入密码 </string>
     <string name="login_btn"> 登录 </string>

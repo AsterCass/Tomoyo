@@ -30,10 +30,12 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 ### Android
 
 <img src="image/android_1.jpg"  width="250"/><img src="image/android_2.jpg"  width="250"/><img src="image/android_3.jpg"  width="250"/>
+<img src="image/android_4.jpg"  width="250"/>
 
 ### Desktop
 
 <img src="image/desktop_1.png" width="250"/><img src="image/desktop_2.png" width="250"/><img src="image/desktop_3.png" width="250"/>
+<img src="image/desktop_4.png" width="250"/>
 
 
 ## Run Project
