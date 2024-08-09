@@ -39,6 +39,13 @@ import ui.components.SettingTab
 import ui.components.VideosTab
 
 
+enum class MusicPlayScreenTabModel(
+) {
+    COMMON,
+    FAV,
+    COLLECTIONS,
+}
+
 enum class MusicPlayModel(
     val imageVector: DrawableResource,
     val desc: StringResource,

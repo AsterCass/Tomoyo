@@ -18,9 +18,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -41,6 +45,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.DotCircle
+import constant.enums.MusicPlayScreenTabModel
 import constant.enums.NotificationType
 import data.AudioSimpleModel
 import data.model.MainScreenModel
@@ -88,6 +93,7 @@ fun MainMusicsScreen(
     val musicApiCoroutine = rememberCoroutineScope()
 
     //data
+    val tab = screenModel.musicTab.collectAsState().value
     val musicPlayMap = screenModel.musicPlayMap.collectAsState().value
     val currentTime = screenModel.playerState.collectAsState().value.currentTime
     val totalDuration = screenModel.playerState.collectAsState().value.totalDuration
@@ -109,43 +115,110 @@ fun MainMusicsScreen(
     var curPosition by remember { mutableStateOf(0.0) }
     curPosition = currentTime
 
+    //this data
+    var searchKey by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .height(minHeightDp)
             .width(minWidthDp)
     ) {
-
-
         Column(
             modifier = Modifier.fillMaxSize()
                 .padding(start = 10.dp, end = 10.dp)
         ) {
-            LazyColumn(state = listState) {
 
-                items(musicPlayMap.size) { index ->
-                    val playingItem = musicPlayMap.values.toList()[index]
-                    MusicListItem(
-                        isPlaying = currentPlayId == playingItem.id,
-                        item = playingItem,
-                        onStart = {
-                            screenModel.onStart(playingItem.id)
-                            if (it) {
-                                navigator.push(MusicsPlayerScreen())
-                                mainModel.updateShowNavBar(false)
-                            }
-                        }
-                    )
+
+            MainBaseCardBox(
+                modifier = Modifier.padding(8.dp).height(62.dp),
+                alignment = Alignment.CenterStart,
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier.height(52.dp),
+                    value = searchKey,
+                    onValueChange = { searchKey = it },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedBorderColor = Color.Transparent,
+                        focusedBorderColor = Color.Transparent,
+                    ),
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                    placeholder = {
+                        Text(
+                            text = "input key",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.subTextColor
+                        )
+                    },
+                    maxLines = 1,
+                )
+            }
+
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(onClick = {
+                    screenModel.updateMusicTab(MusicPlayScreenTabModel.COMMON)
+                }) {
+                    Text("Fist")
                 }
-
-                item {
-                    Row(
-                        modifier = Modifier.height(150.dp).fillMaxSize().padding(10.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text("底部背景图，没想好放什么")
-                    }
+                Button(onClick = {
+                    screenModel.updateMusicTab(MusicPlayScreenTabModel.FAV)
+                }) {
+                    Text("Second")
+                }
+                Button(onClick = {
+                    screenModel.updateMusicTab(MusicPlayScreenTabModel.COLLECTIONS)
+                }) {
+                    Text("Third")
                 }
             }
+
+
+            when (tab) {
+                MusicPlayScreenTabModel.COMMON -> {
+
+                    LazyColumn(state = listState) {
+
+                        items(musicPlayMap.size) { index ->
+                            val playingItem = musicPlayMap.values.toList()[index]
+                            MusicListItem(
+                                isPlaying = currentPlayId == playingItem.id,
+                                item = playingItem,
+                                onStart = {
+                                    screenModel.onStart(playingItem.id)
+                                    if (it) {
+                                        navigator.push(MusicsPlayerScreen())
+                                        mainModel.updateShowNavBar(false)
+                                    }
+                                }
+                            )
+                        }
+
+                        item {
+                            Row(
+                                modifier = Modifier.height(150.dp).fillMaxSize().padding(10.dp),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text("底部背景图，没想好放什么")
+                            }
+                        }
+
+
+                    }
+                }
+
+                MusicPlayScreenTabModel.FAV -> {
+                    Text("this is 2nd tab")
+                }
+
+                MusicPlayScreenTabModel.COLLECTIONS -> {
+                    Text("this is 3rd tab")
+                }
+
+            }
+
         }
 
         if (musicPlayMap.isNotEmpty() && currentPlayId.isNotBlank()) {

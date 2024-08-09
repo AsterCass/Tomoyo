@@ -4,12 +4,22 @@ import api.BaseApi
 import biz.AudioPlayer
 import cafe.adriel.voyager.core.model.ScreenModel
 import constant.enums.MusicPlayModel
+import constant.enums.MusicPlayScreenTabModel
 import data.AudioSimpleModel
 import data.MusicPlayerState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MusicScreenModel : ScreenModel {
+
+    //tab
+    private val _musicTab = MutableStateFlow(MusicPlayScreenTabModel.COMMON)
+    val musicTab = _musicTab.asStateFlow()
+    fun updateMusicTab(tab: MusicPlayScreenTabModel) {
+        _musicTab.value = tab
+    }
+
+    //player
 
     private val _playerState = MutableStateFlow(MusicPlayerState())
     val playerState = _playerState.asStateFlow()
