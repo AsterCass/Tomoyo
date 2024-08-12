@@ -53,10 +53,12 @@ import data.model.ArticleScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
+import tomoyo.composeapp.generated.resources.search_keyword
 import ui.components.ArticleDetailScreen
 import ui.components.MainBaseCardBox
 
@@ -135,7 +137,7 @@ fun MainArticlesScreen(
                         textStyle = MaterialTheme.typography.bodyMedium,
                         placeholder = {
                             Text(
-                                text = "文章检索关键词",
+                                text = stringResource(Res.string.search_keyword),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.subTextColor
                             )

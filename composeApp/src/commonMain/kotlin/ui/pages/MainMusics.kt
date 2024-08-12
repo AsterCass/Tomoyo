@@ -45,6 +45,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.DotCircle
+import constant.baseResText
 import constant.enums.MusicPlayScreenTabModel
 import constant.enums.NotificationType
 import data.AudioSimpleModel
@@ -52,6 +53,7 @@ import data.model.MainScreenModel
 import data.model.MusicScreenModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import theme.deepIconColor
@@ -61,6 +63,7 @@ import tomoyo.composeapp.generated.resources.media_audio
 import tomoyo.composeapp.generated.resources.media_pause
 import tomoyo.composeapp.generated.resources.media_play
 import tomoyo.composeapp.generated.resources.nezuko
+import tomoyo.composeapp.generated.resources.search_keyword
 import ui.components.MainBaseCardBox
 import ui.components.MainNotification
 import ui.components.MusicsPlayerScreen
@@ -144,7 +147,7 @@ fun MainMusicsScreen(
                     textStyle = MaterialTheme.typography.bodyMedium,
                     placeholder = {
                         Text(
-                            text = "input key",
+                            text = stringResource(Res.string.search_keyword),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.subTextColor
                         )
@@ -201,7 +204,7 @@ fun MainMusicsScreen(
                                 modifier = Modifier.height(150.dp).fillMaxSize().padding(10.dp),
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Text("底部背景图，没想好放什么")
+                                Text("底部背景图，没想好放什么") //todo
                             }
                         }
 
@@ -356,7 +359,7 @@ fun MusicListItem(
                     .clickable {
                         NotificationManager.showNotification(
                             MainNotification(
-                                "开发中",
+                                baseResText.underDevelopment,
                                 NotificationType.SUCCESS
                             )
                         )

@@ -61,6 +61,7 @@ import compose.icons.fontawesomeicons.regular.ArrowAltCircleDown
 import compose.icons.fontawesomeicons.regular.ShareSquare
 import compose.icons.fontawesomeicons.regular.ThumbsUp
 import compose.icons.fontawesomeicons.solid.CandyCane
+import constant.baseResText
 import constant.enums.MusicPlayModel
 import constant.enums.NotificationType
 import data.model.MainScreenModel
@@ -184,7 +185,7 @@ class MusicsPlayerScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                "开发中",
+                                                baseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -200,7 +201,7 @@ class MusicsPlayerScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                "开发中",
+                                                baseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -216,7 +217,7 @@ class MusicsPlayerScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                "开发中",
+                                                baseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -350,7 +351,7 @@ class MusicsPlayerScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                "开发中",
+                                                baseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )

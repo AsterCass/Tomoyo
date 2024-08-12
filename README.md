@@ -6,7 +6,7 @@ Tomoyo is a Kotlin Multiplatform app.
 On one hand, it is a functional copy of [the website](https://www.astercasc.com), enabling some of
 its features to be implemented on mobile and desktop platforms.
 On the other hand, it serves as a sample for common functionalities such as navigation, socket
-communication, video, audio, and db in Kotlin Multiplatform.
+(for chat), video, audio, and db in Kotlin Multiplatform.
 
 Tomoyo是一个Kotlin Multiplatform 应用程序
 一方面它是一个对于[该网站](https://www.astercasc.com)的功能拷贝，让其中一些功能可以在移动端和桌面端实现。

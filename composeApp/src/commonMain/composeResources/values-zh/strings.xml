@@ -1,30 +1,6 @@
 <resources>
-    <string name="app_name">Cupcake</string>
-    <string name="order_cupcakes">Order Cupcakes</string>
-    <string name="one_cupcake">One Cupcake</string>
-    <string name="six_cupcakes">Six Cupcakes</string>
-    <string name="twelve_cupcakes">Twelve Cupcakes</string>
-    <string name="choose_flavor">Choose Flavor</string>
-    <string name="vanilla">Vanilla</string>
-    <string name="chocolate">Chocolate</string>
-    <string name="red_velvet">Red Velvet</string>
-    <string name="salted_caramel">Salted Caramel</string>
-    <string name="coffee">Coffee</string>
-    <string name="special_flavor">Special Flavor</string>
-    <string name="cancel">Cancel</string>
-    <string name="next">Next</string>
-    <string name="choose_pickup_date">Choose Pickup Date</string>
-    <string name="order_summary">Order Summary</string>
-    <string name="send">Send Order to Another App</string>
-    <string name="quantity">Quantity</string>
-    <string name="flavor">Flavor</string>
-    <string name="pickup_date">Pickup date</string>
-    <string name="subtotal_price">Subtotal %1$s</string>
-    <string name="total_price">Total %1$s</string>
-    <string name="new_cupcake_order">New Cupcake Order</string>
-    <string name="order_details">Quantity: %1$s \nFlavor: %2$s \nPickup date: %3$s \nTotal: %4$s \n\nThank you!</string>
-    <string name="back_button">Back</string>
-    <string name="cupcakes">%1$d cupcakes</string>
+
+    <string name="app_name"> Tomoyo </string>
 
     <string name="none"> </string>
 
@@ -39,6 +15,9 @@
     <string name="service_error">服务器开小差了，待会再来试试吧</string>
     <string name="login_success">登录成功</string>
     <string name="login_passwd_error">密码错误</string>
+    <string name="logout_btn"> 登出 </string>
+    <string name="under_development"> 开发中 </string>
+    <string name="search_keyword"> 检索关键字 </string>
 
     <string name="play_model_random">随机播放</string>
     <string name="play_model_order">顺序循环</string>
@@ -59,7 +38,7 @@
     <string name="login_notification_account"> 请输入账号 </string>
     <string name="login_notification_passwd"> 请输入密码 </string>
 
-    <string name="logout_btn"> 登出 </string>
+    <string name="chat_send"> 发送 </string>
 
 
 </resources>

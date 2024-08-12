@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import api.ApiResText
 import api.BaseApi
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import constant.baseResText
 import constant.enums.MainNavigationEnum
 import constant.enums.NotificationType
 import kotlinx.coroutines.delay
@@ -56,6 +57,7 @@ import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
 import tomoyo.composeapp.generated.resources.nezuko
 import tomoyo.composeapp.generated.resources.service_error
+import tomoyo.composeapp.generated.resources.under_development
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,7 +90,7 @@ fun MainAppBar(
                         .clickable {
                             NotificationManager.showNotification(
                                 MainNotification(
-                                    "开发中",
+                                    baseResText.underDevelopment,
                                     NotificationType.SUCCESS
                                 )
                             )
@@ -103,7 +105,7 @@ fun MainAppBar(
                         .clickable {
                             NotificationManager.showNotification(
                                 MainNotification(
-                                    "开发中",
+                                    baseResText.underDevelopment,
                                     NotificationType.SUCCESS
                                 )
                             )
@@ -239,6 +241,7 @@ fun InitForNoComposableRes() {
             loginPasswdErrorDes = stringResource(Res.string.login_passwd_error),
         )
     )
+    baseResText.underDevelopment = stringResource(Res.string.under_development)
 }
 
 

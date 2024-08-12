@@ -31,7 +31,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.sendText
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.chat_send
 
 @Composable
 fun MainChatScreen(
@@ -61,7 +64,7 @@ fun MainChatScreen(
         if (!userData.token.isNullOrBlank()) {
             TextField(
                 value = chatMessage,
-                placeholder = { Text("信息") },
+                placeholder = { Text("信息") }, //todo
                 onValueChange = { chatMessage = it }
             )
             Button(
@@ -80,7 +83,7 @@ fun MainChatScreen(
 
                 }
             ) {
-                Text("发送")
+                Text(stringResource(Res.string.chat_send))
             }
         }
 
