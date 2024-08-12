@@ -160,7 +160,12 @@ fun MainMusicsScreen(
                 for (tabEnum in MusicPlayScreenTabModel.entries) {
                     Tab(
                         selected = tab == tabEnum,
-                        onClick = { screenModel.updateMusicTab(tabEnum) },
+                        onClick = {
+                            screenModel.updateMusicTab(tabEnum)
+                            musicApiCoroutine.launch {
+                                listState.scrollToItem(0)
+                            }
+                        },
                         text = {
                             Text(
                                 text = stringResource(tabEnum.text),
