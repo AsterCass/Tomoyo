@@ -223,6 +223,12 @@ fun MainMusicsScreen(
                         musicPlayMap = musicPlayMap,
                         currentPlayId = currentPlayId,
                         screenModel = screenModel,
+                        onStart = {
+                            screenModel.onStart(
+                                playListId = musicPlayMap.keys.first(),
+                                playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
+                            )
+                        }
                     )
 
 
@@ -236,7 +242,10 @@ fun MainMusicsScreen(
                                 isPlaying = isPlaying,
                                 item = playingItem,
                                 onStart = {
-                                    screenModel.onStart(playingItem.id)
+                                    screenModel.onStart(
+                                        playListId = playingItem.id,
+                                        playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
+                                    )
                                     if (it) {
                                         navigator.push(MusicsPlayerScreen())
                                         mainModel.updateShowNavBar(false)
@@ -262,11 +271,21 @@ fun MainMusicsScreen(
                 }
 
                 MusicPlayScreenTabModel.FAV -> {
+
+                    val playFavMap = musicPlayMap.filter { favList.contains(it.key) }
+
                     MusicGlobalPlayRow(
                         isPlaying = isPlaying,
                         musicPlayMap = musicPlayMap,
                         currentPlayId = currentPlayId,
                         screenModel = screenModel,
+                        onStart = {
+                            screenModel.onStart(
+                                playListId = musicPlayMap.keys.first(),
+                                playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
+                                musicPlayMap = playFavMap,
+                            )
+                        }
                     )
 
                     LazyColumn(state = listState) {
@@ -280,7 +299,11 @@ fun MainMusicsScreen(
                                 isPlaying = isPlaying,
                                 item = playingItem,
                                 onStart = {
-                                    screenModel.onStart(playingItem.id)
+                                    screenModel.onStart(
+                                        playListId = playingItem.id,
+                                        playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
+                                        musicPlayMap = playFavMap,
+                                    )
                                     if (it) {
                                         navigator.push(MusicsPlayerScreen())
                                         mainModel.updateShowNavBar(false)
@@ -391,6 +414,7 @@ fun MusicGlobalPlayRow(
     musicPlayMap: Map<String, AudioSimpleModel>,
     currentPlayId: String,
     screenModel: MusicScreenModel,
+    onStart: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -408,7 +432,7 @@ fun MusicGlobalPlayRow(
                             screenModel.onPlay()
                         }
                     } else {
-                        screenModel.onStart(musicPlayMap.keys.first())
+                        onStart()
                     }
                 }
             },
@@ -506,7 +530,7 @@ fun MusicListItem(
             Text(
                 modifier = Modifier.padding(start = 2.dp, bottom = 3.dp),
                 text = item.audioName,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 color = if (isOnThisItem) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.onBackground,
             )
@@ -597,7 +621,7 @@ fun MusicPlayItem(
             Text(
                 modifier = Modifier.padding(start = 2.dp, bottom = 3.dp),
                 text = item.audioName,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(

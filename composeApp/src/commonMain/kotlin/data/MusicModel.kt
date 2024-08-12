@@ -33,6 +33,7 @@ class MusicPlayerState {
     var totalDuration by mutableStateOf(0.0)
 
     var currentPlayId by mutableStateOf("")
+    var currentCollectionId by mutableStateOf("")
     var playModel by mutableStateOf(MusicPlayModel.ORDER.ordinal)
 
     fun toBack() {

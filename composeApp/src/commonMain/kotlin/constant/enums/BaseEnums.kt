@@ -44,10 +44,11 @@ import ui.components.VideosTab
 
 enum class MusicPlayScreenTabModel(
     val text: StringResource,
+    val collectionId: String,
 ) {
-    COMMON(Res.string.play_audio_tab_public),
-    FAV(Res.string.play_audio_tab_favorite),
-    COLLECTIONS(Res.string.play_audio_tab_private),
+    COMMON(Res.string.play_audio_tab_public, "0"),
+    FAV(Res.string.play_audio_tab_favorite, "-1"),
+    COLLECTIONS(Res.string.play_audio_tab_private, "-2"),
 }
 
 enum class MusicPlayModel(

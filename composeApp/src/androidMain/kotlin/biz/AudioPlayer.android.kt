@@ -154,11 +154,15 @@ actual class AudioPlayer actual constructor(
     actual fun next() {
         when (musicPlayerState.playModel) {
             MusicPlayModel.ORDER.ordinal -> {
-                currentItemIndex = currentItemIndex.plus(1).rem(mediaItems.size)
+                if (mediaItems.isNotEmpty()) {
+                    currentItemIndex = currentItemIndex.plus(1).rem(mediaItems.size)
+                }
             }
 
             MusicPlayModel.RANDOM.ordinal -> {
-                currentItemIndex = Random.nextInt(mediaItems.size)
+                if (mediaItems.isNotEmpty()) {
+                    currentItemIndex = Random.nextInt(mediaItems.size)
+                }
             }
 
             MusicPlayModel.CIRCULATION.ordinal -> {

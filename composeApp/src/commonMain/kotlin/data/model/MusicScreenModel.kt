@@ -29,6 +29,7 @@ class MusicScreenModel(
             DataStorageManager.FAV_AUDIO_ID_LIST,
             baseJsonConf.encodeToString(newFav)
         )
+        favUpdateToPlayer()
     }
 
     fun delFav(id: String) {
@@ -39,8 +40,16 @@ class MusicScreenModel(
             DataStorageManager.FAV_AUDIO_ID_LIST,
             baseJsonConf.encodeToString(newFav)
         )
+        favUpdateToPlayer()
     }
 
+    private fun favUpdateToPlayer() {
+        if (_playerState.value.currentCollectionId == MusicPlayScreenTabModel.FAV.collectionId) {
+            _player.value.clearSongs()
+            _player.value.addSongList(_musicPlayMap.value
+                .filter { _favList.value.contains(it.key) })
+        }
+    }
 
     //tab
     private val _musicTab = MutableStateFlow(MusicPlayScreenTabModel.COMMON)
@@ -73,16 +82,19 @@ class MusicScreenModel(
 
     fun onStart(
         playListId: String,
+        playCollectionId: String,
         musicPlayMap: Map<String, AudioSimpleModel> = _musicPlayMap.value
     ) {
         if (playListId == _playerState.value.currentPlayId) {
             return
         }
         //todo login check
-        if (musicPlayMap.isNotEmpty()) {
+        if (musicPlayMap.isNotEmpty() &&
+            _playerState.value.currentCollectionId != playCollectionId
+        ) {
+            _playerState.value.currentCollectionId = playCollectionId
             _player.value.clearSongs()
             _player.value.addSongList(musicPlayMap)
-            _musicPlayMap.value = musicPlayMap
         }
         _player.value.start(playListId)
     }
