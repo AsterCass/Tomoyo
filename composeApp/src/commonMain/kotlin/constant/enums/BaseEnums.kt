@@ -26,6 +26,9 @@ import tomoyo.composeapp.generated.resources.media_repeat_one
 import tomoyo.composeapp.generated.resources.media_shuffle
 import tomoyo.composeapp.generated.resources.musics
 import tomoyo.composeapp.generated.resources.none
+import tomoyo.composeapp.generated.resources.play_audio_tab_favorite
+import tomoyo.composeapp.generated.resources.play_audio_tab_private
+import tomoyo.composeapp.generated.resources.play_audio_tab_public
 import tomoyo.composeapp.generated.resources.play_model_circle
 import tomoyo.composeapp.generated.resources.play_model_order
 import tomoyo.composeapp.generated.resources.play_model_random
@@ -40,10 +43,11 @@ import ui.components.VideosTab
 
 
 enum class MusicPlayScreenTabModel(
+    val text: StringResource,
 ) {
-    COMMON,
-    FAV,
-    COLLECTIONS,
+    COMMON(Res.string.play_audio_tab_public),
+    FAV(Res.string.play_audio_tab_favorite),
+    COLLECTIONS(Res.string.play_audio_tab_private),
 }
 
 enum class MusicPlayModel(

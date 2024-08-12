@@ -22,6 +22,11 @@
     <string name="play_model_random">Shuffle</string>
     <string name="play_model_order">Repeat All</string>
     <string name="play_model_circle">Repeat One</string>
+    <string name="play_audio_tab_public">Public Audios</string>
+    <string name="play_audio_tab_favorite">Favorite Audios</string>
+    <string name="play_audio_tab_private">Private Music Collections</string>
+    <string name="play_audio_playing">Playing</string>
+    <string name="play_audio_play_all">Play All</string>
 
     <string name="login_title">Log In to Your Account</string>
     <string name="login_subtitle">Please enter the email and password you used during registration. If you don't have an account, please go to `www.astercasc.com` to register. This application does not currently offer a registration option.</string>

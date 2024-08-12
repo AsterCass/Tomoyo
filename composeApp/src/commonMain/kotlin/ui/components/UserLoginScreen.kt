@@ -61,7 +61,7 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import constant.baseResText
+import constant.BaseResText
 import constant.enums.NotificationType
 import data.model.MainScreenModel
 import data.store.DataStorageManager
@@ -287,7 +287,7 @@ class UserLoginScreen : Screen {
                                 .clickable {
                                     NotificationManager.showNotification(
                                         MainNotification(
-                                            baseResText.underDevelopment,
+                                            BaseResText.underDevelopment,
                                             NotificationType.SUCCESS
                                         )
                                     )
@@ -384,7 +384,7 @@ class UserLoginScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                baseResText.underDevelopment,
+                                                BaseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -409,7 +409,7 @@ class UserLoginScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                baseResText.underDevelopment,
+                                                BaseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -434,7 +434,7 @@ class UserLoginScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                baseResText.underDevelopment,
+                                                BaseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -478,7 +478,7 @@ class UserLoginScreen : Screen {
                                 .clickable {
                                     NotificationManager.showNotification(
                                         MainNotification(
-                                            baseResText.underDevelopment,
+                                            BaseResText.underDevelopment,
                                             NotificationType.SUCCESS
                                         )
                                     )

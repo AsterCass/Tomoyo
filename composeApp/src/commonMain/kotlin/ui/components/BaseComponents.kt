@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import api.ApiResText
 import api.BaseApi
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import constant.baseResText
+import constant.BaseResText
 import constant.enums.MainNavigationEnum
 import constant.enums.NotificationType
 import kotlinx.coroutines.delay
@@ -50,6 +50,7 @@ import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import theme.third
 import theme.unselectedColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.envelope_alt
@@ -90,7 +91,7 @@ fun MainAppBar(
                         .clickable {
                             NotificationManager.showNotification(
                                 MainNotification(
-                                    baseResText.underDevelopment,
+                                    BaseResText.underDevelopment,
                                     NotificationType.SUCCESS
                                 )
                             )
@@ -105,7 +106,7 @@ fun MainAppBar(
                         .clickable {
                             NotificationManager.showNotification(
                                 MainNotification(
-                                    baseResText.underDevelopment,
+                                    BaseResText.underDevelopment,
                                     NotificationType.SUCCESS
                                 )
                             )
@@ -241,7 +242,12 @@ fun InitForNoComposableRes() {
             loginPasswdErrorDes = stringResource(Res.string.login_passwd_error),
         )
     )
-    baseResText.underDevelopment = stringResource(Res.string.under_development)
+    BaseResText.underDevelopment = stringResource(Res.string.under_development)
+    BaseResText.bgColorList = listOf(
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.third
+    )
 }
 
 

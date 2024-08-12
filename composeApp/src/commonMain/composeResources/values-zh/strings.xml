@@ -22,6 +22,11 @@
     <string name="play_model_random">随机播放</string>
     <string name="play_model_order">顺序循环</string>
     <string name="play_model_circle">单曲循环</string>
+    <string name="play_audio_tab_public">公共音频</string>
+    <string name="play_audio_tab_favorite">我的收藏</string>
+    <string name="play_audio_tab_private">其他音乐集</string>
+    <string name="play_audio_playing">播放中</string>
+    <string name="play_audio_play_all">播放全部</string>
 
 
     <string name="login_title">用户登录</string>

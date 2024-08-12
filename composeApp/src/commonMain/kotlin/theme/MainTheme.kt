@@ -22,6 +22,10 @@ val androidx.compose.material3.ColorScheme.deepIconColor: Color
     get() = if (this.background == LightColorScheme.background)
         Color(0XFF333333) else Color.Transparent
 
+val androidx.compose.material3.ColorScheme.third: Color
+    get() = if (this.background == LightColorScheme.background)
+        Color((0XFFF26E56)) else Color.Transparent
+
 
 
 
@@ -46,8 +50,8 @@ val LightColorScheme = lightColorScheme(
     onPrimary = Color(0xFFE9E9E9),
     inversePrimary = Color(0XFF96C8C8),
 
-    secondary = Color.Red,
-    onSecondary = Color.Blue,
+    secondary = Color(0XFF74ABFF),
+    onSecondary = Color(0xFFE9E9E9),
     onSecondaryContainer = Color(0XFF379B9B),
     secondaryContainer = Color.Transparent,
 

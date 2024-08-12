@@ -61,7 +61,7 @@ import compose.icons.fontawesomeicons.regular.ArrowAltCircleDown
 import compose.icons.fontawesomeicons.regular.ShareSquare
 import compose.icons.fontawesomeicons.regular.ThumbsUp
 import compose.icons.fontawesomeicons.solid.CandyCane
-import constant.baseResText
+import constant.BaseResText
 import constant.enums.MusicPlayModel
 import constant.enums.NotificationType
 import data.model.MainScreenModel
@@ -185,7 +185,7 @@ class MusicsPlayerScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                baseResText.underDevelopment,
+                                                BaseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -201,7 +201,7 @@ class MusicsPlayerScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                baseResText.underDevelopment,
+                                                BaseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -217,7 +217,7 @@ class MusicsPlayerScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                baseResText.underDevelopment,
+                                                BaseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )
@@ -351,7 +351,7 @@ class MusicsPlayerScreen : Screen {
                                     .clickable {
                                         NotificationManager.showNotification(
                                             MainNotification(
-                                                baseResText.underDevelopment,
+                                                BaseResText.underDevelopment,
                                                 NotificationType.SUCCESS
                                             )
                                         )

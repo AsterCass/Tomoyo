@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,13 +19,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,6 +43,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -45,7 +53,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.DotCircle
-import constant.baseResText
+import compose.icons.fontawesomeicons.regular.Heart
+import constant.BaseResText
 import constant.enums.MusicPlayScreenTabModel
 import constant.enums.NotificationType
 import data.AudioSimpleModel
@@ -63,6 +72,8 @@ import tomoyo.composeapp.generated.resources.media_audio
 import tomoyo.composeapp.generated.resources.media_pause
 import tomoyo.composeapp.generated.resources.media_play
 import tomoyo.composeapp.generated.resources.nezuko
+import tomoyo.composeapp.generated.resources.play_audio_play_all
+import tomoyo.composeapp.generated.resources.play_audio_playing
 import tomoyo.composeapp.generated.resources.search_keyword
 import ui.components.MainBaseCardBox
 import ui.components.MainNotification
@@ -94,6 +105,9 @@ fun MainMusicsScreen(
 
     //coroutine
     val musicApiCoroutine = rememberCoroutineScope()
+
+    //soft keyboard
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     //data
     val tab = screenModel.musicTab.collectAsState().value
@@ -132,55 +146,142 @@ fun MainMusicsScreen(
         ) {
 
 
-            MainBaseCardBox(
-                modifier = Modifier.padding(8.dp).height(62.dp),
-                alignment = Alignment.CenterStart,
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier.height(52.dp),
-                    value = searchKey,
-                    onValueChange = { searchKey = it },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                    ),
-                    textStyle = MaterialTheme.typography.bodyMedium,
-                    placeholder = {
-                        Text(
-                            text = stringResource(Res.string.search_keyword),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.subTextColor
-                        )
-                    },
-                    maxLines = 1,
-                )
-            }
-
-
-            Row(
+            TabRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                selectedTabIndex = tab.ordinal,
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onBackground,
+                divider = {},
             ) {
-                Button(onClick = {
-                    screenModel.updateMusicTab(MusicPlayScreenTabModel.COMMON)
-                }) {
-                    Text("Fist")
-                }
-                Button(onClick = {
-                    screenModel.updateMusicTab(MusicPlayScreenTabModel.FAV)
-                }) {
-                    Text("Second")
-                }
-                Button(onClick = {
-                    screenModel.updateMusicTab(MusicPlayScreenTabModel.COLLECTIONS)
-                }) {
-                    Text("Third")
+                for (tabEnum in MusicPlayScreenTabModel.entries) {
+                    Tab(
+                        selected = tab == tabEnum,
+                        onClick = { screenModel.updateMusicTab(tabEnum) },
+                        text = {
+                            Text(
+                                text = stringResource(tabEnum.text),
+                                color = if (tab == tabEnum) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onBackground,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        },
+                        modifier = Modifier.clip(
+                            RoundedCornerShape(10.dp)
+                        ),
+                    )
                 }
             }
-
 
             when (tab) {
                 MusicPlayScreenTabModel.COMMON -> {
+                    MainBaseCardBox(
+                        modifier = Modifier.padding(
+                            start = 10.dp,
+                            end = 10.dp,
+                            top = 12.dp,
+                            bottom = 5.dp
+                        )
+                            .height(62.dp),
+                        alignment = Alignment.CenterStart,
+                    ) {
+                        OutlinedTextField(
+                            modifier = Modifier.height(52.dp),
+                            value = searchKey,
+                            onValueChange = { searchKey = it },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedBorderColor = Color.Transparent,
+                            ),
+                            textStyle = MaterialTheme.typography.bodyMedium,
+                            placeholder = {
+                                Text(
+                                    text = stringResource(Res.string.search_keyword),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.subTextColor
+                                )
+                            },
+                            maxLines = 1,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Search
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onSearch = {
+                                    searchKey = ""
+                                    keyboardController?.hide()
+                                },
+                            ),
+                        )
+                    }
+
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        OutlinedButton(
+                            modifier = Modifier.padding(start = 10.dp),
+                            onClick = {
+                                if (musicPlayMap.isNotEmpty()) {
+                                    if (currentPlayId.isNotBlank()) {
+                                        if (isPlaying) {
+                                            screenModel.onPause()
+                                        } else {
+                                            screenModel.onPlay()
+                                        }
+                                    } else {
+                                        screenModel.onStart(musicPlayMap.keys.first())
+                                    }
+                                }
+                            },
+                            contentPadding = PaddingValues(0.dp),
+                            border = BorderStroke(0.dp, Color.Transparent),
+                            shape = RoundedCornerShape(10.dp),
+                        ) {
+                            Icon(
+                                imageVector = if (isPlaying) vectorResource(Res.drawable.media_pause)
+                                else vectorResource(Res.drawable.media_play),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .size(28.dp),
+                                tint = if (isPlaying) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.deepIconColor
+                            )
+                            Text(
+                                modifier = Modifier.padding(end = 10.dp),
+                                text = if (isPlaying) stringResource(Res.string.play_audio_playing)
+                                else stringResource(Res.string.play_audio_play_all),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = if (isPlaying) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onBackground,
+                            )
+
+                        }
+
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.media_audio),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 15.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable {
+                                    NotificationManager.showNotification(
+                                        MainNotification(
+                                            BaseResText.underDevelopment,
+                                            NotificationType.SUCCESS
+                                        )
+                                    )
+                                }
+                                .size(28.dp),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+
+
+                    }
+
 
                     LazyColumn(state = listState) {
 
@@ -348,10 +449,11 @@ fun MusicListItem(
 
         Row(
             modifier = Modifier.weight(0.3f),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = vectorResource(Res.drawable.media_audio),
+                imageVector = FontAwesomeIcons.Regular.Heart,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(2.dp)
@@ -359,12 +461,12 @@ fun MusicListItem(
                     .clickable {
                         NotificationManager.showNotification(
                             MainNotification(
-                                baseResText.underDevelopment,
+                                BaseResText.underDevelopment,
                                 NotificationType.SUCCESS
                             )
                         )
                     }
-                    .size(28.dp),
+                    .size(22.dp),
                 tint = if (isPlaying) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.deepIconColor
             )
