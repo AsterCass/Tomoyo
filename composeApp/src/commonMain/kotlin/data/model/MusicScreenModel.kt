@@ -1,16 +1,46 @@
 package data.model
 
 import api.BaseApi
+import api.baseJsonConf
 import biz.AudioPlayer
 import cafe.adriel.voyager.core.model.ScreenModel
 import constant.enums.MusicPlayModel
 import constant.enums.MusicPlayScreenTabModel
 import data.AudioSimpleModel
 import data.MusicPlayerState
+import data.store.DataStorageManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.encodeToString
 
-class MusicScreenModel : ScreenModel {
+class MusicScreenModel(
+    private val dataStorageManager: DataStorageManager
+) : ScreenModel {
+
+    //fav
+    private val _favList = MutableStateFlow(setOf<String>())
+    val favList = _favList.asStateFlow()
+    fun addFav(id: String) {
+        val newFav = mutableSetOf<String>()
+        newFav.addAll(_favList.value)
+        newFav.add(id)
+        _favList.value = newFav
+        dataStorageManager.setString(
+            DataStorageManager.FAV_AUDIO_ID_LIST,
+            baseJsonConf.encodeToString(newFav)
+        )
+    }
+
+    fun delFav(id: String) {
+        val newFav = mutableSetOf<String>()
+        _favList.value.forEach { if (it != id) newFav.add(it) }
+        _favList.value = newFav
+        dataStorageManager.setString(
+            DataStorageManager.FAV_AUDIO_ID_LIST,
+            baseJsonConf.encodeToString(newFav)
+        )
+    }
+
 
     //tab
     private val _musicTab = MutableStateFlow(MusicPlayScreenTabModel.COMMON)
@@ -20,7 +50,6 @@ class MusicScreenModel : ScreenModel {
     }
 
     //player
-
     private val _playerState = MutableStateFlow(MusicPlayerState())
     val playerState = _playerState.asStateFlow()
 
@@ -76,6 +105,17 @@ class MusicScreenModel : ScreenModel {
 
     fun onPrev() {
         _player.value.prev()
+    }
+
+    init {
+        //fav
+        val favList = dataStorageManager.getNonFlowString(
+            DataStorageManager.FAV_AUDIO_ID_LIST
+        )
+        if (favList.isNotBlank()) {
+            _favList.value = baseJsonConf.decodeFromString(favList)
+        }
+
     }
 
 

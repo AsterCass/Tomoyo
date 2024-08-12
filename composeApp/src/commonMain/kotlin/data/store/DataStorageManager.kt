@@ -74,6 +74,7 @@ class DataStorageManager(private val settings: Settings) {
 
     companion object {
         const val USER_DATA = "user_data"
+        const val FAV_AUDIO_ID_LIST = "fav_audio_id_list"
     }
 
 }

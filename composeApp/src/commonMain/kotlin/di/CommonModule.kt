@@ -24,7 +24,7 @@ fun commonModule() = module {
     }
 
     single<MusicScreenModel> {
-        MusicScreenModel()
+        MusicScreenModel(dataStorageManager = get())
     }
 
     single<DataStorageManager> {
