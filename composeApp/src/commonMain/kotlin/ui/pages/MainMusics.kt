@@ -194,6 +194,7 @@ fun MainMusicsScreen(
 
             HorizontalPager(
                 state = tabPageState,
+                verticalAlignment = Alignment.Top
             ) { page ->
                 Column {
                     when (page) {
