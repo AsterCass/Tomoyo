@@ -10,6 +10,7 @@
     <string name="videos">视频</string>
     <string name="settings">设置</string>
     <string name="chat">聊天</string>
+    <string name="contacts">通讯录</string>
 
 
     <string name="service_error">服务器开小差了，待会再来试试吧</string>

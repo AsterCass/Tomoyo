@@ -2,6 +2,7 @@ package di
 
 
 import data.model.ArticleScreenModel
+import data.model.ContactScreenModel
 import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
@@ -21,6 +22,10 @@ fun commonModule() = module {
 
     single<ArticleScreenModel> {
         ArticleScreenModel()
+    }
+
+    single<ContactScreenModel> {
+        ContactScreenModel()
     }
 
     single<MusicScreenModel> {

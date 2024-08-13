@@ -10,6 +10,7 @@ import constant.enums.MainNavigationEnum
 import org.jetbrains.compose.resources.stringResource
 import ui.pages.MainArticlesScreen
 import ui.pages.MainChatScreen
+import ui.pages.MainContactsScreen
 import ui.pages.MainHomeScreen
 import ui.pages.MainMusicsScreen
 import ui.pages.MainSettingsScreen
@@ -147,6 +148,34 @@ object ChatTab : Tab {
 
 }
 
+object ContactsTab : Tab {
+
+    private fun readResolve(): Any = ContactsTab
+
+    override val options: TabOptions
+        @Composable
+        get() {
+            val title = stringResource(MainNavigationEnum.Contacts.title)
+            val icon = rememberVectorPainter(MainNavigationEnum.Contacts.icon)
+            val index = MainNavigationEnum.Contacts.ordinal.toUShort()
+
+            return remember {
+                TabOptions(
+                    index = index,
+                    title = title,
+                    icon = icon,
+                )
+            }
+        }
+
+
+    @Composable
+    override fun Content() {
+        MainContactsScreen()
+    }
+
+}
+
 object SettingTab : Tab {
     private fun readResolve(): Any = SettingTab
 
@@ -173,3 +202,5 @@ object SettingTab : Tab {
     }
 
 }
+
+

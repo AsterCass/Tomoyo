@@ -10,13 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.model.ArticleScreenModel
-import org.koin.compose.koinInject
 
 
 @Composable
 fun MainHomeScreen(
-    screenModel: ArticleScreenModel = koinInject(),
 ) {
 
     println("reload MainHomeScreen")

@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.AddressBook
 import compose.icons.fontawesomeicons.solid.Book
 import compose.icons.fontawesomeicons.solid.CandyCane
 import compose.icons.fontawesomeicons.solid.Comments
@@ -20,6 +21,7 @@ import org.jetbrains.compose.resources.StringResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.chat
+import tomoyo.composeapp.generated.resources.contacts
 import tomoyo.composeapp.generated.resources.home
 import tomoyo.composeapp.generated.resources.media_repeat_all
 import tomoyo.composeapp.generated.resources.media_repeat_one
@@ -36,6 +38,7 @@ import tomoyo.composeapp.generated.resources.settings
 import tomoyo.composeapp.generated.resources.videos
 import ui.components.ArticlesTab
 import ui.components.ChatTab
+import ui.components.ContactsTab
 import ui.components.HomeTab
 import ui.components.MusicsTab
 import ui.components.SettingTab
@@ -83,6 +86,7 @@ enum class MainNavigationEnum(
     MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music, MusicsTab),
     VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film, VideosTab),
     CHAT("chat", Res.string.chat, FontAwesomeIcons.Solid.Comments, ChatTab),
+    Contacts("contacts", Res.string.contacts, FontAwesomeIcons.Solid.AddressBook, ContactsTab),
     SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, SettingTab),
 
 

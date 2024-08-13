@@ -5,6 +5,7 @@ import constant.enums.NotificationType
 import data.ArticleSimpleModel
 import data.AudioSimpleModel
 import data.LoginParam
+import data.PublicUserSimpleModel
 import data.ResultObj
 import data.UserDataModel
 import data.model.GlobalDataModel
@@ -124,6 +125,11 @@ class BaseApi {
     suspend fun getAllAudio(): List<AudioSimpleModel> {
         val response = client.get(getUrl("/ushio/video-pro/audios"))
         return response.body<List<AudioSimpleModel>?>() ?: emptyList()
+    }
+
+    suspend fun getPublicUser(): List<PublicUserSimpleModel> {
+        val response = client.get(getUrl("/yui/user/public/users"))
+        return response.body<ResultObj<List<PublicUserSimpleModel>>>().data ?: emptyList()
     }
 
 

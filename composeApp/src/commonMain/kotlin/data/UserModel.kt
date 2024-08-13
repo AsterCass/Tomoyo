@@ -16,6 +16,15 @@ data class UserDataModel(
     var token: String? = null,
 )
 
+@Serializable
+data class PublicUserSimpleModel(
+    var id: String = "",
+    var nickName: String = "",
+    var gender: Int = 1,
+    var roleType: Int = 1,
+    var avatar: String = "",
+)
+
 @Stable
 class UserState {
     var token by mutableStateOf("")

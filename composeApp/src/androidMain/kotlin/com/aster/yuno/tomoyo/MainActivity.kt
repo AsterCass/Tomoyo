@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 platformData = PlatformInitData(
                     extraNavigationList = listOf(
                         MainNavigationEnum.ARTICLES,
-                        MainNavigationEnum.CHAT,
+                        MainNavigationEnum.Contacts,
                         MainNavigationEnum.MUSICS,
                         MainNavigationEnum.SETTING,
                     )

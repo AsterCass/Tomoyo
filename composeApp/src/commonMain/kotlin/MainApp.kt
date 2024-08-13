@@ -30,7 +30,7 @@ import org.koin.compose.koinInject
 import theme.LightColorScheme
 import theme.MainTypography
 import ui.components.ArticlesTab
-import ui.components.ChatTab
+import ui.components.ContactsTab
 import ui.components.HomeTab
 import ui.components.InitForNoComposableRes
 import ui.components.MainAppBar
@@ -83,7 +83,7 @@ fun MainApp(
                     TabDisposable(
                         navigator = it,
                         tabs = listOf(
-                            HomeTab, ArticlesTab, MusicsTab, VideosTab, ChatTab, SettingTab
+                            HomeTab, ArticlesTab, MusicsTab, VideosTab, ContactsTab, SettingTab
                         )
                     )
                 },
