@@ -1,10 +1,9 @@
 package ui.pages
 
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -67,6 +66,7 @@ import constant.enums.NotificationType
 import data.AudioSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -145,8 +145,8 @@ fun MainMusicsScreen(
     //this data
     var searchKey by remember { mutableStateOf("") }
     var lastTab by remember { mutableStateOf(-1) }
-
-
+    var tabLoading by remember { mutableStateOf(false) }
+    var tabCopy by remember { mutableStateOf(tab) }
 
     Box(
         modifier = Modifier
@@ -170,10 +170,14 @@ fun MainMusicsScreen(
                     Tab(
                         selected = tab == tabEnum,
                         onClick = {
+                            tabLoading = true
                             lastTab = tab.ordinal
                             screenModel.updateMusicTab(tabEnum)
                             musicApiCoroutine.launch {
                                 listState.scrollToItem(0)
+                                delay(500)
+                                tabCopy = tabEnum
+                                tabLoading = false
                             }
                         },
                         text = {
@@ -191,19 +195,37 @@ fun MainMusicsScreen(
                 }
             }
 
-            AnimatedContent(targetState = tab, transitionSpec = {
-                val fromPre = (lastTab >= 0 && tab.ordinal > lastTab)
-                slideInHorizontally(
-                    initialOffsetX = { if (fromPre) it else -it },
+            val fromPre = (lastTab >= 0 && tab.ordinal > lastTab)
+
+//            if (tabLoading) {
+//                Box(
+//                    modifier = Modifier.fillMaxSize(),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    CircularProgressIndicator(
+//                        modifier = Modifier.padding(16.dp)
+//                    )
+//                }
+//            }
+
+            AnimatedVisibility(
+                visible = !tabLoading,
+//                enter =
+//                slideInHorizontally(
+//                    initialOffsetX = { if (fromPre) it else -it },
+//                    animationSpec = tween(durationMillis = 500)
+//                ) +
+//                        fadeIn(animationSpec = tween(durationMillis = 500)),
+                exit =
+                slideOutHorizontally(
+                    targetOffsetX = { if (fromPre) -it else it },
                     animationSpec = tween(durationMillis = 500)
-                ) togetherWith
-                        slideOutHorizontally(
-                            targetOffsetX = { if (fromPre) -it else it },
-                            animationSpec = tween(durationMillis = 500)
-                        )
-            }) { thisTab ->
+                ) +
+                        fadeOut(animationSpec = tween(durationMillis = 500)),
+            ) {
+
                 Column {
-                    when (thisTab) {
+                    when (tabCopy) {
                         MusicPlayScreenTabModel.COMMON -> {
                             MainBaseCardBox(
                                 modifier = Modifier.padding(
