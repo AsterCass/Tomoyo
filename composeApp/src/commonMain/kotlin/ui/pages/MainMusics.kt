@@ -1,9 +1,10 @@
 package ui.pages
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -146,7 +147,8 @@ fun MainMusicsScreen(
     var searchKey by remember { mutableStateOf("") }
     var lastTab by remember { mutableStateOf(-1) }
     var tabLoading by remember { mutableStateOf(false) }
-    var tabCopy by remember { mutableStateOf(tab) }
+
+
 
     Box(
         modifier = Modifier
@@ -170,13 +172,12 @@ fun MainMusicsScreen(
                     Tab(
                         selected = tab == tabEnum,
                         onClick = {
-                            tabLoading = true
                             lastTab = tab.ordinal
                             screenModel.updateMusicTab(tabEnum)
+                            tabLoading = true
                             musicApiCoroutine.launch {
                                 listState.scrollToItem(0)
-                                delay(500)
-                                tabCopy = tabEnum
+                                delay(600)
                                 tabLoading = false
                             }
                         },
@@ -195,196 +196,198 @@ fun MainMusicsScreen(
                 }
             }
 
-            val fromPre = (lastTab >= 0 && tab.ordinal > lastTab)
-
-//            if (tabLoading) {
-//                Box(
-//                    modifier = Modifier.fillMaxSize(),
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    CircularProgressIndicator(
-//                        modifier = Modifier.padding(16.dp)
-//                    )
-//                }
-//            }
-
-            AnimatedVisibility(
-                visible = !tabLoading,
-//                enter =
-//                slideInHorizontally(
-//                    initialOffsetX = { if (fromPre) it else -it },
-//                    animationSpec = tween(durationMillis = 500)
-//                ) +
-//                        fadeIn(animationSpec = tween(durationMillis = 500)),
-                exit =
-                slideOutHorizontally(
-                    targetOffsetX = { if (fromPre) -it else it },
+            AnimatedContent(targetState = tab, transitionSpec = {
+                val fromPre = (lastTab >= 0 && tab.ordinal > lastTab)
+                slideInHorizontally(
+                    initialOffsetX = { if (fromPre) it else -it },
                     animationSpec = tween(durationMillis = 500)
-                ) +
-                        fadeOut(animationSpec = tween(durationMillis = 500)),
-            ) {
-
+                ) togetherWith
+                        slideOutHorizontally(
+                            targetOffsetX = { if (fromPre) -it else it },
+                            animationSpec = tween(durationMillis = 500)
+                        )
+            }) { thisTab ->
                 Column {
-                    when (tabCopy) {
+                    when (thisTab) {
                         MusicPlayScreenTabModel.COMMON -> {
-                            MainBaseCardBox(
-                                modifier = Modifier.padding(
-                                    start = 10.dp,
-                                    end = 10.dp,
-                                    top = 12.dp,
-                                    bottom = 5.dp
-                                )
-                                    .height(62.dp),
-                                alignment = Alignment.CenterStart,
-                            ) {
-                                OutlinedTextField(
-                                    modifier = Modifier.height(52.dp),
-                                    value = searchKey,
-                                    onValueChange = { searchKey = it },
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        unfocusedBorderColor = Color.Transparent,
-                                        focusedBorderColor = Color.Transparent,
-                                    ),
-                                    textStyle = MaterialTheme.typography.bodyMedium,
-                                    placeholder = {
-                                        Text(
-                                            text = stringResource(Res.string.search_keyword),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.subTextColor
+
+                            if (tabLoading) {
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(stringResource(Res.string.under_development))
+                                }
+                            } else {
+                                MainBaseCardBox(
+                                    modifier = Modifier.padding(
+                                        start = 10.dp,
+                                        end = 10.dp,
+                                        top = 12.dp,
+                                        bottom = 5.dp
+                                    )
+                                        .height(62.dp),
+                                    alignment = Alignment.CenterStart,
+                                ) {
+                                    OutlinedTextField(
+                                        modifier = Modifier.height(52.dp),
+                                        value = searchKey,
+                                        onValueChange = { searchKey = it },
+                                        colors = OutlinedTextFieldDefaults.colors(
+                                            unfocusedBorderColor = Color.Transparent,
+                                            focusedBorderColor = Color.Transparent,
+                                        ),
+                                        textStyle = MaterialTheme.typography.bodyMedium,
+                                        placeholder = {
+                                            Text(
+                                                text = stringResource(Res.string.search_keyword),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.subTextColor
+                                            )
+                                        },
+                                        maxLines = 1,
+                                        keyboardOptions = KeyboardOptions(
+                                            keyboardType = KeyboardType.Text,
+                                            imeAction = ImeAction.Search
+                                        ),
+                                        keyboardActions = KeyboardActions(
+                                            onSearch = {
+                                                searchKey = ""
+                                                keyboardController?.hide()
+                                            },
+                                        ),
+                                    )
+                                }
+
+                                MusicGlobalPlayRow(
+                                    isPlaying = isPlaying,
+                                    musicPlayMap = musicPlayMap,
+                                    currentPlayId = currentPlayId,
+                                    screenModel = screenModel,
+                                    onStart = {
+                                        screenModel.onStart(
+                                            playListId = musicPlayMap.keys.first(),
+                                            playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
                                         )
                                     },
-                                    maxLines = 1,
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Search
-                                    ),
-                                    keyboardActions = KeyboardActions(
-                                        onSearch = {
-                                            searchKey = ""
-                                            keyboardController?.hide()
-                                        },
-                                    ),
+                                    isMatchCollection = tab.collectionId == currentCollectionId
                                 )
-                            }
-
-                            MusicGlobalPlayRow(
-                                isPlaying = isPlaying,
-                                musicPlayMap = musicPlayMap,
-                                currentPlayId = currentPlayId,
-                                screenModel = screenModel,
-                                onStart = {
-                                    screenModel.onStart(
-                                        playListId = musicPlayMap.keys.first(),
-                                        playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
-                                    )
-                                },
-                                isMatchCollection = tab.collectionId == currentCollectionId
-                            )
 
 
-                            LazyColumn(state = listState) {
+                                LazyColumn(state = listState) {
 
-                                items(musicPlayMap.size) { index ->
-                                    val playingItem = musicPlayMap.values.toList()[index]
-                                    MusicListItem(
-                                        favList = favList,
-                                        isOnThisItem = currentPlayId == playingItem.id,
-                                        isPlaying = isPlaying,
-                                        item = playingItem,
-                                        onStart = {
-                                            screenModel.onStart(
-                                                playListId = playingItem.id,
-                                                playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
-                                            )
-                                            if (it) {
-                                                navigator.push(MusicsPlayerScreen())
-                                                mainModel.updateShowNavBar(false)
-                                            }
-                                        },
-                                        onFav = { isFav, id ->
-                                            if (isFav) screenModel.addFav(id) else screenModel.delFav(
-                                                id
-                                            )
-                                        },
-                                        onPause = { screenModel.onPause() },
-                                        onPlay = { screenModel.onPlay() },
-                                    )
-                                }
-
-                                item {
-                                    Row(
-                                        modifier = Modifier.height(150.dp).fillMaxSize()
-                                            .padding(10.dp),
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-                                        Text("底部背景图，没想好放什么") //todo
+                                    items(musicPlayMap.size) { index ->
+                                        val playingItem = musicPlayMap.values.toList()[index]
+                                        MusicListItem(
+                                            favList = favList,
+                                            isOnThisItem = currentPlayId == playingItem.id,
+                                            isPlaying = isPlaying,
+                                            item = playingItem,
+                                            onStart = {
+                                                screenModel.onStart(
+                                                    playListId = playingItem.id,
+                                                    playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
+                                                )
+                                                if (it) {
+                                                    navigator.push(MusicsPlayerScreen())
+                                                    mainModel.updateShowNavBar(false)
+                                                }
+                                            },
+                                            onFav = { isFav, id ->
+                                                if (isFav) screenModel.addFav(id) else screenModel.delFav(
+                                                    id
+                                                )
+                                            },
+                                            onPause = { screenModel.onPause() },
+                                            onPlay = { screenModel.onPlay() },
+                                        )
                                     }
+
+                                    item {
+                                        Row(
+                                            modifier = Modifier.height(150.dp).fillMaxSize()
+                                                .padding(10.dp),
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text("底部背景图，没想好放什么") //todo
+                                        }
+                                    }
+
+
                                 }
-
-
                             }
+
+
                         }
 
                         MusicPlayScreenTabModel.FAV -> {
-
-                            val playFavMap = musicPlayMap.filter { favList.contains(it.key) }
-
-                            MusicGlobalPlayRow(
-                                isPlaying = isPlaying,
-                                musicPlayMap = musicPlayMap,
-                                currentPlayId = currentPlayId,
-                                screenModel = screenModel,
-                                onStart = {
-                                    screenModel.onStart(
-                                        playListId = playFavMap.keys.first(),
-                                        playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
-                                        musicPlayMap = playFavMap,
-                                    )
-                                },
-                                isMatchCollection = tab.collectionId == currentCollectionId,
-                            )
-
-                            LazyColumn(state = listState) {
-
-                                items(playFavMap.size) { index ->
-                                    val playingItem = playFavMap.values.toList()[index]
-                                    MusicListItem(
-                                        favList = favList,
-                                        isOnThisItem = currentPlayId == playingItem.id,
-                                        isPlaying = isPlaying,
-                                        item = playingItem,
-                                        onStart = {
-                                            screenModel.onStart(
-                                                playListId = playingItem.id,
-                                                playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
-                                                musicPlayMap = playFavMap,
-                                            )
-                                            if (it) {
-                                                navigator.push(MusicsPlayerScreen())
-                                                mainModel.updateShowNavBar(false)
-                                            }
-                                        },
-                                        onFav = { isFav, id ->
-                                            if (isFav) screenModel.addFav(id) else screenModel.delFav(
-                                                id
-                                            )
-                                        },
-                                        onPause = { screenModel.onPause() },
-                                        onPlay = { screenModel.onPlay() },
-                                    )
+                            if (tabLoading) {
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(stringResource(Res.string.under_development))
                                 }
+                            } else {
+                                val playFavMap = musicPlayMap.filter { favList.contains(it.key) }
 
-                                item {
-                                    Row(
-                                        modifier = Modifier.height(150.dp).fillMaxSize()
-                                            .padding(10.dp),
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-                                        Text("底部背景图，没想好放什么") //todo
+                                MusicGlobalPlayRow(
+                                    isPlaying = isPlaying,
+                                    musicPlayMap = musicPlayMap,
+                                    currentPlayId = currentPlayId,
+                                    screenModel = screenModel,
+                                    onStart = {
+                                        screenModel.onStart(
+                                            playListId = playFavMap.keys.first(),
+                                            playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
+                                            musicPlayMap = playFavMap,
+                                        )
+                                    },
+                                    isMatchCollection = tab.collectionId == currentCollectionId,
+                                )
+
+                                LazyColumn(state = listState) {
+
+                                    items(playFavMap.size) { index ->
+                                        val playingItem = playFavMap.values.toList()[index]
+                                        MusicListItem(
+                                            favList = favList,
+                                            isOnThisItem = currentPlayId == playingItem.id,
+                                            isPlaying = isPlaying,
+                                            item = playingItem,
+                                            onStart = {
+                                                screenModel.onStart(
+                                                    playListId = playingItem.id,
+                                                    playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
+                                                    musicPlayMap = playFavMap,
+                                                )
+                                                if (it) {
+                                                    navigator.push(MusicsPlayerScreen())
+                                                    mainModel.updateShowNavBar(false)
+                                                }
+                                            },
+                                            onFav = { isFav, id ->
+                                                if (isFav) screenModel.addFav(id) else screenModel.delFav(
+                                                    id
+                                                )
+                                            },
+                                            onPause = { screenModel.onPause() },
+                                            onPlay = { screenModel.onPlay() },
+                                        )
+                                    }
+
+                                    item {
+                                        Row(
+                                            modifier = Modifier.height(150.dp).fillMaxSize()
+                                                .padding(10.dp),
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text("底部背景图，没想好放什么") //todo
+                                        }
                                     }
                                 }
-
-
                             }
 
                         }
