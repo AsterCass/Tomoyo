@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,14 +30,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import constant.enums.GenderTypeEnum
 import constant.enums.RoleTypeEnum
 import data.PublicUserSimpleModel
 import data.model.ContactScreenModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
@@ -100,7 +102,7 @@ fun PublicUserListItem(
 ) {
 
     val thisRoleType = RoleTypeEnum.getEnumByCode(item.roleType)
-    val thisGender = GenderTypeEnum.getEnumByCode(item.gender)
+    //val thisGender = GenderTypeEnum.getEnumByCode(item.gender)
 
     Row(
         modifier = Modifier
@@ -143,38 +145,45 @@ fun PublicUserListItem(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
-                Box(
+                Row(
                     modifier = Modifier
                         .padding(vertical = 2.dp, horizontal = 4.dp)
                         .clip(
                             RoundedCornerShape(3.dp)
                         )
                         .background(thisRoleType.color)
-                        .padding(horizontal = 2.dp)
+                        .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Icon(
+                        imageVector = vectorResource(thisRoleType.logo),
+                        contentDescription = null,
+                        modifier = Modifier.size(10.dp),
+                        tint = Color.White
+                    )
                     Text(
-                        modifier = Modifier.padding(horizontal = 2.dp),
+                        modifier = Modifier.padding(start = 2.dp),
                         text = stringResource(thisRoleType.label),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.background,
                     )
                 }
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 2.dp, horizontal = 4.dp)
-                        .clip(
-                            RoundedCornerShape(3.dp)
-                        )
-                        .background(thisGender.color)
-                        .padding(horizontal = 2.dp)
-                ) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 2.dp),
-                        text = stringResource(thisGender.label),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.background,
-                    )
-                }
+//                Box(
+//                    modifier = Modifier
+//                        .padding(vertical = 2.dp, horizontal = 4.dp)
+//                        .clip(
+//                            RoundedCornerShape(3.dp)
+//                        )
+//                        .background(thisGender.color)
+//                        .padding(horizontal = 2.dp)
+//                ) {
+//                    Text(
+//                        modifier = Modifier.padding(horizontal = 2.dp),
+//                        text = stringResource(thisGender.label),
+//                        style = MaterialTheme.typography.bodySmall,
+//                        color = MaterialTheme.colorScheme.background,
+//                    )
+//                }
             }
 
             Text(
