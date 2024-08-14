@@ -171,7 +171,7 @@ object ContactsTab : Tab {
 
     @Composable
     override fun Content() {
-        MainContactsScreen()
+        Navigator(screen = MainContactsScreen)
     }
 
 }

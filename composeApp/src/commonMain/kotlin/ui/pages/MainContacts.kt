@@ -32,12 +32,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.request.ImageRequest
 import constant.enums.RoleTypeEnum
 import data.PublicUserSimpleModel
 import data.model.ContactScreenModel
+import data.model.MainScreenModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -45,12 +49,30 @@ import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.user_no_motto
+import ui.components.UserDetailScreen
+
+
+object MainContactsScreen : Screen {
+
+    private fun readResolve(): Any = MainContactsScreen
+
+    @Composable
+    override fun Content() {
+        MainContactsScreen()
+    }
+
+}
+
 
 
 @Composable
 fun MainContactsScreen(
     screenModel: ContactScreenModel = koinInject(),
+    mainModel: MainScreenModel = koinInject(),
 ) {
+    //navigation
+    mainModel.updateShowNavBar(true)
+    val navigator = LocalNavigator.currentOrThrow
 
     //coroutine
     val contactApiCoroutine = rememberCoroutineScope()
@@ -69,7 +91,13 @@ fun MainContactsScreen(
         LazyColumn(state = listState) {
 
             items(publicUserDataList.size) { index ->
-                PublicUserListItem(item = publicUserDataList[index])
+                PublicUserListItem(
+                    item = publicUserDataList[index],
+                    onClick = {
+                        navigator.push(UserDetailScreen(it))
+                        mainModel.updateShowNavBar(false)
+                    }
+                )
             }
 
 
@@ -101,9 +129,10 @@ fun MainContactsScreen(
 @Composable
 fun PublicUserListItem(
     item: PublicUserSimpleModel,
+    onClick: (String) -> Unit,
     configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
 ) {
-
+    //context for image
     val context = LocalPlatformContext.current
 
     val thisRoleType = RoleTypeEnum.getEnumByCode(item.roleType)
@@ -114,7 +143,9 @@ fun PublicUserListItem(
             .fillMaxWidth()
             .padding(vertical = 5.dp)
             .clip(RoundedCornerShape(10.dp))
-            .clickable {}
+            .clickable {
+                onClick(item.id)
+            }
             .fillMaxHeight()
             .padding(5.dp),
         verticalAlignment = Alignment.CenterVertically
