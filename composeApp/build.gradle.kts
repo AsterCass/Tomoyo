@@ -99,8 +99,9 @@ kotlin {
 
             //https://developer.android.com/codelabs/basic-android-kotlin-compose-load-images
             //https://coil-kt.github.io/coil/upgrading_to_coil3/#multiplatform
-            implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
-            implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0-alpha06")
+            implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha10")
+            implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0-alpha10")
+            implementation("io.coil-kt.coil3:coil-gif:3.0.0-alpha10")
 
             //https://github.com/DevSrSouza/compose-icons
             implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")

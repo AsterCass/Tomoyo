@@ -117,7 +117,6 @@ fun PublicUserListItem(
 
         AsyncImage(
             model = item.avatar,
-
             contentDescription = null,
             modifier = Modifier
                 .size(50.dp)
