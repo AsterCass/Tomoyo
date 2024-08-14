@@ -256,6 +256,7 @@ fun MainBaseCardBox(
     color: Color = MaterialTheme.colorScheme.onBackground,
     modifier: Modifier = Modifier,
     alignment: Alignment = Alignment.TopStart,
+    contentBgColor: Color = MaterialTheme.colorScheme.background,
     content: @Composable () -> Unit,
 ) {
 
@@ -287,7 +288,7 @@ fun MainBaseCardBox(
                     )
                     .fillMaxSize()
                     .background(
-                        color = MaterialTheme.colorScheme.background,
+                        color = contentBgColor,
                         shape = RoundedCornerShape(roundSize - borderSize)
                     )
                     .clip(

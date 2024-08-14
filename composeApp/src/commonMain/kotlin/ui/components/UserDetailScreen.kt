@@ -3,7 +3,9 @@ package ui.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,9 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Button
@@ -25,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -37,6 +40,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.bg3
 import tomoyo.composeapp.generated.resources.nezuko
 
 
@@ -68,7 +72,7 @@ class UserDetailScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Image(
-                    painter = painterResource(Res.drawable.nezuko),
+                    painter = painterResource(Res.drawable.bg3),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -83,8 +87,8 @@ class UserDetailScreen(
                         end = 15.dp,
                         top = statusBarHigh + 4.dp,
                         bottom = 4.dp
-                    )
-                        .verticalScroll(rememberScrollState()),
+                    ).fillMaxSize()
+
                 ) {
 
                     Row(
@@ -106,6 +110,38 @@ class UserDetailScreen(
                                 contentDescription = null,
                             )
                         }
+                    }
+
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(top = 20.dp),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                        MainBaseCardBox(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 50.dp),
+                        ) {
+
+
+                        }
+
+
+                        Image(
+                            painter = painterResource(Res.drawable.nezuko),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(CircleShape)
+                                .border(
+                                    border = BorderStroke(
+                                        2.dp,
+                                        MaterialTheme.colorScheme.onBackground
+                                    ),
+                                    shape = CircleShape
+                                )
+
+                        )
+
                     }
 
                 }
