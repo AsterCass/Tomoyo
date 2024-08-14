@@ -29,6 +29,23 @@
     <string name="play_audio_playing">Playing</string>
     <string name="play_audio_play_all">Play All</string>
 
+    <string name="user_no_motto">This person is very lazy and didn't leave anything behind.</string>
+    <string name="user_role_alien">Alien</string>
+    <string name="user_role_guest">Guest</string>
+    <string name="user_role_member">Member</string>
+    <string name="user_role_supper_member">Super Member</string>
+    <string name="user_role_sugar_member">Sugar Member</string>
+    <string name="user_role_admin">Super Admin</string>
+    <string name="user_gender_male">Male</string>
+    <string name="user_gender_female">Female</string>
+    <string name="user_gender_androgynous">Androgynous</string>
+    <string name="user_gender_pyf">Partially Female</string>
+    <string name="user_gender_pym">Partially Male</string>
+    <string name="user_gender_pf">Partial Female</string>
+    <string name="user_gender_pm">Partial Male</string>
+    <string name="user_gender_ah">Attack Helicopter</string>
+    <string name="user_gender_wsb">Walmart Shopping Bag</string>
+
     <string name="login_title">Log In to Your Account</string>
     <string name="login_subtitle">Please enter the email and password you used during registration. If you don't have an account, please go to `www.astercasc.com` to register. This application does not currently offer a registration option.</string>
     <string name="login_account_placeholder"> you@example.com </string>

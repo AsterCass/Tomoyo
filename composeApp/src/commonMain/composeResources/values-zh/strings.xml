@@ -29,6 +29,23 @@
     <string name="play_audio_playing">播放中</string>
     <string name="play_audio_play_all">播放全部</string>
 
+    <string name="user_no_motto">这个人很懒，什么都没有留下</string>
+    <string name="user_role_alien">外星人</string>
+    <string name="user_role_guest">游客</string>
+    <string name="user_role_member">会员</string>
+    <string name="user_role_supper_member">超级会员</string>
+    <string name="user_role_sugar_member">炒鸡会员</string>
+    <string name="user_role_admin">站长</string>
+    <string name="user_gender_male">男</string>
+    <string name="user_gender_female">女</string>
+    <string name="user_gender_androgynous">中性</string>
+    <string name="user_gender_pyf">偏女两性人</string>
+    <string name="user_gender_pym">偏男两性人</string>
+    <string name="user_gender_pf">不完全女性</string>
+    <string name="user_gender_pm">不完全男性</string>
+    <string name="user_gender_ah">武装直升飞机</string>
+    <string name="user_gender_wsb">沃尔玛购物袋</string>
+
 
     <string name="login_title">用户登录</string>
     <string name="login_subtitle">请输入注册时使用的邮箱和密码。如果没有账户，请前往`www.astercasc.com`进行注册，本应用程序暂时不提供注册（对您产生的困扰深表歉意,后续版本会增加应用程序的注册）</string>

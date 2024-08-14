@@ -23,6 +23,7 @@ data class PublicUserSimpleModel(
     var gender: Int = 1,
     var roleType: Int = 1,
     var avatar: String = "",
+    var motto: String? = null,
 )
 
 @Stable
