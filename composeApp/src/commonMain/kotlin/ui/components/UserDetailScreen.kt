@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -37,6 +35,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import data.model.MainScreenModel
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import org.koin.core.qualifier.named
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
 
@@ -51,10 +50,14 @@ class UserDetailScreen(
     @Composable
     override fun Content() {
         val mainModel: MainScreenModel = koinInject()
+        val isMobile: Boolean = koinInject(qualifier = named("isMobile"))
 
         //navigation
         val navigator = LocalNavigator.currentOrThrow
         val loadingScreen = mainModel.loadingScreen.collectAsState().value
+
+        //this data
+        val statusBarHigh = if (isMobile) 30.dp else 0.dp
 
 
         AnimatedVisibility(
@@ -68,13 +71,19 @@ class UserDetailScreen(
                     painter = painterResource(Res.drawable.nezuko),
                     contentDescription = null,
                     modifier = Modifier
-                        .background(Color.Black)
                         .fillMaxWidth(),
                     contentScale = ContentScale.FillWidth,
                 )
 
+
+
                 Column(
-                    Modifier.padding(vertical = 4.dp, horizontal = 15.dp)
+                    Modifier.padding(
+                        start = 15.dp,
+                        end = 15.dp,
+                        top = statusBarHigh + 4.dp,
+                        bottom = 4.dp
+                    )
                         .verticalScroll(rememberScrollState()),
                 ) {
 

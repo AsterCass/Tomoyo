@@ -5,6 +5,7 @@ import com.github.panpf.sketch.decode.GifSkiaAnimatedDecoder
 import com.github.panpf.sketch.request.ImageRequest
 import data.store.SettingsWrapper
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 actual fun platformModule(): Module = module {
@@ -16,5 +17,9 @@ actual fun platformModule(): Module = module {
                 addDecoder(GifSkiaAnimatedDecoder.Factory())
             }
         }
+    }
+
+    single<Boolean>(qualifier = named("isMobile")) {
+        false
     }
 }
