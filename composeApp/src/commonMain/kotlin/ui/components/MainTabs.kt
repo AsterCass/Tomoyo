@@ -38,7 +38,7 @@ object HomeTab : Tab {
 
     @Composable
     override fun Content() {
-        MainHomeScreen()
+        Navigator(screen = MainHomeScreen)
     }
 }
 

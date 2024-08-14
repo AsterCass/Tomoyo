@@ -10,7 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
 
+
+object MainHomeScreen : Screen {
+
+    private fun readResolve(): Any = MainHomeScreen
+
+    @Composable
+    override fun Content() {
+        MainHomeScreen()
+    }
+
+}
 
 @Composable
 fun MainHomeScreen(
