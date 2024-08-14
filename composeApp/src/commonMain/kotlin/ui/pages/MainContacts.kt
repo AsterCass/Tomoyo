@@ -32,7 +32,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import com.github.panpf.sketch.AsyncImage
+import com.github.panpf.sketch.LocalPlatformContext
+import com.github.panpf.sketch.request.ImageRequest
 import constant.enums.RoleTypeEnum
 import data.PublicUserSimpleModel
 import data.model.ContactScreenModel
@@ -99,7 +101,10 @@ fun MainContactsScreen(
 @Composable
 fun PublicUserListItem(
     item: PublicUserSimpleModel,
+    configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
 ) {
+
+    val context = LocalPlatformContext.current
 
     val thisRoleType = RoleTypeEnum.getEnumByCode(item.roleType)
     //val thisGender = GenderTypeEnum.getEnumByCode(item.gender)
@@ -116,7 +121,11 @@ fun PublicUserListItem(
     ) {
 
         AsyncImage(
-            model = item.avatar,
+            request = ImageRequest(
+                context = context,
+                uri = item.avatar,
+                configBlock = configBlock,
+            ),
             contentDescription = null,
             modifier = Modifier
                 .size(50.dp)
@@ -126,7 +135,8 @@ fun PublicUserListItem(
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
                     shape = CircleShape
                 ),
-        )
+
+            )
 
 
         Column(

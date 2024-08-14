@@ -58,7 +58,7 @@ Run command `./gradlew :composeApp:run`
 - [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/)
 - [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 - [Koin](https://insert-koin.io/)
-- [Coil](https://coil-kt.github.io/coil/)
+- [Sketch](https://github.com/panpf/sketch/)
 - [Ktor](https://ktor.io/)
 - [Krossbow](https://github.com/joffrey-bion/krossbow)
 - [Exoplayer](https://github.com/google/ExoPlayer)

@@ -29,6 +29,11 @@ kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.addAll(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=" +
+                    "${project.rootDir.absolutePath}/composeApp/config/compose_compiler_config.conf"
+        )
     }
 
     androidTarget {
@@ -97,11 +102,10 @@ kotlin {
             implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.19")
             implementation("com.fasterxml.jackson.core:jackson-databind:2.13.5")
 
-            //https://developer.android.com/codelabs/basic-android-kotlin-compose-load-images
-            //https://coil-kt.github.io/coil/upgrading_to_coil3/#multiplatform
-            implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha10")
-            implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0-alpha10")
-            implementation("io.coil-kt.coil3:coil-gif:3.0.0-alpha10")
+            //https://github.com/panpf/sketch
+            //https://github.com/panpf/sketch/blob/main/docs/wiki/animated_image.md
+            implementation("io.github.panpf.sketch4:sketch-compose:4.0.0-alpha05")
+            implementation("io.github.panpf.sketch4:sketch-animated:4.0.0-alpha05")
 
             //https://github.com/DevSrSouza/compose-icons
             implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
