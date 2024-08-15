@@ -73,6 +73,8 @@ fun MainContactsScreen(
     //navigation
     mainModel.updateShowNavBar(true)
     val navigator = LocalNavigator.currentOrThrow
+    val loadingScreen = mainModel.loadingScreen.collectAsState().value
+    if (loadingScreen) return
 
     //coroutine
     val contactApiCoroutine = rememberCoroutineScope()

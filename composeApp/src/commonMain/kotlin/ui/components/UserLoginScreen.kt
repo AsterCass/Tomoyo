@@ -59,11 +59,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import api.baseJsonConf
+import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.navigator.internal.BackHandler
 import constant.BaseResText
 import constant.enums.NotificationType
 import data.model.MainScreenModel
@@ -96,7 +98,7 @@ class UserLoginScreen : Screen {
 
     override val key: ScreenKey = uniqueScreenKey
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, InternalVoyagerApi::class)
     @Composable
     override fun Content() {
         val mainModel: MainScreenModel = koinInject()
@@ -136,6 +138,11 @@ class UserLoginScreen : Screen {
             navigator.pop()
             return
         }
+
+        //override back handle
+        BackHandler(enabled = true, onBack = {
+            navigator.popUntilRoot()
+        })
 
         var account by rememberSaveable { mutableStateOf("") }
         var passwd by rememberSaveable { mutableStateOf("") }

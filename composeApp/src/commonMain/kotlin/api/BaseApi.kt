@@ -8,6 +8,7 @@ import data.LoginParam
 import data.PublicUserSimpleModel
 import data.ResultObj
 import data.UserDataModel
+import data.UserDetailModel
 import data.model.GlobalDataModel
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -130,6 +131,11 @@ class BaseApi {
     suspend fun getPublicUser(): List<PublicUserSimpleModel> {
         val response = client.get(getUrl("/yui/user/public/users"))
         return response.body<ResultObj<List<PublicUserSimpleModel>>>().data ?: emptyList()
+    }
+
+    suspend fun getUserDetail(userId: String): UserDetailModel {
+        val response = client.get(getUrl("/yui/user/detail?userId=$userId"))
+        return response.body<ResultObj<UserDetailModel>>().data ?: UserDetailModel()
     }
 
 
