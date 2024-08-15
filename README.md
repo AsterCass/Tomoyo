@@ -25,18 +25,31 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 |:-------:|:---:|:-----------:|:---:|
 |    √    |  ×  |      √      |  ×  |
 
+## Documents
+
+[Music playback solution in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182402577020566323)
+[Implementing HTTP requests in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182174036963389030)
+[Navigation solution in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182028575808345292)
+[Building cross-platform client interfaces](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
+
+[Kotlin Compose Multiplatform下音乐播放解决方案](https://www.astercasc.com/article/detail?articleId=AT182402577020566323)
+[Kotlin Compose Multiplatform下实现HTTP请求](https://www.astercasc.com/article/detail?articleId=AT182174036963389030)
+[Kotlin Compose Multiplatform下导航解决方案](https://www.astercasc.com/article/detail?articleId=AT182028575808345292)
+[构建跨平台的客户端界面](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
+
 ## Screenshots
 
 ### Android
 
 <img src="image/android_1.jpg"  width="250"/><img src="image/android_2.jpg"  width="250"/><img src="image/android_3.jpg"  width="250"/>
-<img src="image/android_4.jpg"  width="250"/><img src="image/android_5.jpg"  width="250"/>
+<img src="image/android_4.jpg"  width="250"/><img src="image/android_5.jpg"  width="250"/><img src="image/android_6.jpg"  width="250"/>
+<img src="image/android_7.jpg"  width="250"/>
 
 ### Desktop
 
 <img src="image/desktop_1.png" width="250"/><img src="image/desktop_2.png" width="250"/><img src="image/desktop_3.png" width="250"/>
-<img src="image/desktop_4.png" width="250"/><img src="image/desktop_5.png" width="250"/>
-
+<img src="image/desktop_4.png" width="250"/><img src="image/desktop_5.png" width="250"/><img src="image/desktop_6.png" width="250"/>
+<img src="image/desktop_7.png"  width="250"/>
 
 ## Run Project
 
