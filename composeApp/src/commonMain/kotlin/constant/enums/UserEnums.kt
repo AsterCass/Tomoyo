@@ -8,6 +8,18 @@ import tomoyo.composeapp.generated.resources.drumstick_bite_solid
 import tomoyo.composeapp.generated.resources.id_badge_solid
 import tomoyo.composeapp.generated.resources.none
 import tomoyo.composeapp.generated.resources.skull_solid
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_goat
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_god
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_horse
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_loong
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_monkey
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_ox
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_pig
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_rabbit
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_rat
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_rooster
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_snake
+import tomoyo.composeapp.generated.resources.user_chinese_zodiac_tiger
 import tomoyo.composeapp.generated.resources.user_gender_ah
 import tomoyo.composeapp.generated.resources.user_gender_androgynous
 import tomoyo.composeapp.generated.resources.user_gender_female
@@ -26,6 +38,18 @@ import tomoyo.composeapp.generated.resources.user_role_sugar_member
 import tomoyo.composeapp.generated.resources.user_role_supper_member
 import tomoyo.composeapp.generated.resources.user_secret_solid
 import tomoyo.composeapp.generated.resources.user_solid
+import tomoyo.composeapp.generated.resources.user_zodiac_aquarius
+import tomoyo.composeapp.generated.resources.user_zodiac_aries
+import tomoyo.composeapp.generated.resources.user_zodiac_cancer
+import tomoyo.composeapp.generated.resources.user_zodiac_capricorn
+import tomoyo.composeapp.generated.resources.user_zodiac_gemini
+import tomoyo.composeapp.generated.resources.user_zodiac_leo
+import tomoyo.composeapp.generated.resources.user_zodiac_libra
+import tomoyo.composeapp.generated.resources.user_zodiac_pisces
+import tomoyo.composeapp.generated.resources.user_zodiac_sagittarius
+import tomoyo.composeapp.generated.resources.user_zodiac_scorpio
+import tomoyo.composeapp.generated.resources.user_zodiac_taurus
+import tomoyo.composeapp.generated.resources.user_zodiac_virgo
 
 
 enum class RoleTypeEnum(
@@ -163,5 +187,44 @@ enum class GenderTypeEnum(
             return ret
         }
     }
+
+}
+
+
+enum class UserZodiac(
+    val label: StringResource,
+    val sepDay: Int,
+) {
+    SAP_B(Res.string.user_zodiac_capricorn, 20),
+    AQ(Res.string.user_zodiac_aquarius, 19),
+    PI(Res.string.user_zodiac_pisces, 21),
+    AR(Res.string.user_zodiac_aries, 20),
+    TA(Res.string.user_zodiac_taurus, 21),
+    GE(Res.string.user_zodiac_gemini, 22),
+    CA(Res.string.user_zodiac_cancer, 23),
+    LE(Res.string.user_zodiac_leo, 23),
+    VI(Res.string.user_zodiac_virgo, 23),
+    LI(Res.string.user_zodiac_libra, 24),
+    SC(Res.string.user_zodiac_scorpio, 23),
+    SA(Res.string.user_zodiac_sagittarius, 22),
+    SAP_A(Res.string.user_zodiac_sagittarius, Int.MAX_VALUE),
+
+}
+
+enum class UserChineseZodiac(
+    val label: StringResource,
+) {
+    RAT(Res.string.user_chinese_zodiac_rat),
+    OX(Res.string.user_chinese_zodiac_ox),
+    TIG(Res.string.user_chinese_zodiac_tiger),
+    RAB(Res.string.user_chinese_zodiac_rabbit),
+    LOO(Res.string.user_chinese_zodiac_loong),
+    SN(Res.string.user_chinese_zodiac_snake),
+    HO(Res.string.user_chinese_zodiac_horse),
+    GOA(Res.string.user_chinese_zodiac_goat),
+    MON(Res.string.user_chinese_zodiac_monkey),
+    RO(Res.string.user_chinese_zodiac_rooster),
+    GO(Res.string.user_chinese_zodiac_god),
+    PIG(Res.string.user_chinese_zodiac_pig),
 
 }

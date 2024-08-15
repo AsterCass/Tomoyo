@@ -46,6 +46,34 @@
     <string name="user_gender_ah">武装直升飞机</string>
     <string name="user_gender_wsb">沃尔玛购物袋</string>
 
+    <string name="user_chat_btn">聊天</string>
+    <string name="user_follow_btn">关注</string>
+    <string name="user_unfollow_btn">取关</string>
+    <string name="user_zodiac_aries">白羊座</string>
+    <string name="user_zodiac_taurus">金牛座</string>
+    <string name="user_zodiac_gemini">双子座</string>
+    <string name="user_zodiac_cancer">巨蟹座</string>
+    <string name="user_zodiac_leo">狮子座</string>
+    <string name="user_zodiac_virgo">处女座</string>
+    <string name="user_zodiac_libra">天秤座</string>
+    <string name="user_zodiac_scorpio">天蝎座</string>
+    <string name="user_zodiac_sagittarius">射手座</string>
+    <string name="user_zodiac_capricorn">摩羯座</string>
+    <string name="user_zodiac_aquarius">水瓶座</string>
+    <string name="user_zodiac_pisces">双鱼座</string>
+    <string name="user_chinese_zodiac_rat">鼠</string>
+    <string name="user_chinese_zodiac_ox">牛</string>
+    <string name="user_chinese_zodiac_tiger">虎</string>
+    <string name="user_chinese_zodiac_rabbit">兔</string>
+    <string name="user_chinese_zodiac_loong">龙</string>
+    <string name="user_chinese_zodiac_snake">蛇</string>
+    <string name="user_chinese_zodiac_horse">马</string>
+    <string name="user_chinese_zodiac_goat">羊</string>
+    <string name="user_chinese_zodiac_monkey">猴</string>
+    <string name="user_chinese_zodiac_rooster">鸡</string>
+    <string name="user_chinese_zodiac_god">狗</string>
+    <string name="user_chinese_zodiac_pig">猪</string>
+
 
     <string name="login_title">用户登录</string>
     <string name="login_subtitle">请输入注册时使用的邮箱和密码。如果没有账户，请前往`www.astercasc.com`进行注册，本应用程序暂时不提供注册（对您产生的困扰深表歉意,后续版本会增加应用程序的注册）</string>

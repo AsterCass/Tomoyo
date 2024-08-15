@@ -46,6 +46,35 @@
     <string name="user_gender_ah">Attack Helicopter</string>
     <string name="user_gender_wsb">Walmart Shopping Bag</string>
 
+
+    <string name="user_chat_btn">Chat</string>
+    <string name="user_follow_btn">Follow</string>
+    <string name="user_unfollow_btn">Unfollow</string>
+    <string name="user_zodiac_aries">Aries</string>
+    <string name="user_zodiac_taurus">Taurus</string>
+    <string name="user_zodiac_gemini">Gemini</string>
+    <string name="user_zodiac_cancer">Cancer</string>
+    <string name="user_zodiac_leo">Leo</string>
+    <string name="user_zodiac_virgo">Virgo</string>
+    <string name="user_zodiac_libra">Libra</string>
+    <string name="user_zodiac_scorpio">Scorpio</string>
+    <string name="user_zodiac_sagittarius">Sagittarius</string>
+    <string name="user_zodiac_capricorn">Capricorn</string>
+    <string name="user_zodiac_aquarius">Aquarius</string>
+    <string name="user_zodiac_pisces">Pisces</string>
+    <string name="user_chinese_zodiac_rat">Rat</string>
+    <string name="user_chinese_zodiac_ox">Ox</string>
+    <string name="user_chinese_zodiac_tiger">Tiger</string>
+    <string name="user_chinese_zodiac_rabbit">Rabbit</string>
+    <string name="user_chinese_zodiac_loong">Loong</string>
+    <string name="user_chinese_zodiac_snake">Snake</string>
+    <string name="user_chinese_zodiac_horse">Horse</string>
+    <string name="user_chinese_zodiac_goat">Goat</string>
+    <string name="user_chinese_zodiac_monkey">Monkey</string>
+    <string name="user_chinese_zodiac_rooster">Rooster</string>
+    <string name="user_chinese_zodiac_god">Dog</string>
+    <string name="user_chinese_zodiac_pig">Pig</string>
+
     <string name="login_title">Log In to Your Account</string>
     <string name="login_subtitle">Please enter the email and password you used during registration. If you don't have an account, please go to `www.astercasc.com` to register. This application does not currently offer a registration option.</string>
     <string name="login_account_placeholder"> you@example.com </string>

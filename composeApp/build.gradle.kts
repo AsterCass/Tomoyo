@@ -114,6 +114,10 @@ kotlin {
             implementation("com.russhwolf:multiplatform-settings:1.1.1")
             implementation("com.russhwolf:multiplatform-settings-coroutines:1.1.1")
 
+            //tools https://www.hutool.cn/ for chinese date
+            implementation("cn.hutool:hutool-core:5.8.31")
+
+
             //https://github.com/MohamedRejeb/Compose-Rich-Editor/blob/main/docs/getting_started.md
             //https://github.com/MohamedRejeb/Compose-Rich-Editor/issues/306
             //还有很多东西不支持，先不做吧
