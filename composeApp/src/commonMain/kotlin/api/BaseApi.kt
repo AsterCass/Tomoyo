@@ -138,5 +138,14 @@ class BaseApi {
         return response.body<ResultObj<UserDetailModel>>().data ?: UserDetailModel()
     }
 
+    suspend fun getArticleCount(userId: String, type: Int): Int {
+        val response = client.get(
+            getUrl(
+                "/kotomi/article/list/count?articleType=$type&authorId=$userId"
+            )
+        )
+        return response.body<ResultObj<Int>>().data ?: 0
+    }
+
 
 }

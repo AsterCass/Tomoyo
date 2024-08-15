@@ -28,7 +28,12 @@ class ContactScreenModel : ScreenModel {
         if (_userDetail.value.id == userId) {
             return
         }
-        _userDetail.value = BaseApi().getUserDetail(userId)
+        val articleNum = BaseApi().getArticleCount(userId, 1)
+        val thoughtNum = BaseApi().getArticleCount(userId, 2)
+        val baseData = BaseApi().getUserDetail(userId)
+        baseData.articleNum = articleNum
+        baseData.thoughtNum = thoughtNum
+        _userDetail.value = baseData
     }
 
 

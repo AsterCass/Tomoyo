@@ -32,7 +32,10 @@ data class UserDetailModel(
     var mail: String = "",
     var birth: LocalDate = LocalDate.fromEpochDays(0),
     var community: UserCommunityModel = UserCommunityModel(),
-    var socialLink: UserSocialLinkDto = UserSocialLinkDto()
+    var socialLink: UserSocialLinkDto = UserSocialLinkDto(),
+    //insert data
+    var articleNum: Int? = null,
+    var thoughtNum: Int? = null,
 )
 
 @Serializable

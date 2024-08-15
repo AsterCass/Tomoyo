@@ -73,6 +73,11 @@
     <string name="user_chinese_zodiac_rooster">鸡</string>
     <string name="user_chinese_zodiac_god">狗</string>
     <string name="user_chinese_zodiac_pig">猪</string>
+    <string name="user_following">关注</string>
+    <string name="user_followers">粉丝</string>
+    <string name="user_friends">好友</string>
+    <string name="user_articles">博文</string>
+    <string name="user_thoughts">杂谈</string>
 
 
     <string name="login_title">用户登录</string>

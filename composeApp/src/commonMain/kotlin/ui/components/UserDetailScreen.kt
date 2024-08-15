@@ -71,9 +71,14 @@ import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import theme.baseBackground
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.bg3
 import tomoyo.composeapp.generated.resources.user_chat_btn
 import tomoyo.composeapp.generated.resources.user_follow_btn
+import tomoyo.composeapp.generated.resources.user_followers
+import tomoyo.composeapp.generated.resources.user_following
+import tomoyo.composeapp.generated.resources.user_friends
+import tomoyo.composeapp.generated.resources.user_thoughts
 
 
 class UserDetailScreen(
@@ -430,6 +435,114 @@ class UserDetailScreen(
                                 }
 
 
+                                FlowRow(
+                                    modifier = Modifier.padding(vertical = 10.dp).fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                ) {
+
+                                    Row(
+                                        modifier = Modifier.height(30.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+
+                                        Text(
+                                            text = stringResource(Res.string.user_following) + ": ",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        Text(
+                                            text = userDetailData.community.followNum.toString(),
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        VerticalDivider(
+                                            modifier = Modifier.padding(10.dp).height(8.dp)
+                                        )
+
+                                    }
+
+
+
+                                    Row(
+                                        modifier = Modifier.height(30.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+
+                                        Text(
+                                            text = stringResource(Res.string.user_followers) + ": ",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        Text(
+                                            text = userDetailData.community.fansNum.toString(),
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        VerticalDivider(
+                                            modifier = Modifier.padding(10.dp).height(8.dp)
+                                        )
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.height(30.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+
+                                        Text(
+                                            text = stringResource(Res.string.user_friends) + ": ",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        Text(
+                                            text = userDetailData.community.friendNum.toString(),
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        VerticalDivider(
+                                            modifier = Modifier.padding(10.dp).height(8.dp)
+                                        )
+                                    }
+
+
+                                    Row(
+                                        modifier = Modifier.height(30.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+
+                                        Text(
+                                            text = stringResource(Res.string.articles) + ": ",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        Text(
+                                            text = userDetailData.articleNum?.toString() ?: "0",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        VerticalDivider(
+                                            modifier = Modifier.padding(10.dp).height(8.dp)
+                                        )
+
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.height(30.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+
+                                        Text(
+                                            text = stringResource(Res.string.user_thoughts) + ": ",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                        Text(
+                                            text = userDetailData.thoughtNum?.toString() ?: "0",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+
+                                    }
+
+                                }
 
                             }
 

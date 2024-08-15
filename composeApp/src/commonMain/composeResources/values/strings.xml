@@ -74,6 +74,12 @@
     <string name="user_chinese_zodiac_rooster">Rooster</string>
     <string name="user_chinese_zodiac_god">Dog</string>
     <string name="user_chinese_zodiac_pig">Pig</string>
+    <string name="user_following">Following</string>
+    <string name="user_followers">Followers</string>
+    <string name="user_friends">Friends</string>
+    <string name="user_articles">Articles</string>
+    <string name="user_thoughts">Thoughts</string>
+
 
     <string name="login_title">Log In to Your Account</string>
     <string name="login_subtitle">Please enter the email and password you used during registration. If you don't have an account, please go to `www.astercasc.com` to register. This application does not currently offer a registration option.</string>
