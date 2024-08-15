@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -29,7 +30,7 @@ data class UserDetailModel(
     var avatar: String = "",
     var motto: String? = null,
     var mail: String = "",
-    var birth: String = "",
+    var birth: LocalDate = LocalDate.fromEpochDays(0),
     var community: UserCommunityModel = UserCommunityModel(),
     var socialLink: UserSocialLinkDto = UserSocialLinkDto()
 )
