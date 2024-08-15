@@ -292,7 +292,7 @@ class UserLoginScreen : Screen {
                             text = stringResource(Res.string.login_check_privacy_terms),
                             textDecoration = TextDecoration.Underline,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(5.dp))
 
@@ -483,7 +483,7 @@ class UserLoginScreen : Screen {
                             text = stringResource(Res.string.login_create_account),
                             textDecoration = TextDecoration.Underline,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(5.dp))
 

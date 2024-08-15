@@ -29,7 +29,7 @@ val androidx.compose.material3.ColorScheme.third: Color
 
 val androidx.compose.material3.ColorScheme.baseBackground: Color
     get() = if (this.background == LightColorScheme.background)
-        Color.White else Color.Black
+        Color(0XE0FFFFFF) else Color.Black
 
 
 
@@ -51,13 +51,13 @@ val LightColorScheme = lightColorScheme(
     onSurfaceVariant = Color(0XFF191919),
     surfaceContainer = Color.Transparent,
 
-    primary = Color(0XFF379B9B),
+    primary = Color(0XFF33691E),
     onPrimary = Color(0xFFE9E9E9),
-    inversePrimary = Color(0XFF96C8C8),
+    inversePrimary = Color(0XFF97B38D),
 
-    secondary = Color(0XFF74ABFF),
+    secondary = Color(0XFF0378BD),
     onSecondary = Color(0xFFE9E9E9),
-    onSecondaryContainer = Color(0XFF379B9B),
+    onSecondaryContainer = Color(0XFF33691E),
     secondaryContainer = Color.Transparent,
 
 

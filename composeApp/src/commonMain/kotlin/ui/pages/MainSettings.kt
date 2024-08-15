@@ -14,6 +14,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import api.baseJsonConf
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import data.model.MainScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.launch
@@ -21,13 +24,33 @@ import kotlinx.serialization.encodeToString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.login_btn
 import tomoyo.composeapp.generated.resources.logout_btn
+import ui.components.UserLoginScreen
+
+
+object MainSettingsScreen : Screen {
+
+    private fun readResolve(): Any = MainSettingsScreen
+
+    @Composable
+    override fun Content() {
+        MainSettingsScreen()
+    }
+
+}
 
 @Composable
 fun MainSettingsScreen(
     mainModel: MainScreenModel = koinInject(),
     dataStorageManager: DataStorageManager = koinInject(),
 ) {
+
+    //navigation
+    mainModel.updateShowNavBar(true)
+    val navigator = LocalNavigator.currentOrThrow
+    val loadingScreen = mainModel.loadingScreen.collectAsState().value
+    if (loadingScreen) return
 
     //coroutine
     val settingApiCoroutine = rememberCoroutineScope()
@@ -69,6 +92,24 @@ fun MainSettingsScreen(
             ) {
                 Text(
                     text = stringResource(Res.string.logout_btn),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+        } else {
+            Button(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxWidth()
+                    .height(50.dp),
+                onClick = {
+                    navigator.push(UserLoginScreen())
+                },
+                colors = ButtonDefaults.buttonColors().copy(
+
+                )
+            ) {
+                Text(
+                    text = stringResource(Res.string.login_btn),
                     style = MaterialTheme.typography.bodyLarge,
                 )
             }

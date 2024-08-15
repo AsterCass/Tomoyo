@@ -198,7 +198,7 @@ object SettingTab : Tab {
 
     @Composable
     override fun Content() {
-        MainSettingsScreen()
+        Navigator(screen = MainSettingsScreen)
     }
 
 }
