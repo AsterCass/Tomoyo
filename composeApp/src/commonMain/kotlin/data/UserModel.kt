@@ -31,6 +31,7 @@ data class UserDetailModel(
     var motto: String? = null,
     var mail: String = "",
     var birth: LocalDate = LocalDate.fromEpochDays(0),
+    var friendList: List<PublicUserSimpleModel> = emptyList(),
     var community: UserCommunityModel = UserCommunityModel(),
     var socialLink: UserSocialLinkDto = UserSocialLinkDto(),
     //insert data

@@ -78,6 +78,7 @@
     <string name="user_friends">好友</string>
     <string name="user_articles">博文</string>
     <string name="user_thoughts">杂谈</string>
+    <string name="user_no_friend">这个用户还没有好友喔，快来和他互关成为好友吧！</string>
 
 
     <string name="login_title">用户登录</string>

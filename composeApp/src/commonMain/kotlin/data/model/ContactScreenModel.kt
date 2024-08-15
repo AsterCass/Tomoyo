@@ -2,6 +2,7 @@ package data.model
 
 import api.BaseApi
 import cafe.adriel.voyager.core.model.ScreenModel
+import constant.enums.UserDetailTabScreenTabModel
 import data.PublicUserSimpleModel
 import data.UserDetailModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +35,13 @@ class ContactScreenModel : ScreenModel {
         baseData.articleNum = articleNum
         baseData.thoughtNum = thoughtNum
         _userDetail.value = baseData
+    }
+
+    //tab
+    private val _userDetailTab = MutableStateFlow(UserDetailTabScreenTabModel.FRIENDS)
+    val userDetailTab = _userDetailTab.asStateFlow()
+    fun updateUserDetailTab(tab: UserDetailTabScreenTabModel) {
+        _userDetailTab.value = tab
     }
 
 

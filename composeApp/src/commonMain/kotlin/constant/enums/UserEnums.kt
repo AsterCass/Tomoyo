@@ -8,6 +8,7 @@ import tomoyo.composeapp.generated.resources.drumstick_bite_solid
 import tomoyo.composeapp.generated.resources.id_badge_solid
 import tomoyo.composeapp.generated.resources.none
 import tomoyo.composeapp.generated.resources.skull_solid
+import tomoyo.composeapp.generated.resources.user_articles
 import tomoyo.composeapp.generated.resources.user_chinese_zodiac_goat
 import tomoyo.composeapp.generated.resources.user_chinese_zodiac_god
 import tomoyo.composeapp.generated.resources.user_chinese_zodiac_horse
@@ -20,6 +21,7 @@ import tomoyo.composeapp.generated.resources.user_chinese_zodiac_rat
 import tomoyo.composeapp.generated.resources.user_chinese_zodiac_rooster
 import tomoyo.composeapp.generated.resources.user_chinese_zodiac_snake
 import tomoyo.composeapp.generated.resources.user_chinese_zodiac_tiger
+import tomoyo.composeapp.generated.resources.user_friends
 import tomoyo.composeapp.generated.resources.user_gender_ah
 import tomoyo.composeapp.generated.resources.user_gender_androgynous
 import tomoyo.composeapp.generated.resources.user_gender_female
@@ -38,6 +40,7 @@ import tomoyo.composeapp.generated.resources.user_role_sugar_member
 import tomoyo.composeapp.generated.resources.user_role_supper_member
 import tomoyo.composeapp.generated.resources.user_secret_solid
 import tomoyo.composeapp.generated.resources.user_solid
+import tomoyo.composeapp.generated.resources.user_thoughts
 import tomoyo.composeapp.generated.resources.user_zodiac_aquarius
 import tomoyo.composeapp.generated.resources.user_zodiac_aries
 import tomoyo.composeapp.generated.resources.user_zodiac_cancer
@@ -229,4 +232,14 @@ enum class UserChineseZodiac(
     GO(Res.string.user_chinese_zodiac_god, "\uD83D\uDC36"),
     PIG(Res.string.user_chinese_zodiac_pig, "\uD83D\uDC36"),
 
+}
+
+
+enum class UserDetailTabScreenTabModel(
+    val text: StringResource,
+    val collectionId: String,
+) {
+    FRIENDS(Res.string.user_friends, "0"),
+    ARTICLE(Res.string.user_articles, "1"),
+    THOUGHTS(Res.string.user_thoughts, "2"),
 }

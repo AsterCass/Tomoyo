@@ -79,6 +79,7 @@
     <string name="user_friends">Friends</string>
     <string name="user_articles">Articles</string>
     <string name="user_thoughts">Thoughts</string>
+    <string name="user_no_friend">This user doesn't have any friends yet. Go ahead and follow each other to become friends!</string>
 
 
     <string name="login_title">Log In to Your Account</string>

@@ -4,9 +4,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,8 +21,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Button
@@ -29,10 +36,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +71,10 @@ import compose.icons.fontawesomeicons.solid.BirthdayCake
 import compose.icons.fontawesomeicons.solid.Envelope
 import compose.icons.fontawesomeicons.solid.Paw
 import compose.icons.fontawesomeicons.solid.StarAndCrescent
+import constant.enums.GenderTypeEnum
 import constant.enums.RoleTypeEnum
+import constant.enums.UserDetailTabScreenTabModel
+import data.UserDetailModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
@@ -70,14 +84,17 @@ import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import theme.baseBackground
+import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.bg3
+import tomoyo.composeapp.generated.resources.under_development
 import tomoyo.composeapp.generated.resources.user_chat_btn
 import tomoyo.composeapp.generated.resources.user_follow_btn
 import tomoyo.composeapp.generated.resources.user_followers
 import tomoyo.composeapp.generated.resources.user_following
 import tomoyo.composeapp.generated.resources.user_friends
+import tomoyo.composeapp.generated.resources.user_no_friend
 import tomoyo.composeapp.generated.resources.user_thoughts
 
 
@@ -88,7 +105,7 @@ class UserDetailScreen(
     override val key: ScreenKey = uniqueScreenKey
 
 
-    @OptIn(ExperimentalLayoutApi::class)
+    @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
         //inject
@@ -115,7 +132,7 @@ class UserDetailScreen(
             userDetailData.birth.monthNumber, userDetailData.birth.dayOfMonth
         )
         val thisChineseZodiac = getChineseZodiac(userDetailData.birth)
-
+        val tabPageState = rememberPagerState { UserDetailTabScreenTabModel.entries.size }
 
         userDetailApiCoroutine.launch {
             contactScreenModel.updateUserDetail(userId)
@@ -258,7 +275,7 @@ class UserDetailScreen(
 
                                 Row(
                                     modifier = Modifier
-                                        .padding(10.dp)
+                                        .padding(5.dp)
                                         .clip(
                                             RoundedCornerShape(3.dp)
                                         )
@@ -281,7 +298,7 @@ class UserDetailScreen(
                                 }
 
                                 Row(
-                                    modifier = Modifier.padding(vertical = 10.dp).fillMaxWidth(),
+                                    modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
@@ -339,12 +356,12 @@ class UserDetailScreen(
                                 }
 
                                 FlowRow(
-                                    modifier = Modifier.padding(vertical = 10.dp).fillMaxWidth(),
+                                    modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center,
                                 ) {
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(28.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         Icon(
@@ -369,7 +386,7 @@ class UserDetailScreen(
 
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(28.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         Icon(
@@ -391,7 +408,7 @@ class UserDetailScreen(
                                     }
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(28.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         Icon(
@@ -414,7 +431,7 @@ class UserDetailScreen(
 
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(28.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         Icon(
@@ -436,12 +453,12 @@ class UserDetailScreen(
 
 
                                 FlowRow(
-                                    modifier = Modifier.padding(vertical = 10.dp).fillMaxWidth(),
+                                    modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center,
                                 ) {
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(25.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
 
@@ -464,7 +481,7 @@ class UserDetailScreen(
 
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(25.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
 
@@ -484,7 +501,7 @@ class UserDetailScreen(
                                     }
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(25.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
 
@@ -505,7 +522,7 @@ class UserDetailScreen(
 
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(25.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
 
@@ -526,7 +543,7 @@ class UserDetailScreen(
                                     }
 
                                     Row(
-                                        modifier = Modifier.height(30.dp),
+                                        modifier = Modifier.height(25.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
 
@@ -543,6 +560,24 @@ class UserDetailScreen(
                                     }
 
                                 }
+
+
+                                UserDetailTabScreen(
+                                    tabPageState = tabPageState,
+                                    userDetailData = userDetailData,
+                                    changeTab = { tabEnum ->
+                                        contactScreenModel.updateUserDetailTab(tabEnum)
+                                        userDetailApiCoroutine.launch {
+                                            tabPageState.animateScrollToPage(
+                                                page = tabEnum.ordinal,
+                                                animationSpec = tween(durationMillis = 1000)
+                                            )
+                                        }
+                                    },
+                                    toOtherUserDetail = {
+                                        navigator.push(UserDetailScreen(it))
+                                    }
+                                )
 
                             }
 
@@ -580,4 +615,185 @@ class UserDetailScreen(
 
 
     }
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    fun UserDetailTabScreen(
+        tabPageState: PagerState,
+        userDetailData: UserDetailModel,
+        changeTab: (UserDetailTabScreenTabModel) -> Unit,
+        toOtherUserDetail: (String) -> Unit,
+    ) {
+
+        val tabOrdinal = remember { derivedStateOf { tabPageState.currentPage } }
+        val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
+        val context = LocalPlatformContext.current
+
+        TabRow(
+            modifier = Modifier.fillMaxWidth(),
+            selectedTabIndex = tabOrdinal.value,
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onBackground,
+            divider = {},
+        ) {
+            for (tabEnum in UserDetailTabScreenTabModel.entries) {
+                Tab(
+                    selected = tabOrdinal.value == tabEnum.ordinal,
+                    onClick = {
+                        changeTab(tabEnum)
+                    },
+                    text = {
+                        Text(
+                            text = stringResource(tabEnum.text),
+                            color = if (tabOrdinal.value == tabEnum.ordinal)
+                                MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    },
+                    modifier = Modifier.clip(
+                        RoundedCornerShape(10.dp)
+                    ),
+                )
+            }
+        }
+
+
+
+        HorizontalPager(
+            state = tabPageState,
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            Column(
+                modifier = Modifier.padding(top = 10.dp)
+            ) {
+                when (page) {
+                    UserDetailTabScreenTabModel.FRIENDS.ordinal -> {
+                        if (userDetailData.friendList.isEmpty()) {
+                            Row(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.user_no_friend),
+                                    color = MaterialTheme.colorScheme.subTextColor
+                                )
+                            }
+                        } else {
+                            Column(
+                                Modifier.verticalScroll(rememberScrollState())
+                            ) {
+                                for (friend in userDetailData.friendList) {
+
+                                    val thisRoleType = RoleTypeEnum.getEnumByCode(friend.roleType)
+                                    val thisGender = GenderTypeEnum.getEnumByCode(friend.gender)
+
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 5.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .clickable {
+                                                toOtherUserDetail(friend.id)
+                                            }
+                                            .padding(5.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        AsyncImage(
+                                            request = ImageRequest(
+                                                context = context,
+                                                uri = friend.avatar,
+                                                configBlock = configBlock,
+                                            ),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(40.dp)
+                                                .align(Alignment.CenterVertically)
+                                                .clip(CircleShape)
+                                        )
+
+                                        Column(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            verticalArrangement = Arrangement.SpaceEvenly,
+                                        ) {
+
+                                            Text(
+                                                modifier = Modifier.padding(start = 4.dp),
+                                                text = friend.nickName,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.primary,
+                                            )
+
+                                            Row(
+                                                modifier = Modifier.padding(start = 1.dp)
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(vertical = 2.dp, horizontal = 4.dp)
+                                                        .clip(
+                                                            RoundedCornerShape(3.dp)
+                                                        )
+                                                        .background(thisRoleType.color)
+                                                        .padding(horizontal = 4.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Icon(
+                                                        imageVector = vectorResource(thisRoleType.logo),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(10.dp),
+                                                        tint = Color.White
+                                                    )
+                                                    Text(
+                                                        modifier = Modifier.padding(start = 2.dp),
+                                                        text = stringResource(thisRoleType.label),
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.background,
+                                                    )
+                                                }
+                                                Box(
+                                                    modifier = Modifier
+                                                        .padding(vertical = 2.dp, horizontal = 4.dp)
+                                                        .clip(
+                                                            RoundedCornerShape(3.dp)
+                                                        )
+                                                        .background(thisGender.color)
+                                                        .padding(horizontal = 2.dp)
+                                                ) {
+                                                    Text(
+                                                        modifier = Modifier.padding(horizontal = 2.dp),
+                                                        text = stringResource(thisGender.label),
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.background,
+                                                    )
+                                                }
+                                            }
+
+                                        }
+
+
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                    else -> {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(stringResource(Res.string.under_development))
+                        }
+                    }
+                }
+            }
+
+        }
+    }
 }
+
+
