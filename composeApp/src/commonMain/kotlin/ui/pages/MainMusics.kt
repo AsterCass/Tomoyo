@@ -311,11 +311,13 @@ fun MainMusicsScreen(
                                 currentPlayId = currentPlayId,
                                 screenModel = screenModel,
                                 onStart = {
-                                    screenModel.onStart(
-                                        playListId = playFavMap.keys.first(),
-                                        playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
-                                        musicPlayMap = playFavMap,
-                                    )
+                                    if (playFavMap.isNotEmpty()) {
+                                        screenModel.onStart(
+                                            playListId = playFavMap.keys.first(),
+                                            playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
+                                            musicPlayMap = playFavMap,
+                                        )
+                                    }
                                 },
                                 isMatchCollection = currentCollectionId ==
                                         MusicPlayScreenTabModel.entries[tabOrdinal.value].collectionId
