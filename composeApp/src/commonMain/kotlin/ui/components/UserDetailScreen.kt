@@ -31,7 +31,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -184,11 +183,9 @@ class UserDetailScreen(
                     ) {
                         Button(
                             shape = RoundedCornerShape(15.dp),
-                            colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.baseBackground,
                                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             ),
                             contentPadding = PaddingValues(0.dp),
                             onClick = { navigator.popUntilRoot() }) {

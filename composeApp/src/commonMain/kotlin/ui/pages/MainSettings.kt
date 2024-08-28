@@ -103,6 +103,7 @@ fun MainSettingsScreen(
                     .height(50.dp),
                 onClick = {
                     navigator.push(UserLoginScreen())
+                    mainModel.updateShowNavBar(false)
                 },
                 colors = ButtonDefaults.buttonColors().copy(
 

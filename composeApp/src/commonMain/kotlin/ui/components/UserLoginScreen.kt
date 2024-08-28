@@ -27,7 +27,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -75,6 +75,7 @@ import kotlinx.serialization.encodeToString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
+import theme.halfTransSurfaceVariant
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.github
@@ -170,11 +171,9 @@ class UserLoginScreen : Screen {
                 ) {
                     Button(
                         shape = RoundedCornerShape(15.dp),
-                        colors = ButtonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                         contentPadding = PaddingValues(0.dp),
                         onClick = { navigator.popUntilRoot() }) {
