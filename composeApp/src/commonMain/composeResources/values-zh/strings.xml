@@ -12,6 +12,8 @@
     <string name="chat">聊天</string>
     <string name="contacts">通讯录</string>
 
+    <string name="notification_user_no_login">用户未登录，请先登录</string>
+
 
     <string name="service_error">服务器开小差了，待会再来试试吧</string>
     <string name="login_success">登录成功</string>

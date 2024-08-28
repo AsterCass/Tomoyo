@@ -12,6 +12,7 @@
     <string name="chat">Chat</string>
     <string name="contacts">Contacts</string>
 
+    <string name="notification_user_no_login">Please log in first</string>
 
     <string name="service_error">Error</string>
     <string name="login_success">Login successful</string>

@@ -58,6 +58,7 @@ import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
 import tomoyo.composeapp.generated.resources.nezuko
+import tomoyo.composeapp.generated.resources.notification_user_no_login
 import tomoyo.composeapp.generated.resources.service_error
 import tomoyo.composeapp.generated.resources.under_development
 
@@ -244,6 +245,7 @@ fun InitForNoComposableRes() {
         )
     )
     BaseResText.underDevelopment = stringResource(Res.string.under_development)
+    BaseResText.userNoLogin = stringResource(Res.string.notification_user_no_login)
     BaseResText.bgColorList = listOf(
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.secondary,

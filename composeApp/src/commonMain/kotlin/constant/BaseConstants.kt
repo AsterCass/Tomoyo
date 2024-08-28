@@ -9,6 +9,7 @@ val FULL_SCREEN_ROUTES = listOf(MainNavigationEnum.MUSIC_PLAYER.name)
 
 
 object BaseResText {
+    var userNoLogin: String = ""
     var underDevelopment: String = ""
     var bgColorList: List<Color> = listOf(Color.White, Color.White, Color.White)
 }

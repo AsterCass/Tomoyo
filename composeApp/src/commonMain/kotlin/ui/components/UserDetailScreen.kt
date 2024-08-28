@@ -70,7 +70,9 @@ import compose.icons.fontawesomeicons.solid.BirthdayCake
 import compose.icons.fontawesomeicons.solid.Envelope
 import compose.icons.fontawesomeicons.solid.Paw
 import compose.icons.fontawesomeicons.solid.StarAndCrescent
+import constant.BaseResText
 import constant.enums.GenderTypeEnum
+import constant.enums.NotificationType
 import constant.enums.RoleTypeEnum
 import constant.enums.UserDetailTabScreenTabModel
 import data.UserDetailModel
@@ -123,6 +125,10 @@ class UserDetailScreen(
 
         //data
         val userDetailData = contactScreenModel.userDetail.collectAsState().value
+
+        //user data
+        val userState = mainModel.userState.collectAsState().value
+        val token = userState.token
 
         //this data
         val statusBarHigh = if (isMobile) 30.dp else 0.dp
@@ -224,7 +230,18 @@ class UserDetailScreen(
                                 ) {
 
                                     Button(
-                                        onClick = {},
+                                        onClick = {
+                                            if (token.isNotBlank()) {
+                                                navigator.push(UserChatScreen(userId))
+                                            } else {
+                                                NotificationManager.showNotification(
+                                                    MainNotification(
+                                                        BaseResText.userNoLogin,
+                                                        NotificationType.SUCCESS
+                                                    )
+                                                )
+                                            }
+                                        },
                                         shape = RoundedCornerShape(5.dp),
                                         contentPadding = PaddingValues(
                                             vertical = 3.dp,
