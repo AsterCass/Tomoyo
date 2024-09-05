@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -94,7 +95,8 @@ fun MainApp(
 
                 Scaffold(
                     contentWindowInsets = WindowInsets.navigationBars,
-                    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
+                    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)
+                        .imePadding(),
                     topBar = {
                         AnimatedVisibility(
                             visible = showNavBar,
