@@ -85,7 +85,7 @@ import tomoyo.composeapp.generated.resources.search_keyword
 import tomoyo.composeapp.generated.resources.under_development
 import ui.components.MainBaseCardBox
 import ui.components.MainNotification
-import ui.components.MusicsPlayerScreen
+import ui.views.MusicsPlayerScreen
 import ui.components.NotificationManager
 
 

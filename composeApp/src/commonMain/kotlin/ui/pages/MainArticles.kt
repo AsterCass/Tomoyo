@@ -59,7 +59,7 @@ import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.nezuko
 import tomoyo.composeapp.generated.resources.search_keyword
-import ui.components.ArticleDetailScreen
+import ui.views.ArticleDetailScreen
 import ui.components.MainBaseCardBox
 
 

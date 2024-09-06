@@ -1,4 +1,4 @@
-package ui.components
+package ui.views
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -94,6 +94,9 @@ import tomoyo.composeapp.generated.resources.login_passwd_placeholder
 import tomoyo.composeapp.generated.resources.login_subtitle
 import tomoyo.composeapp.generated.resources.login_title
 import tomoyo.composeapp.generated.resources.reddit
+import ui.components.MainBaseCardBox
+import ui.components.MainNotification
+import ui.components.NotificationManager
 
 class UserLoginScreen : Screen {
 

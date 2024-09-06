@@ -1,4 +1,4 @@
-package ui.components
+package ui.views
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -97,6 +97,8 @@ import tomoyo.composeapp.generated.resources.user_following
 import tomoyo.composeapp.generated.resources.user_friends
 import tomoyo.composeapp.generated.resources.user_no_friend
 import tomoyo.composeapp.generated.resources.user_thoughts
+import ui.components.MainNotification
+import ui.components.NotificationManager
 
 
 class UserDetailScreen(

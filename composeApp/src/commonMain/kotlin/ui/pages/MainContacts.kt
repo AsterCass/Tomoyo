@@ -49,7 +49,7 @@ import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.user_no_motto
-import ui.components.UserDetailScreen
+import ui.views.UserDetailScreen
 
 
 object MainContactsScreen : Screen {

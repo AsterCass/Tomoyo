@@ -26,7 +26,7 @@ import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.login_btn
 import tomoyo.composeapp.generated.resources.logout_btn
-import ui.components.UserLoginScreen
+import ui.views.UserLoginScreen
 
 
 object MainSettingsScreen : Screen {

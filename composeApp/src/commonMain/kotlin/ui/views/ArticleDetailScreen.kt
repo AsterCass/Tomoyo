@@ -1,4 +1,4 @@
-package ui.components
+package ui.views
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween

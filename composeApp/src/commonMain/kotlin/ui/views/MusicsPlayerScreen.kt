@@ -1,4 +1,4 @@
-package ui.components
+package ui.views
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -81,6 +81,9 @@ import tomoyo.composeapp.generated.resources.media_circle_play
 import tomoyo.composeapp.generated.resources.media_next
 import tomoyo.composeapp.generated.resources.media_previous
 import tomoyo.composeapp.generated.resources.nezuko
+import ui.components.MainBaseCardBox
+import ui.components.MainNotification
+import ui.components.NotificationManager
 
 class MusicsPlayerScreen : Screen {
 
