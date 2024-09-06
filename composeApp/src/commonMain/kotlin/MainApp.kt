@@ -64,7 +64,7 @@ fun MainApp(
             typography = MainTypography(),
         ) {
             //init
-            StatusBar().updateColor(MaterialTheme.colorScheme.background, true)
+            StatusBar().updateColor(MaterialTheme.colorScheme.surface, true)
             InitForNoComposableRes()
 
             //user status

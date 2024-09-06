@@ -21,8 +21,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,6 +39,7 @@ import data.model.MainScreenModel
 import data.store.DataStorageManager
 import org.koin.compose.koinInject
 import theme.halfTransSurfaceVariant
+import ui.components.UserInput
 
 class UserChatScreen(
     private val userId: String,
@@ -98,12 +97,12 @@ class UserChatScreen(
                 Modifier
                     .windowInsetsPadding(WindowInsets.systemBars)
                     .fillMaxHeight()
-                    .padding(vertical = 4.dp, horizontal = 15.dp),
+                    .padding(top = 4.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
 
                 Row(
-                    Modifier.height(50.dp),
+                    Modifier.height(50.dp).padding(horizontal = 15.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
@@ -122,15 +121,8 @@ class UserChatScreen(
                 }
 
 
-
                 Row {
-                    TextField(
-                        value = thisInputContent,
-                        placeholder = { Text("信息") }, //todo
-                        onValueChange = { chatScreenModel.updateInputContent(userId, it) },
-
-
-                        )
+                    UserInput(onMessageSent = {})
                 }
 
 

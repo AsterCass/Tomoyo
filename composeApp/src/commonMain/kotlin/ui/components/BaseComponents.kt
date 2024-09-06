@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -174,10 +176,20 @@ data class MainNotification(
     var isExpire: Boolean = false,
 )
 
+data class MainDialogAlert(
+    val message: String,
+    val onDismissed: () -> Unit = {},
+    val cancelOperationText: String = "",
+    val confirmOperationText: String = "",
+    val confirmOperation: () -> Unit = {}
+)
+
 object NotificationManager {
 
     private val _notifications = MutableStateFlow<MainNotification?>(null)
     val notifications: StateFlow<MainNotification?> = _notifications
+    private val _dialogAlert = MutableStateFlow<MainDialogAlert?>(null)
+    val dialogAlert: StateFlow<MainDialogAlert?> = _dialogAlert
 
 
     fun showNotification(notification: MainNotification) {
@@ -186,6 +198,14 @@ object NotificationManager {
 
     fun clearNotification() {
         _notifications.value = _notifications.value?.copy(isExpire = true)
+    }
+
+    fun createDialogAlert(dialogAlert: MainDialogAlert) {
+        _dialogAlert.value = dialogAlert
+    }
+
+    fun removeDialogAlert() {
+        _dialogAlert.value = null
     }
 }
 
@@ -229,10 +249,58 @@ fun NotificationComponent() {
             delay(3000)
             NotificationManager.clearNotification()
         }
+    }
 
+
+    val dialogAlert by NotificationManager.dialogAlert.collectAsState()
+    if (null != dialogAlert) {
+        MainAlertDialog(
+            message = dialogAlert!!.message,
+            onDismissed = {
+                dialogAlert!!.onDismissed
+                NotificationManager.removeDialogAlert()
+            },
+            cancelOperationText = dialogAlert!!.cancelOperationText,
+            confirmOperationText = dialogAlert!!.confirmOperationText,
+            confirmOperation = dialogAlert!!.confirmOperation
+        )
     }
 
 }
+
+@Composable
+fun MainAlertDialog(
+    message: String,
+    onDismissed: () -> Unit = {},
+    cancelOperationText: String = "",
+    confirmOperationText: String = "",
+    confirmOperation: () -> Unit = {},
+) {
+    AlertDialog(
+        onDismissRequest = onDismissed,
+        text = {
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        confirmButton = {
+            if (confirmOperationText.isNotBlank()) {
+                TextButton(onClick = confirmOperation) {
+                    Text(text = confirmOperationText)
+                }
+            }
+        },
+        dismissButton = {
+            if (cancelOperationText.isNotBlank()) {
+                TextButton(onClick = onDismissed) {
+                    Text(text = cancelOperationText)
+                }
+            }
+        }
+    )
+}
+
 
 
 @Composable
