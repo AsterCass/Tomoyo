@@ -1,6 +1,7 @@
 package di
 
 
+import com.russhwolf.settings.ExperimentalSettingsApi
 import data.model.ArticleScreenModel
 import data.model.ChatScreenModel
 import data.model.ContactScreenModel
@@ -11,6 +12,7 @@ import data.store.DataStorageManager
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
+@OptIn(ExperimentalSettingsApi::class)
 fun commonModule() = module {
 
     single<GlobalDataModel> {

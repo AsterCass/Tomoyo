@@ -60,6 +60,9 @@ kotlin {
             implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
             implementation("androidx.media3:media3-ui:1.3.1")
 
+
+            implementation("androidx.datastore:datastore-preferences:1.1.1")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -111,8 +114,9 @@ kotlin {
             implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
 
             //https://github.com/russhwolf/multiplatform-settings
-            implementation("com.russhwolf:multiplatform-settings:1.1.1")
-            implementation("com.russhwolf:multiplatform-settings-coroutines:1.1.1")
+            implementation("com.russhwolf:multiplatform-settings:1.2.0")
+            implementation("com.russhwolf:multiplatform-settings-datastore:1.2.0")
+            implementation("com.russhwolf:multiplatform-settings-coroutines:1.2.0")
 
             //tools https://www.hutool.cn/ for chinese date
             implementation("cn.hutool:hutool-core:5.8.31")

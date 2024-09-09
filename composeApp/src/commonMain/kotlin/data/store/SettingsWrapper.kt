@@ -1,7 +1,9 @@
 package data.store
 
-import com.russhwolf.settings.Settings
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.coroutines.FlowSettings
 
 expect class SettingsWrapper {
-    fun createSettings(): Settings
+    @OptIn(ExperimentalSettingsApi::class)
+    fun createSettings(): FlowSettings
 }
