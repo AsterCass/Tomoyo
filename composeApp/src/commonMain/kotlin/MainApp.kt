@@ -34,6 +34,7 @@ import org.koin.compose.koinInject
 import theme.LightColorScheme
 import theme.MainTypography
 import ui.components.ArticlesTab
+import ui.components.CheckAppNotificationPermission
 import ui.components.ContactsTab
 import ui.components.HomeTab
 import ui.components.InitForNoComposableRes
@@ -66,6 +67,7 @@ fun MainApp(
             //init
             StatusBar().updateColor(MaterialTheme.colorScheme.surface, true)
             InitForNoComposableRes()
+            CheckAppNotificationPermission()
 
             //user status
             if (userDataStringDb.isNotBlank() && firstTryLinkSocket) {

@@ -14,6 +14,7 @@ import data.PlatformInitData
 import di.KoinInit
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import ui.components.createAppNotificationChannel
 
 
 class MainActivity : ComponentActivity() {
@@ -42,9 +43,9 @@ class MainActivity : ComponentActivity() {
             modules()
         }
 
-        println("reload onCreate")
+        createAppNotificationChannel(this)
+
         setContent {
-            println("reload setContent")
             MainApp(
                 platformData = PlatformInitData(
                     extraNavigationList = listOf(
@@ -55,6 +56,7 @@ class MainActivity : ComponentActivity() {
                     )
                 )
             )
+
         }
     }
 }
