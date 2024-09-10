@@ -26,8 +26,10 @@ import kotlinx.coroutines.flow.StateFlow
 
 expect fun sendAppNotification(title: String, content: String)
 
+expect fun clearAppNotification()
+
 @Composable
-expect fun CheckAppNotificationPermission();
+expect fun CheckAppNotificationPermission(requestPermission: (() -> Unit) -> Unit)
 
 
 data class MainNotification(

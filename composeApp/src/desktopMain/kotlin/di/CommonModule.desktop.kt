@@ -8,6 +8,8 @@ import data.store.SettingsWrapper
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 
 @OptIn(ExperimentalSettingsApi::class)
 actual fun platformModule(): Module = module {
@@ -23,5 +25,22 @@ actual fun platformModule(): Module = module {
 
     single<Boolean>(qualifier = named("isMobile")) {
         false
+    }
+
+    single<BufferedImage>(qualifier = named("showIcon")) {
+        ImageIO.read(
+            Thread.currentThread().contextClassLoader
+                .getResource("snow.png")
+        )
+
+    }
+
+    single<BufferedImage>(qualifier = named("hideIcon")) {
+        ImageIO.read(
+            Thread.currentThread().contextClassLoader
+                .getResource("notification-lightning.png")
+        )
+
+
     }
 }

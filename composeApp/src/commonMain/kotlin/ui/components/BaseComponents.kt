@@ -38,7 +38,6 @@ import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.Bell
 import constant.BaseResText
 import constant.enums.MainNavigationEnum
-import constant.enums.NotificationType
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import theme.third
@@ -96,12 +95,13 @@ fun MainAppBar(
                     modifier = Modifier
                         .clip(RoundedCornerShape(5.dp))
                         .clickable {
-                            NotificationManager.showNotification(
-                                MainNotification(
-                                    BaseResText.underDevelopment,
-                                    NotificationType.SUCCESS
-                                )
-                            )
+                            clearAppNotification()
+//                            NotificationManager.showNotification(
+//                                MainNotification(
+//                                    BaseResText.underDevelopment,
+//                                    NotificationType.SUCCESS
+//                                )
+//                            )
                         }
                         .size(22.dp),
                     imageVector = FontAwesomeIcons.Regular.Bell,

@@ -7,19 +7,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
 import com.aster.yuno.tomoyo.MainActivity
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -30,37 +19,22 @@ import com.google.accompanist.permissions.rememberPermissionState
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-actual fun CheckAppNotificationPermission() {
-
+actual fun CheckAppNotificationPermission(
+    requestPermission: (() -> Unit) -> Unit
+) {
 
     val notificationPermission = rememberPermissionState(
         permission = Manifest.permission.POST_NOTIFICATIONS
     )
 
-    val context = LocalContext.current
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column {
-            Button(onClick = {
-                if (!notificationPermission.status.isGranted) {
-                    notificationPermission.launchPermissionRequest()
-                } else {
-                    Toast.makeText(context, "Permission Given Already", Toast.LENGTH_SHORT).show()
-                }
-            }) {
-                Text(text = "Ask for permission")
-            }
-            Text(
-                text = "Permission Status : ${notificationPermission.status.isGranted}",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
+    if (!notificationPermission.status.isGranted) {
+        requestPermission {
+            println("request permission")
+            notificationPermission.launchPermissionRequest()
         }
     }
 
+    //Toast.makeText(LocalContext.current, "Permission Check", Toast.LENGTH_SHORT).show()
 }
 
 fun createAppNotificationChannel(context: Context) {
@@ -81,7 +55,7 @@ actual fun sendAppNotification(title: String, content: String) {
     val context = MainActivity.mainContext!!
 
     val channelId = "some_channel_idaa"
-    val notificationId = 12341
+    val notificationId = 1
 
     val builder = NotificationCompat.Builder(context, channelId)
         .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -95,3 +69,9 @@ actual fun sendAppNotification(title: String, content: String) {
     notificationManager.notify(notificationId, builder.build())
 }
 
+actual fun clearAppNotification() {
+    val context = MainActivity.mainContext!!
+    val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    notificationManager.cancelAll()
+}

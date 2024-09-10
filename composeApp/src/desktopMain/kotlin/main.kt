@@ -13,14 +13,15 @@ import data.PlatformInitData
 import di.KoinInit
 import javafx.embed.swing.JFXPanel
 import org.koin.core.Koin
+import org.koin.core.qualifier.named
 import java.awt.SystemTray
 import java.awt.TrayIcon
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
 
 lateinit var koin: Koin
-
+val tray: SystemTray = SystemTray.getSystemTray()
 
 fun main() {
 
@@ -32,12 +33,8 @@ fun main() {
     //init javafx
     JFXPanel()
 
-    val tray = SystemTray.getSystemTray()
-    val image = ImageIO.read(
-        Thread.currentThread().contextClassLoader
-            .getResource("snow.png")
-    )
-    val trayIcon = TrayIcon(image, "Tomoyo")
+    val showIcon: BufferedImage = koin.get(named("showIcon"))
+    val trayIcon = TrayIcon(showIcon, "Tomoyo")
     tray.add(trayIcon)
 
     application {
