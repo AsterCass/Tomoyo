@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import ui.components.CheckAppNotificationPermission
 
 
 object MainHomeScreen : Screen {
@@ -33,6 +34,9 @@ fun MainHomeScreen(
         Column(
             modifier = Modifier.align(Alignment.TopCenter).padding(top = 20.dp),
         ) {
+
+            CheckAppNotificationPermission()
+
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp),
                 text = "没想好放什么",

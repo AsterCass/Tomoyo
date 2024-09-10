@@ -210,7 +210,7 @@ compose.desktop {
             includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.1.10"
+            packageVersion = "1.2.23"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."
