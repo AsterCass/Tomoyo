@@ -17,7 +17,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 @SuppressLint("PermissionLaunchedDuringComposition")
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalPermissionsApi::class)
+@ExperimentalPermissionsApi
 @Composable
 actual fun CheckAppNotificationPermission(
     requestPermission: (() -> Unit) -> Unit
