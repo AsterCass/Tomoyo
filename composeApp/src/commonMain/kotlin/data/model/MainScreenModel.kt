@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.sockjs.SockJSClient
 import org.koin.java.KoinJavaComponent.inject
@@ -55,10 +56,25 @@ class MainScreenModel : ScreenModel {
     }
 
     //socket
+    private val _socketConnected = MutableStateFlow(false)
     private val _collectorJob = MutableStateFlow<Job?>(null)
-    private val _socketClient = MutableStateFlow(StompClient(SockJSClient()))
+    private val _socketClient = MutableStateFlow(StompClient(SockJSClient()) {
+        instrumentation = object : KrossbowInstrumentation {
+            override suspend fun onWebSocketClosed(cause: Throwable?) {
+                try {
+                    _socketConnected.value = false
+                    _collectorJob.value?.cancel()
+                    _socketSession.value?.disconnect()
+                } catch (ignore: Exception) {
+                }
+
+            }
+        }
+    })
+
     private val _socketSession = MutableStateFlow<StompSession?>(null)
     val socketSession = _socketSession.asStateFlow()
+    val socketConnected = _socketConnected.asStateFlow()
 
     //user data
     private val _firstTryLinkSocket = MutableStateFlow(true)
@@ -110,6 +126,7 @@ class MainScreenModel : ScreenModel {
                 val subscription: Flow<String> = _socketSession.value!!.subscribeText(
                     "/user/${_userState.value.token}/message/receive"
                 )
+                _socketConnected.value = true
                 _collectorJob.value = _commonCoroutine.launch {
                     subscription.collect { msg ->
                         val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
@@ -118,6 +135,8 @@ class MainScreenModel : ScreenModel {
                     }
                 }
             } catch (ex: Exception) {
+                ex.printStackTrace()
+                _socketConnected.value = false
                 logout()
             }
         }
