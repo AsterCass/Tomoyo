@@ -12,6 +12,8 @@ import data.UserDetailModel
 import data.model.GlobalDataModel
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -24,6 +26,8 @@ import kotlinx.serialization.json.Json
 import org.koin.java.KoinJavaComponent.inject
 import ui.components.MainNotification
 import ui.components.NotificationManager
+import java.net.ConnectException
+import java.net.UnknownHostException
 
 
 val baseJsonConf = Json {
@@ -54,6 +58,32 @@ class BaseApi {
         install(ContentNegotiation) {
             json(baseJsonConf)
         }
+
+
+
+        HttpResponseValidator {
+            validateResponse { response ->
+                println(response.status.value)
+            }
+            handleResponseExceptionWithRequest { exception, request ->
+                when (exception) {
+                    is UnknownHostException -> {
+                        println("UnknownHostException: Unable to resolve domain name.")
+                    }
+                    is ConnectException -> {
+                        println("ConnectException: Unable to connect to the server.")
+                    }
+                    is ResponseException -> {
+                        println("ResponseException: ${exception.message}")
+                    }
+                    else -> {
+                        println("Unknown exception: ${exception.message}")
+                    }
+                }
+            }
+
+        }
+
     }
 
     private fun getUrl(path: String): String = BASE_SERVER_ADDRESS + path
