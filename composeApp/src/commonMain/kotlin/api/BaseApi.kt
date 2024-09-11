@@ -101,7 +101,7 @@ class BaseApi {
     private fun getUrl(path: String): String = BASE_SERVER_ADDRESS + path
 
 
-    suspend inline fun <reified T> HttpClient.safeRequest(
+    private suspend inline fun <reified T> HttpClient.safeRequest(
         url: String,
         block: HttpRequestBuilder.() -> Unit,
     ): ApiResponse<T> =
@@ -220,26 +220,26 @@ class BaseApi {
     }
 
     suspend fun getPublicUser(): List<PublicUserSimpleModel> {
-        val body = client.safeRequest<List<PublicUserSimpleModel>?>(
+        val body = client.safeRequest<ResultObj<List<PublicUserSimpleModel>?>>(
             getUrl("/yui/user/public/users")
         ) {
             method = HttpMethod.Get
         }
         return if (body is ApiResponse.Success) {
-            body.body ?: emptyList()
+            body.body.data ?: emptyList()
         } else {
             emptyList()
         }
     }
 
     suspend fun getUserDetail(userId: String): UserDetailModel {
-        val body = client.safeRequest<UserDetailModel>(
+        val body = client.safeRequest<ResultObj<UserDetailModel>>(
             getUrl("/yui/user/detail?userId=$userId")
         ) {
             method = HttpMethod.Get
         }
         return if (body is ApiResponse.Success) {
-            body.body
+            body.body.data ?: UserDetailModel()
         } else {
             UserDetailModel()
         }
