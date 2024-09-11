@@ -4,16 +4,19 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -37,9 +40,14 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import data.model.ChatScreenModel
 import data.model.MainScreenModel
 import data.store.DataStorageManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.hildan.krossbow.stomp.sendText
 import org.koin.compose.koinInject
 import theme.halfTransSurfaceVariant
 import ui.components.UserInput
+import ui.pages.MessageCard
 
 class UserChatScreen(
     private val userId: String,
@@ -64,7 +72,6 @@ class UserChatScreen(
         //soft keyboard
         val keyboardController = LocalSoftwareKeyboardController.current
 
-
         //data
         val ime = WindowInsets.ime
         val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
@@ -76,6 +83,11 @@ class UserChatScreen(
         //user data
         val userState = mainModel.userState.collectAsState().value
         val token = userState.token
+
+        //chat
+        val socketSession = mainModel.socketSession.collectAsState().value
+        val chatId = mainModel.currentChatId.collectAsState().value
+        val chatRowList = mainModel.currentChatRowList.collectAsState().value
 
         //finish login
         if (token.isBlank()) {
@@ -120,9 +132,33 @@ class UserChatScreen(
                     }
                 }
 
+                Box(
+                    modifier = Modifier.weight(1f).fillMaxSize()
+                ) {
+                    //todo 这里之后可以自定义背景
+                    LazyColumn(modifier = Modifier.fillMaxSize())
+                    {
+                        item {
+
+                        }
+                        items(chatRowList.size) { index ->
+                            MessageCard(item = chatRowList[index])
+                        }
+                    }
+                }
+
 
                 Row {
-                    UserInput(onMessageSent = {})
+                    UserInput(onMessageSent = { msg ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            socketSession?.sendText(
+                                "/socket/message/send",
+                                "{\"chatId\": \"${chatId}\", " +
+                                        "\"message\": \"$msg\"}"
+                            )
+
+                        }
+                    })
                 }
 
 

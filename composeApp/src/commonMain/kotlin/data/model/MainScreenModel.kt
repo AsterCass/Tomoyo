@@ -119,9 +119,6 @@ class MainScreenModel : ScreenModel {
                 }
             } catch (ex: Exception) {
                 logout()
-            } finally {
-                _collectorJob.value?.cancel()
-                _socketSession.value?.disconnect()
             }
         }
     }
