@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
 import data.UserDataModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -56,22 +57,21 @@ class MainScreenModel : ScreenModel {
     }
 
     //socket
+    private val handler = CoroutineExceptionHandler { a, exception ->
+        _socketConnected.value = false
+        println("CoroutineException Caught $exception")
+        //  logout()
+    }
     private val _socketConnected = MutableStateFlow(false)
     private val _collectorJob = MutableStateFlow<Job?>(null)
     private val _socketClient = MutableStateFlow(StompClient(SockJSClient()) {
         instrumentation = object : KrossbowInstrumentation {
             override suspend fun onWebSocketClosed(cause: Throwable?) {
-                try {
-                    _socketConnected.value = false
-                    _collectorJob.value?.cancel()
-                    _socketSession.value?.disconnect()
-                } catch (ignore: Exception) {
-                }
-
+                println(cause)
+                _socketConnected.value = false
             }
         }
     })
-
     private val _socketSession = MutableStateFlow<StompSession?>(null)
     val socketSession = _socketSession.asStateFlow()
     val socketConnected = _socketConnected.asStateFlow()
@@ -113,32 +113,31 @@ class MainScreenModel : ScreenModel {
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch(handler) {
             try {
                 _collectorJob.value?.cancel()
                 _socketSession.value?.disconnect()
                 _collectorJob.value = null
                 _socketSession.value = null
-                _socketSession.value = _socketClient.value.connect(
-                    "https://api.astercasc.com/yui/chat-websocket/socketAuthNoError?" +
-                            "User-Token=${_userState.value.token}"
-                )
-                val subscription: Flow<String> = _socketSession.value!!.subscribeText(
-                    "/user/${_userState.value.token}/message/receive"
-                )
-                _socketConnected.value = true
-                _collectorJob.value = _commonCoroutine.launch {
-                    subscription.collect { msg ->
-                        val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
-                        _currentChatId.value = chatRow.fromChatId
-                        _currentChatRowList.value += chatRow
-                    }
-                }
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-                _socketConnected.value = false
-                logout()
+            } catch (ignore: Exception) {
             }
+
+            _socketSession.value = _socketClient.value.connect(
+                "https://api.astercasc.com/yui/chat-websocket/socketAuthNoError?" +
+                        "User-Token=${_userState.value.token}"
+            )
+            val subscription: Flow<String> = _socketSession.value!!.subscribeText(
+                "/user/${_userState.value.token}/message/receive"
+            )
+            _socketConnected.value = true
+            _collectorJob.value = _commonCoroutine.launch(handler) {
+                subscription.collect { msg ->
+                    val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
+                    _currentChatId.value = chatRow.fromChatId
+                    _currentChatRowList.value += chatRow
+                }
+            }
+
         }
     }
 
