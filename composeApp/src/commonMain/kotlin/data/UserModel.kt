@@ -74,8 +74,12 @@ data class LoginParam(
 @Serializable
 data class ChatRowModel(
     val fromChatId: String = "",
+    val sendUserId: String = "",
+    val sendUserRoleType: Int = 0,
+    val sendUserGender: Int = 0,
     val sendMessageId: String = "",
     val sendUserAvatar: String = "",
     val sendMessage: String = "",
     val sendUserNickname: String = "",
+    val sendDate: String = "",
 )

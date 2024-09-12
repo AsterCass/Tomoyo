@@ -25,12 +25,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.ChatRowModel
+import data.UserChatMsgDto
 import data.model.MainScreenModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.hildan.krossbow.stomp.sendText
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
@@ -43,9 +39,9 @@ fun MainChatScreen(
 
     //data
     val userState = mainModel.userState.collectAsState().value
-    val socketSession = mainModel.socketSession.collectAsState().value
-    val chatId = mainModel.currentChatId.collectAsState().value
-    val chatRowList = mainModel.currentChatRowList.collectAsState().value
+//    val socketSession = mainModel.socketSession.collectAsState().value
+//    val chatId = mainModel.currentChatId.collectAsState().value
+//    val chatRowList = mainModel.currentChatRowList.collectAsState().value
 
     val userData = userState.userData
 
@@ -70,13 +66,13 @@ fun MainChatScreen(
             Button(
                 onClick = {
 //                    sendMsgCoroutine.launch {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        socketSession?.sendText(
-                            "/socket/message/send",
-                            "{\"chatId\": \"${chatId}\", " +
-                                    "\"message\": \"$chatMessage\"}"
-                        )
-                    }
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        socketSession?.sendText(
+//                            "/socket/message/send",
+//                            "{\"chatId\": \"${chatId}\", " +
+//                                    "\"message\": \"$chatMessage\"}"
+//                        )
+//                    }
 //                    sendMsgCoroutine.launch {
 //
 //                    }
@@ -96,9 +92,7 @@ fun MainChatScreen(
             item {
 
             }
-            items(chatRowList.size) { index ->
-                MessageCard(item = chatRowList[index])
-            }
+//
         }
 
 
@@ -108,7 +102,7 @@ fun MainChatScreen(
 
 
 @Composable
-fun MessageCard(item: ChatRowModel) {
+fun MessageCard(item: UserChatMsgDto) {
 
     Row(modifier = Modifier.padding(all = 8.dp)) {
 //        Image(
@@ -132,7 +126,7 @@ fun MessageCard(item: ChatRowModel) {
         // We toggle the isExpanded variable when we click on this Column
         Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
             Text(
-                text = item.sendUserNickname,
+                text = item.sendUserNickname ?: "",
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.titleSmall
             )
@@ -148,7 +142,7 @@ fun MessageCard(item: ChatRowModel) {
                 modifier = Modifier.animateContentSize().padding(1.dp)
             ) {
                 Text(
-                    text = item.sendMessage,
+                    text = item.message ?: "",
                     modifier = Modifier.padding(all = 4.dp),
                     // If the message is expanded, we display all its content
                     // otherwise we only display the first line
@@ -159,3 +153,5 @@ fun MessageCard(item: ChatRowModel) {
         }
     }
 }
+
+

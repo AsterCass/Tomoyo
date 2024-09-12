@@ -27,6 +27,8 @@ import org.koin.java.KoinJavaComponent.inject
 class MainScreenModel : ScreenModel {
 
     private val globalDataModel: GlobalDataModel by inject(GlobalDataModel::class.java)
+    private val chatScreenModel: ChatScreenModel by inject(ChatScreenModel::class.java)
+
     private val _userState = globalDataModel.userState
     val userState = _userState
 
@@ -133,8 +135,7 @@ class MainScreenModel : ScreenModel {
             _collectorJob.value = _commonCoroutine.launch(handler) {
                 subscription.collect { msg ->
                     val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
-                    _currentChatId.value = chatRow.fromChatId
-                    _currentChatRowList.value += chatRow
+                    chatScreenModel.pushChatMessage(_userState.value.token, chatRow)
                 }
             }
 
@@ -146,13 +147,6 @@ class MainScreenModel : ScreenModel {
         globalDataModel.clearLocalUserState()
         _syncUserData.value = true
     }
-
-    //chat
-    private val _currentChatId = MutableStateFlow("")
-    val currentChatId = _currentChatId.asStateFlow()
-
-    private val _currentChatRowList = MutableStateFlow(emptyList<ChatRowModel>())
-    val currentChatRowList = _currentChatRowList.asStateFlow()
 
 
 }

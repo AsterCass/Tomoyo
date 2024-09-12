@@ -26,8 +26,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,7 +44,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.semantics.SemanticsPropertyKey
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
@@ -76,6 +73,8 @@ enum class InputSelector {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserInput(
+    inputText: String,
+    updateInput: (String) -> Unit,
     onMessageSent: (String) -> Unit,
     modifier: Modifier = Modifier,
     resetScroll: () -> Unit = {},
@@ -83,9 +82,7 @@ fun UserInput(
     var currentInputSelector by rememberSaveable { mutableStateOf(InputSelector.NONE) }
     var textFieldFocusState by remember { mutableStateOf(false) }
     val dismissKeyboard = { currentInputSelector = InputSelector.NONE }
-    var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue())
-    }
+    var textState = TextFieldValue(inputText)
 
     Column(
         modifier = modifier
@@ -93,8 +90,8 @@ fun UserInput(
         verticalArrangement = Arrangement.Center
     ) {
         UserInputText(
-            textFieldValue = textState,
-            onTextChanged = { textState = it },
+            textFieldValue = inputText,
+            onTextChanged = { updateInput(it) },
             onSelectorChange = {
                 currentInputSelector = it
             },
@@ -297,9 +294,9 @@ var SemanticsPropertyReceiver.keyboardShownProperty by KeyboardShownKey
 @Composable
 private fun UserInputText(
     keyboardType: KeyboardType = KeyboardType.Text,
-    onTextChanged: (TextFieldValue) -> Unit,
+    onTextChanged: (String) -> Unit,
     onSelectorChange: (InputSelector) -> Unit,
-    textFieldValue: TextFieldValue,
+    textFieldValue: String,
     keyboardShown: Boolean,
     onTextFieldFocused: (Boolean) -> Unit,
     onMessageSent: (String) -> Unit,
@@ -365,7 +362,7 @@ private fun UserInputText(
                     .padding(end = 8.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .clickable {
-                        onMessageSent(textFieldValue.text)
+                        onMessageSent(textFieldValue)
                     }
                     .size(28.dp),
                 tint = MaterialTheme.colorScheme.onBackground
@@ -391,8 +388,8 @@ private fun UserInputText(
 
 @Composable
 private fun BoxScope.UserInputTextField(
-    textFieldValue: TextFieldValue,
-    onTextChanged: (TextFieldValue) -> Unit,
+    textFieldValue: String,
+    onTextChanged: (String) -> Unit,
     onTextFieldFocused: (Boolean) -> Unit,
     keyboardType: KeyboardType,
     onMessageSent: (String) -> Unit,
@@ -419,11 +416,9 @@ private fun BoxScope.UserInputTextField(
             imeAction = ImeAction.Send
         ),
         keyboardActions = KeyboardActions {
-            if (textFieldValue.text.isNotBlank()) onMessageSent(textFieldValue.text)
+            if (textFieldValue.isNotBlank()) onMessageSent(textFieldValue)
         },
         maxLines = 1,
-        cursorBrush = SolidColor(LocalContentColor.current),
-        textStyle = LocalTextStyle.current.copy(color = LocalContentColor.current)
     )
 }
 

@@ -15,14 +15,12 @@ import org.koin.dsl.module
 @OptIn(ExperimentalSettingsApi::class)
 fun commonModule() = module {
 
+    //global
     single<GlobalDataModel> {
         GlobalDataModel()
     }
 
-    single<MainScreenModel> {
-        MainScreenModel()
-    }
-
+    //common
     single<ArticleScreenModel> {
         ArticleScreenModel()
     }
@@ -39,6 +37,12 @@ fun commonModule() = module {
         MusicScreenModel(dataStorageManager = get())
     }
 
+    //main
+    single<MainScreenModel> {
+        MainScreenModel()
+    }
+
+    //db
     single<DataStorageManager> {
         DataStorageManager(settings = get())
     }

@@ -7,6 +7,8 @@ import data.AudioSimpleModel
 import data.LoginParam
 import data.PublicUserSimpleModel
 import data.ResultObj
+import data.UserChatParam
+import data.UserChattingSimple
 import data.UserDataModel
 import data.UserDetailModel
 import data.model.GlobalDataModel
@@ -255,6 +257,27 @@ class BaseApi {
             body.body.data ?: 0
         } else {
             0
+        }
+    }
+
+    suspend fun privateInitChat(token: String, toUserId: String): UserChattingSimple {
+        val body = client.safeRequest<ResultObj<UserChattingSimple>>(
+            getUrl("/yui/user/chat/private/auth")
+        ) {
+            contentType(ContentType.Application.Json)
+            method = HttpMethod.Post
+            header("User-Token", token)
+            setBody(
+                UserChatParam(
+                    toUserId = toUserId
+                )
+            )
+        }
+        return if (body is ApiResponse.Success) {
+            println(body.body.data)
+            return body.body.data ?: UserChattingSimple()
+        } else {
+            UserChattingSimple()
         }
     }
 
