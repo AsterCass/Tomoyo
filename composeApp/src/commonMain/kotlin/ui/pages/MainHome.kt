@@ -89,7 +89,6 @@ fun MainHomeScreen(
                     val userDataStringDb =
                         dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
 
-
                     MainHomeNotificationBox(
                         text = stringResource(Res.string.notification_need_reconnect),
                         icon = FontAwesomeIcons.Solid.InfoCircle,
@@ -99,6 +98,7 @@ fun MainHomeScreen(
                                 baseJsonConf.decodeFromString(userDataStringDb)
                             if (!userDataDb.token.isNullOrBlank()) {
                                 commonApiCoroutine.launch {
+                                    //todo 检查网络，否则会清掉用户登录状态
                                     mainModel.login(
                                         dbData = userDataDb
                                     )
