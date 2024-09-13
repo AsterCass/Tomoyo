@@ -7,6 +7,7 @@ import data.AudioSimpleModel
 import data.LoginParam
 import data.PublicUserSimpleModel
 import data.ResultObj
+import data.UserChatMsgDto
 import data.UserChatParam
 import data.UserChattingSimple
 import data.UserDataModel
@@ -274,10 +275,32 @@ class BaseApi {
             )
         }
         return if (body is ApiResponse.Success) {
-            println(body.body.data)
             return body.body.data ?: UserChattingSimple()
         } else {
             UserChattingSimple()
+        }
+    }
+
+
+    suspend fun moreMessage(
+        token: String,
+        chatId: String,
+        lastMessage: String
+    ): List<UserChatMsgDto> {
+        val body = client.safeRequest<ResultObj<List<UserChatMsgDto>>>(
+            getUrl("/yui/user/chat/message/authNoError?lastMessage=$lastMessage&chatId=$chatId")
+        ) {
+            contentType(ContentType.Application.Json)
+            method = HttpMethod.Get
+            header("User-Token", token)
+        }
+        return if (body is ApiResponse.Success) {
+//            println(body.body.status)
+//            println(body.body.data)
+//            println(body.body.message)
+            return body.body.data ?: emptyList()
+        } else {
+            emptyList()
         }
     }
 

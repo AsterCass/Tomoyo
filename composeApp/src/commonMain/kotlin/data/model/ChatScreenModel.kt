@@ -31,7 +31,7 @@ class ChatScreenModel : ScreenModel {
         if (_chatData.containsKey(chatRow.fromChatId)) {
             val newMessage = UserChatMsgDto(
                 sendUserNickname = chatRow.sendUserNickname,
-                message = chatRow.sendMessage
+                message = chatRow.sendMessage,
             )
             _chatData[chatRow.fromChatId]?.userChattingData?.add(0, newMessage)
             if (_currentChatData.value.chatId == chatRow.fromChatId) {
@@ -39,6 +39,21 @@ class ChatScreenModel : ScreenModel {
             }
         } else {
             //todo reference web function baseDataInit(webIsLogin)
+        }
+    }
+
+    suspend fun loadMoreMessage(token: String) {
+        val chatId = _currentChatData.value.chatId
+        val lastMessageId = _currentChatData.value.userChattingData.last().messageId
+        if (!_currentChatData.value.clientLoadAllHistoryMessage && null != chatId) {
+            println(lastMessageId)
+            val moreMessage = BaseApi().moreMessage(token, chatId, lastMessageId ?: "")
+            if (moreMessage.isEmpty()) {
+                _currentChatData.value.clientLoadAllHistoryMessage = true
+            } else {
+                _chatData[chatId]?.userChattingData?.addAll(moreMessage)
+            }
+            _updateStatus.value++
         }
     }
 

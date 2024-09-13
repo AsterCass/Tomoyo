@@ -98,6 +98,7 @@ class UserChatScreen(
         val chatData = chatScreenModel.currentChatData.collectAsState().value
         val chatId = chatData.chatId
         val chatRowList = chatData.userChattingData
+        val loadAllHistoryMessage = chatData.clientLoadAllHistoryMessage
         val inputContent = chatScreenModel.inputContent.collectAsState().value
         val thisInputContent = inputContent[chatId] ?: ""
 
@@ -148,13 +149,19 @@ class UserChatScreen(
                             MessageCard(item = chatRowList[index])
                         }
                         item {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.padding(16.dp)
-                                )
+                            if (!loadAllHistoryMessage) {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                }
+
+                                chatApiCoroutine.launch {
+                                    chatScreenModel.loadMoreMessage(token)
+                                }
                             }
                         }
                     }
