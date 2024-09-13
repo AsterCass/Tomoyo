@@ -27,7 +27,7 @@ actual fun sendAppNotification(title: String, content: String) {
 
 @Composable
 actual fun CheckAppNotificationPermission(
-    requestPermission: (() -> Unit) -> Unit
+    requestPermission: @Composable (() -> Unit) -> Unit
 ) {
 }
 

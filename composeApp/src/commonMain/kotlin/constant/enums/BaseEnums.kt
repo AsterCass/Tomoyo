@@ -12,7 +12,6 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.AddressBook
 import compose.icons.fontawesomeicons.solid.Book
 import compose.icons.fontawesomeicons.solid.CandyCane
-import compose.icons.fontawesomeicons.solid.Comments
 import compose.icons.fontawesomeicons.solid.Film
 import compose.icons.fontawesomeicons.solid.ListUl
 import compose.icons.fontawesomeicons.solid.Music
@@ -20,7 +19,6 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
-import tomoyo.composeapp.generated.resources.chat
 import tomoyo.composeapp.generated.resources.contacts
 import tomoyo.composeapp.generated.resources.home
 import tomoyo.composeapp.generated.resources.media_repeat_all
@@ -37,7 +35,6 @@ import tomoyo.composeapp.generated.resources.play_model_random
 import tomoyo.composeapp.generated.resources.settings
 import tomoyo.composeapp.generated.resources.videos
 import ui.components.ArticlesTab
-import ui.components.ChatTab
 import ui.components.ContactsTab
 import ui.components.HomeTab
 import ui.components.MusicsTab
@@ -85,7 +82,6 @@ enum class MainNavigationEnum(
     ARTICLES("articles", Res.string.articles, FontAwesomeIcons.Solid.Book, ArticlesTab),
     MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music, MusicsTab),
     VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film, VideosTab),
-    CHAT("chat", Res.string.chat, FontAwesomeIcons.Solid.Comments, ChatTab),
     Contacts("contacts", Res.string.contacts, FontAwesomeIcons.Solid.AddressBook, ContactsTab),
     SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, SettingTab),
 

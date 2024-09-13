@@ -29,7 +29,7 @@ expect fun sendAppNotification(title: String, content: String)
 expect fun clearAppNotification()
 
 @Composable
-expect fun CheckAppNotificationPermission(requestPermission: (() -> Unit) -> Unit)
+expect fun CheckAppNotificationPermission(requestPermission: @Composable (() -> Unit) -> Unit)
 
 
 data class MainNotification(

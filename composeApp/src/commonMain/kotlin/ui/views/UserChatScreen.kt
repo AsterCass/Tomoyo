@@ -47,8 +47,8 @@ import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.sendText
 import org.koin.compose.koinInject
 import theme.halfTransSurfaceVariant
+import ui.components.MessageCard
 import ui.components.UserInput
-import ui.pages.MessageCard
 
 class UserChatScreen(
     private val userId: String,

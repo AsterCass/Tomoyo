@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import api.ApiResText
 import api.BaseApi
@@ -265,6 +267,52 @@ fun MainBaseCardBox(
 
 
     }
+}
+
+
+@Composable
+fun MainHomeNotificationBox(
+    text: String,
+    icon: ImageVector? = null,
+    color: Color = MaterialTheme.colorScheme.primary,
+    bgColor: Color = MaterialTheme.colorScheme.inversePrimary,
+    onClick: () -> Unit = {}
+) {
+
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 20.dp, vertical = 5.dp)
+            .clip(RoundedCornerShape(5.dp))
+            .height(40.dp).fillMaxWidth().background(bgColor)
+            .clickable {
+                onClick()
+            }.padding(horizontal = 10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    modifier = Modifier.padding(end = 5.dp).size(20.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = null,
+                )
+            }
+
+            Text(
+                modifier = Modifier,
+                text = text,
+                color = color,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
+
 }
 
 

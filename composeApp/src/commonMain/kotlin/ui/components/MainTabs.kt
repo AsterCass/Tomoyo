@@ -9,7 +9,6 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import constant.enums.MainNavigationEnum
 import org.jetbrains.compose.resources.stringResource
 import ui.pages.MainArticlesScreen
-import ui.pages.MainChatScreen
 import ui.pages.MainContactsScreen
 import ui.pages.MainHomeScreen
 import ui.pages.MainMusicsScreen
@@ -118,32 +117,6 @@ object VideosTab : Tab {
     @Composable
     override fun Content() {
         MainVideosScreen()
-    }
-
-}
-
-object ChatTab : Tab {
-    private fun readResolve(): Any = ChatTab
-
-    override val options: TabOptions
-        @Composable
-        get() {
-            val title = stringResource(MainNavigationEnum.CHAT.title)
-            val icon = rememberVectorPainter(MainNavigationEnum.CHAT.icon)
-            val index = MainNavigationEnum.CHAT.ordinal.toUShort()
-
-            return remember {
-                TabOptions(
-                    index = index,
-                    title = title,
-                    icon = icon,
-                )
-            }
-        }
-
-    @Composable
-    override fun Content() {
-        MainChatScreen()
     }
 
 }

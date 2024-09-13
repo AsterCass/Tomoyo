@@ -13,7 +13,9 @@
     <string name="contacts">通讯录</string>
 
     <string name="notification_user_no_login">用户未登录，请先登录</string>
-
+    <string name="notification_user_login_suggest">请登录以获得更多功能</string>
+    <string name="notification_no_permission_notification">当前无法接收新消息通知，请打开应用通知权限</string>
+    <string name="notification_need_reconnect">当前网络连接不稳定，点击重新连接</string>
 
     <string name="service_error">服务器开小差了，待会再来试试吧</string>
     <string name="login_success">登录成功</string>

@@ -6,9 +6,12 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationCompat
 import com.aster.yuno.tomoyo.MainActivity
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -20,18 +23,30 @@ import com.google.accompanist.permissions.rememberPermissionState
 @ExperimentalPermissionsApi
 @Composable
 actual fun CheckAppNotificationPermission(
-    requestPermission: (() -> Unit) -> Unit
+    requestPermission: @Composable (() -> Unit) -> Unit
 ) {
+
+    val context = LocalContext.current
 
     val notificationPermission = rememberPermissionState(
         permission = Manifest.permission.POST_NOTIFICATIONS
     )
 
     if (!notificationPermission.status.isGranted) {
+
         requestPermission {
-            println("request permission")
-            notificationPermission.launchPermissionRequest()
+            //function 1
+            //notificationPermission.launchPermissionRequest()
+
+            //function 2
+            val intent = Intent().apply {
+                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            }
+            context.startActivity(intent)
         }
+
+
     }
 
     //Toast.makeText(LocalContext.current, "Permission Check", Toast.LENGTH_SHORT).show()

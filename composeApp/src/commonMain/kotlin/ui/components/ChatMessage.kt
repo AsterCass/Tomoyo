@@ -1,4 +1,4 @@
-package ui.pages
+package ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -10,21 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
@@ -34,82 +26,9 @@ import androidx.compose.ui.unit.sp
 import constant.biliEmojiMap
 import constant.emojiReplaceKey
 import data.UserChatMsgDto
-import data.model.MainScreenModel
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bili_00
-import tomoyo.composeapp.generated.resources.chat_send
-
-@Composable
-fun MainChatScreen(
-    mainModel: MainScreenModel = koinInject(),
-) {
-
-    //data
-    val userState = mainModel.userState.collectAsState().value
-//    val socketSession = mainModel.socketSession.collectAsState().value
-//    val chatId = mainModel.currentChatId.collectAsState().value
-//    val chatRowList = mainModel.currentChatRowList.collectAsState().value
-
-    val userData = userState.userData
-
-
-    if (userData.token.isNullOrBlank()) {
-        return
-    }
-
-    //coroutine
-    val sendMsgCoroutine = rememberCoroutineScope()
-
-    var chatMessage by rememberSaveable { mutableStateOf("") }
-
-    Column(
-    ) {
-        if (!userData.token.isNullOrBlank()) {
-            TextField(
-                value = chatMessage,
-                placeholder = { Text("信息") }, //todo
-                onValueChange = { chatMessage = it }
-            )
-            Button(
-                onClick = {
-//                    sendMsgCoroutine.launch {
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        socketSession?.sendText(
-//                            "/socket/message/send",
-//                            "{\"chatId\": \"${chatId}\", " +
-//                                    "\"message\": \"$chatMessage\"}"
-//                        )
-//                    }
-//                    sendMsgCoroutine.launch {
-//
-//                    }
-
-                }
-            ) {
-                Text(stringResource(Res.string.chat_send))
-            }
-        }
-
-
-        LazyColumn(
-            modifier = Modifier.height(1200.dp)
-//        modifier = Modifier.verticalScroll(),
-//        verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            item {
-
-            }
-//
-        }
-
-
-    }
-
-}
-
 
 fun parseTextWithEmojis(text: String): AnnotatedString {
     val builder = AnnotatedString.Builder()
@@ -189,5 +108,3 @@ fun MessageCard(item: UserChatMsgDto) {
         }
     }
 }
-
-
