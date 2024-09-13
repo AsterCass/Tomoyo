@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -19,11 +20,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -118,8 +121,9 @@ class UserChatScreen(
             ) {
 
                 Row(
-                    Modifier.height(50.dp).padding(horizontal = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    Modifier.height(50.dp).fillMaxWidth().padding(horizontal = 15.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Button(
                         shape = RoundedCornerShape(15.dp),
@@ -131,6 +135,20 @@ class UserChatScreen(
                         onClick = { navigator.pop() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                    Text(chatData.chatName ?: "")
+                    Button(
+                        shape = RoundedCornerShape(15.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                        contentPadding = PaddingValues(0.dp),
+                        onClick = { }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.List,
                             contentDescription = null,
                         )
                     }

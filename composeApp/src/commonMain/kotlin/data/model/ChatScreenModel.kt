@@ -32,6 +32,7 @@ class ChatScreenModel : ScreenModel {
             val newMessage = UserChatMsgDto(
                 sendUserNickname = chatRow.sendUserNickname,
                 message = chatRow.sendMessage,
+                messageId = chatRow.sendMessageId
             )
             _chatData[chatRow.fromChatId]?.userChattingData?.add(0, newMessage)
             if (_currentChatData.value.chatId == chatRow.fromChatId) {
@@ -46,7 +47,6 @@ class ChatScreenModel : ScreenModel {
         val chatId = _currentChatData.value.chatId
         val lastMessageId = _currentChatData.value.userChattingData.last().messageId
         if (!_currentChatData.value.clientLoadAllHistoryMessage && null != chatId) {
-            println(lastMessageId)
             val moreMessage = BaseApi().moreMessage(token, chatId, lastMessageId ?: "")
             if (moreMessage.isEmpty()) {
                 _currentChatData.value.clientLoadAllHistoryMessage = true
