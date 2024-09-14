@@ -299,7 +299,7 @@ fun MainHomeNotificationBox(
                 Icon(
                     imageVector = icon,
                     modifier = Modifier.padding(end = 5.dp).size(20.dp),
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = color,
                     contentDescription = null,
                 )
             }

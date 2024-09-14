@@ -59,22 +59,26 @@ class MainScreenModel : ScreenModel {
     }
 
     //socket
-    private val handler = CoroutineExceptionHandler { _, exception ->
-        println("CoroutineException Caught $exception")
+
+    private val socketExceptionHandlerWithReconnect = CoroutineExceptionHandler { _, exception ->
+        println("Reconnect CoroutineException Caught $exception")
         globalDataModel.resetSocketConnected(false)
         globalDataModel.checkNetwork()
-
         CoroutineScope(Dispatchers.IO).launch {
-            println("===============================")
             delay(3000)
-            println("xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
             if (globalDataModel.userState.value.token.isNotBlank()) {
-                println("yyyyyyyyyyyyyyyyyyyyy")
                 login(
-                    dbData = globalDataModel.userState.value.userData
+                    dbData = globalDataModel.userState.value.userData,
+                    forceLogin = true
                 )
             }
         }
+        //  logout()
+    }
+    val socketExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        println("CoroutineException Caught $exception")
+        globalDataModel.resetSocketConnected(false)
+        globalDataModel.checkNetwork()
         //  logout()
     }
 
@@ -106,7 +110,8 @@ class MainScreenModel : ScreenModel {
 
     suspend fun login(
         account: String = "", passwd: String = "",
-        dbData: UserDataModel? = null
+        dbData: UserDataModel? = null,
+        forceLogin: Boolean = false,
     ) {
         if (null == dbData) {
             _userState.value.userData = BaseApi().login(account, passwd)
@@ -123,12 +128,16 @@ class MainScreenModel : ScreenModel {
         if (null != dbData) {
             val isLogin = BaseApi().isLogin(_userState.value.token)
             if (!isLogin) {
-                if (globalDataModel.netStatus.value) globalDataModel.clearLocalUserState()
-                return
+                if (globalDataModel.netStatus.value) {
+                    globalDataModel.clearLocalUserState()
+                } else {
+                    globalDataModel.resetSocketConnected(false)
+                }
+                if (!forceLogin) return
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch(handler) {
+        CoroutineScope(Dispatchers.IO).launch(socketExceptionHandlerWithReconnect) {
             try {
                 _collectorJob.value?.cancel()
                 _socketSession.value?.disconnect()
@@ -145,7 +154,7 @@ class MainScreenModel : ScreenModel {
                 "/user/${_userState.value.token}/message/receive"
             )
             globalDataModel.resetSocketConnected(true)
-            _collectorJob.value = _commonCoroutine.launch(handler) {
+            _collectorJob.value = _commonCoroutine.launch(socketExceptionHandlerWithReconnect) {
                 subscription.collect { msg ->
                     val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
                     chatScreenModel.pushChatMessage(_userState.value.token, chatRow)

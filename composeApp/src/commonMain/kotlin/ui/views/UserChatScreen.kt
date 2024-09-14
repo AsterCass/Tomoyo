@@ -39,6 +39,7 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.model.ChatScreenModel
+import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.CoroutineScope
@@ -61,6 +62,7 @@ class UserChatScreen(
     override fun Content() {
         val mainModel: MainScreenModel = koinInject()
         val chatScreenModel: ChatScreenModel = koinInject()
+        val globalDataModel: GlobalDataModel = koinInject()
         val dataStorageManager: DataStorageManager = koinInject()
 
         //navigation
@@ -189,13 +191,13 @@ class UserChatScreen(
                 Row {
                     UserInput(
                         onMessageSent = { msg ->
-                        CoroutineScope(Dispatchers.IO).launch {
-                            socketSession?.sendText(
-                                "/socket/message/send",
-                                "{\"chatId\": \"${chatId}\", " +
-                                        "\"message\": \"$msg\"}"
-                            )
-                            chatScreenModel.updateInputContent(chatId, "")
+                            CoroutineScope(Dispatchers.IO).launch(mainModel.socketExceptionHandler) {
+                                socketSession?.sendText(
+                                    "/socket/message/send",
+                                    "{\"chatId\": \"${chatId}\", " +
+                                            "\"message\": \"$msg\"}"
+                                )
+                                chatScreenModel.updateInputContent(chatId, "")
                         }
                         },
                         inputText = thisInputContent,

@@ -74,7 +74,8 @@ fun MainApp(
                 if (!userDataDb.token.isNullOrBlank()) {
                     commonApiCoroutine.launch {
                         mainModel.login(
-                            dbData = userDataDb
+                            dbData = userDataDb,
+                            forceLogin = true
                         )
                     }
                 }

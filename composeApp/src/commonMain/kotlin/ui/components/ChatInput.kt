@@ -96,7 +96,6 @@ fun UserInput(
     var currentInputSelector by rememberSaveable { mutableStateOf(InputSelector.NONE) }
     var textFieldFocusState by remember { mutableStateOf(false) }
     val dismissKeyboard = { currentInputSelector = InputSelector.NONE }
-    var textState = TextFieldValue(inputText)
 
     Column(
         modifier = modifier

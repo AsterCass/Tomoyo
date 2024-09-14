@@ -12,21 +12,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import api.baseJsonConf
 import cafe.adriel.voyager.core.screen.Screen
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.InfoCircle
-import data.UserDataModel
 import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import data.store.DataStorageManager
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import theme.inverseThird
+import theme.third
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.notification_check_network
-import tomoyo.composeapp.generated.resources.notification_need_reconnect
 import tomoyo.composeapp.generated.resources.notification_no_permission_notification
 import tomoyo.composeapp.generated.resources.notification_user_login_suggest
 import ui.components.CheckAppNotificationPermission
@@ -79,6 +77,15 @@ fun MainHomeScreen(
                 }
             } else {
 
+                if (!socketConnected || !netStatus) {
+                    MainHomeNotificationBox(
+                        text = stringResource(Res.string.notification_check_network),
+                        icon = FontAwesomeIcons.Solid.InfoCircle,
+                        color = MaterialTheme.colorScheme.third,
+                        bgColor = MaterialTheme.colorScheme.inverseThird
+                    )
+                }
+
                 CheckAppNotificationPermission { func ->
                     MainHomeNotificationBox(
                         text = stringResource(Res.string.notification_no_permission_notification),
@@ -89,37 +96,6 @@ fun MainHomeScreen(
                 }
 
 
-                if (!socketConnected) {
-                    val userDataStringDb =
-                        dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
-
-                    MainHomeNotificationBox(
-                        text = stringResource(Res.string.notification_need_reconnect),
-                        icon = FontAwesomeIcons.Solid.InfoCircle,
-                    ) {
-                        if (userDataStringDb.isNotBlank()) {
-                            val userDataDb: UserDataModel =
-                                baseJsonConf.decodeFromString(userDataStringDb)
-                            if (!userDataDb.token.isNullOrBlank()) {
-                                commonApiCoroutine.launch {
-                                    mainModel.login(
-                                        dbData = userDataDb
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-
-                if (!netStatus) {
-                    MainHomeNotificationBox(
-                        text = stringResource(Res.string.notification_check_network),
-                        icon = FontAwesomeIcons.Solid.InfoCircle,
-                    ) {
-                        globalDataModel.checkNetwork()
-                    }
-                }
 
             }
 
