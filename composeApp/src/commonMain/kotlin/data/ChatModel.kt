@@ -16,6 +16,7 @@ data class UserChattingSimple(
     var lastMessageId: String? = null,
     var userChattingData: MutableList<UserChatMsgDto> = mutableListOf(),
     var latestRead: Boolean? = null,
+    var lastMessageText: String? = null,
     var clientLoadAllHistoryMessage: Boolean = false,
 )
 

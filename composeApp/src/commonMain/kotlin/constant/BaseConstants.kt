@@ -73,10 +73,6 @@ import tomoyo.composeapp.generated.resources.bili_68
 import tomoyo.composeapp.generated.resources.bili_69
 import tomoyo.composeapp.generated.resources.bili_70
 
-const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"
-
-const val NETWORK_CHECK_HOST = "www.baidu.com"
-
 
 object BaseResText {
     var userNoLogin: String = ""
@@ -84,8 +80,12 @@ object BaseResText {
     var bgColorList: List<Color> = listOf(Color.White, Color.White, Color.White)
 }
 
+const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"
+const val EMOJI_REPLACE_KEY = "EMOJI_PLACEHOLDER"
+const val NETWORK_CHECK_HOST = "www.baidu.com"
+
+
 const val maxNumEmojiPage = 36
-const val emojiReplaceKey = "EMOJI_PLACEHOLDER"
 val biliEmojiMap = mapOf(
     "[#b00]" to Res.drawable.bili_00,
     "[#b01]" to Res.drawable.bili_01,

@@ -22,24 +22,40 @@ class ChatScreenModel : ScreenModel {
     val updateStatus = _updateStatus.asStateFlow()
     private val _currentChatData = MutableStateFlow(UserChattingSimple())
     val currentChatData = _currentChatData.asStateFlow()
-    private val _chatData = emptyMap<String, UserChattingSimple>().toMutableMap()
+    private val _chatData = MutableStateFlow(mutableMapOf<String, UserChattingSimple>())
+    val chatData = _chatData.asStateFlow()
     private fun pushChatData(chatId: String, input: UserChattingSimple) {
-        _chatData[chatId] = input
+        _chatData.value[chatId] = input
     }
 
     fun pushChatMessage(token: String, chatRow: ChatRowModel) {
-        if (_chatData.containsKey(chatRow.fromChatId)) {
+        if (_chatData.value.containsKey(chatRow.fromChatId)) {
             val newMessage = UserChatMsgDto(
                 sendUserNickname = chatRow.sendUserNickname,
                 message = chatRow.sendMessage,
                 messageId = chatRow.sendMessageId
             )
-            _chatData[chatRow.fromChatId]?.userChattingData?.add(0, newMessage)
+            _chatData.value[chatRow.fromChatId]?.userChattingData?.add(0, newMessage)
             if (_currentChatData.value.chatId == chatRow.fromChatId) {
                 _updateStatus.value++
             }
         } else {
             //todo reference web function baseDataInit(webIsLogin)
+        }
+    }
+
+    suspend fun updateChatData(token: String) {
+        val newChatData = BaseApi().chattingUsers(token)
+        if (newChatData.isEmpty()) {
+            return
+        }
+        for (chat in newChatData) {
+            val data = newChatData
+                .associateBy { it.chatId }
+                .filterKeys { null != it }
+                .mapKeys { it.key!! }
+                .toMutableMap()
+            _chatData.value = data
         }
     }
 
@@ -51,7 +67,7 @@ class ChatScreenModel : ScreenModel {
             if (moreMessage.isEmpty()) {
                 _currentChatData.value.clientLoadAllHistoryMessage = true
             } else {
-                _chatData[chatId]?.userChattingData?.addAll(moreMessage)
+                _chatData.value[chatId]?.userChattingData?.addAll(moreMessage)
             }
             _updateStatus.value++
         }

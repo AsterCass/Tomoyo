@@ -115,8 +115,11 @@ class MainScreenModel : ScreenModel {
     ) {
         if (null == dbData) {
             _userState.value.userData = BaseApi().login(account, passwd)
-            if (!_userState.value.userData.token.isNullOrBlank()) {
+            val thisToken = _userState.value.userData.token
+            if (!thisToken.isNullOrBlank()) {
                 _syncUserData.value = true
+            } else {
+                chatScreenModel.updateChatData(thisToken!!)
             }
         } else {
             _userState.value.userData = dbData
@@ -134,6 +137,8 @@ class MainScreenModel : ScreenModel {
                     globalDataModel.resetSocketConnected(false)
                 }
                 if (!forceLogin) return
+            } else {
+                chatScreenModel.updateChatData(_userState.value.token)
             }
         }
 

@@ -307,5 +307,19 @@ class BaseApi {
         }
     }
 
+    suspend fun chattingUsers(token: String): List<UserChattingSimple> {
+        val body = client.safeRequest<ResultObj<List<UserChattingSimple>>>(
+            getUrl("/yui/user/chat/chattingUsers/authNoError")
+        ) {
+            method = HttpMethod.Get
+            header("User-Token", token)
+        }
+        return if (body is ApiResponse.Success) {
+            return body.body.data ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
+
 
 }

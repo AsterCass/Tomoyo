@@ -23,8 +23,8 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import constant.EMOJI_REPLACE_KEY
 import constant.biliEmojiMap
-import constant.emojiReplaceKey
 import data.UserChatMsgDto
 import org.jetbrains.compose.resources.painterResource
 import tomoyo.composeapp.generated.resources.Res
@@ -38,7 +38,7 @@ fun parseTextWithEmojis(text: String): AnnotatedString {
         val match = result.value
         if (biliEmojiMap.containsKey(match)) {
             builder.append(text.substring(currentIndex, result.range.first))
-            builder.appendInlineContent(emojiReplaceKey, match)
+            builder.appendInlineContent(EMOJI_REPLACE_KEY, match)
             currentIndex = result.range.last + 1
         }
     }
@@ -91,7 +91,7 @@ fun MessageCard(item: UserChatMsgDto) {
                     modifier = Modifier.padding(all = 4.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     inlineContent = mapOf(
-                        emojiReplaceKey to InlineTextContent(
+                        EMOJI_REPLACE_KEY to InlineTextContent(
                             Placeholder(20.sp, 20.sp, PlaceholderVerticalAlign.TextCenter)
                         ) { emoji ->
                             Image(
