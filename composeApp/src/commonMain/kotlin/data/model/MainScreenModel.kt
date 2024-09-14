@@ -59,24 +59,37 @@ class MainScreenModel : ScreenModel {
     }
 
     //socket
-    private val handler = CoroutineExceptionHandler { a, exception ->
-        _socketConnected.value = false
+    private val handler = CoroutineExceptionHandler { _, exception ->
         println("CoroutineException Caught $exception")
+        globalDataModel.resetSocketConnected(false)
+        globalDataModel.checkNetwork()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            println("===============================")
+            delay(3000)
+            println("xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            if (globalDataModel.userState.value.token.isNotBlank()) {
+                println("yyyyyyyyyyyyyyyyyyyyy")
+                login(
+                    dbData = globalDataModel.userState.value.userData
+                )
+            }
+        }
         //  logout()
     }
-    private val _socketConnected = MutableStateFlow(false)
+
     private val _collectorJob = MutableStateFlow<Job?>(null)
     private val _socketClient = MutableStateFlow(StompClient(SockJSClient()) {
         instrumentation = object : KrossbowInstrumentation {
             override suspend fun onWebSocketClosed(cause: Throwable?) {
                 println(cause)
-                _socketConnected.value = false
+                globalDataModel.resetSocketConnected(false)
             }
         }
     })
     private val _socketSession = MutableStateFlow<StompSession?>(null)
     val socketSession = _socketSession.asStateFlow()
-    val socketConnected = _socketConnected.asStateFlow()
+
 
     //user data
     private val _firstTryLinkSocket = MutableStateFlow(true)
@@ -110,7 +123,7 @@ class MainScreenModel : ScreenModel {
         if (null != dbData) {
             val isLogin = BaseApi().isLogin(_userState.value.token)
             if (!isLogin) {
-                globalDataModel.clearLocalUserState()
+                if (globalDataModel.netStatus.value) globalDataModel.clearLocalUserState()
                 return
             }
         }
@@ -131,7 +144,7 @@ class MainScreenModel : ScreenModel {
             val subscription: Flow<String> = _socketSession.value!!.subscribeText(
                 "/user/${_userState.value.token}/message/receive"
             )
-            _socketConnected.value = true
+            globalDataModel.resetSocketConnected(true)
             _collectorJob.value = _commonCoroutine.launch(handler) {
                 subscription.collect { msg ->
                     val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)

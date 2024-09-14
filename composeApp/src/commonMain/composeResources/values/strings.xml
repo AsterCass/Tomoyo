@@ -16,6 +16,7 @@
     <string name="notification_user_login_suggest">Please log in to access more features</string>
     <string name="notification_no_permission_notification">Unable to receive new message notifications. Click to open app notification permissions</string>
     <string name="notification_need_reconnect">The network connection is currently unstable. Click to reconnect</string>
+    <string name="notification_check_network">No network connection. Please check your internet</string>
 
     <string name="service_error">Error</string>
     <string name="login_success">Login successful</string>

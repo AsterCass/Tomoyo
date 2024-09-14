@@ -1,7 +1,6 @@
 package constant
 
 import androidx.compose.ui.graphics.Color
-import constant.enums.MainNavigationEnum
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bili_00
 import tomoyo.composeapp.generated.resources.bili_01
@@ -75,6 +74,8 @@ import tomoyo.composeapp.generated.resources.bili_69
 import tomoyo.composeapp.generated.resources.bili_70
 
 const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"
+
+const val NETWORK_CHECK_HOST = "www.baidu.com"
 
 
 object BaseResText {

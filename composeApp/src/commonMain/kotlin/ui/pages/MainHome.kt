@@ -18,12 +18,14 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.InfoCircle
 import data.UserDataModel
+import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.notification_check_network
 import tomoyo.composeapp.generated.resources.notification_need_reconnect
 import tomoyo.composeapp.generated.resources.notification_no_permission_notification
 import tomoyo.composeapp.generated.resources.notification_user_login_suggest
@@ -46,14 +48,16 @@ object MainHomeScreen : Screen {
 fun MainHomeScreen(
 ) {
     //inject
+    val globalDataModel: GlobalDataModel = koinInject()
     val dataStorageManager: DataStorageManager = koinInject()
     val mainModel: MainScreenModel = koinInject()
-    val socketConnected = mainModel.socketConnected.collectAsState().value
+    val socketConnected = globalDataModel.socketConnected.collectAsState().value
 
     //coroutine
     val commonApiCoroutine = rememberCoroutineScope()
 
     //data
+    val netStatus = globalDataModel.netStatus.collectAsState().value
     val userState = mainModel.userState.collectAsState().value
     val token = userState.token
 
@@ -98,7 +102,6 @@ fun MainHomeScreen(
                                 baseJsonConf.decodeFromString(userDataStringDb)
                             if (!userDataDb.token.isNullOrBlank()) {
                                 commonApiCoroutine.launch {
-                                    //todo 检查网络，否则会清掉用户登录状态
                                     mainModel.login(
                                         dbData = userDataDb
                                     )
@@ -106,8 +109,18 @@ fun MainHomeScreen(
                             }
                         }
                     }
-
                 }
+
+
+                if (!netStatus) {
+                    MainHomeNotificationBox(
+                        text = stringResource(Res.string.notification_check_network),
+                        icon = FontAwesomeIcons.Solid.InfoCircle,
+                    ) {
+                        globalDataModel.checkNetwork()
+                    }
+                }
+
             }
 
 

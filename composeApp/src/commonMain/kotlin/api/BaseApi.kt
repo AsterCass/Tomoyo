@@ -110,14 +110,20 @@ class BaseApi {
     ): ApiResponse<T> =
         try {
             val response = request(url) { block() }
-            ApiResponse.Success(response.body())
+            val body: T = response.body()
+            globalDataModel.resetNetStatus(true)
+            ApiResponse.Success(body)
         } catch (e: ClientRequestException) {
+            globalDataModel.checkNetwork()
             ApiResponse.Error.HttpError(e.response.status.value, e.message)
         } catch (e: ServerResponseException) {
+            globalDataModel.checkNetwork()
             ApiResponse.Error.HttpError(e.response.status.value, e.message)
         } catch (e: IOException) {
+            globalDataModel.resetNetStatus(false)
             ApiResponse.Error.NetworkError
         } catch (e: SerializationException) {
+            globalDataModel.checkNetwork()
             ApiResponse.Error.SerializationError
         }
 
@@ -295,9 +301,6 @@ class BaseApi {
             header("User-Token", token)
         }
         return if (body is ApiResponse.Success) {
-//            println(body.body.status)
-//            println(body.body.data)
-//            println(body.body.message)
             return body.body.data ?: emptyList()
         } else {
             emptyList()
