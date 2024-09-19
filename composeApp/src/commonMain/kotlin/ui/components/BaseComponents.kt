@@ -51,6 +51,13 @@ import tomoyo.composeapp.generated.resources.nezuko
 import tomoyo.composeapp.generated.resources.notification_user_no_login
 import tomoyo.composeapp.generated.resources.service_error
 import tomoyo.composeapp.generated.resources.under_development
+import tomoyo.composeapp.generated.resources.web_fri
+import tomoyo.composeapp.generated.resources.web_mon
+import tomoyo.composeapp.generated.resources.web_sat
+import tomoyo.composeapp.generated.resources.web_sun
+import tomoyo.composeapp.generated.resources.web_thu
+import tomoyo.composeapp.generated.resources.web_tue
+import tomoyo.composeapp.generated.resources.web_wed
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -194,7 +201,6 @@ fun MainAlertDialog(
 }
 
 
-
 @Composable
 fun InitForNoComposableRes() {
     BaseApi.buildStringRes(
@@ -210,6 +216,16 @@ fun InitForNoComposableRes() {
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.secondary,
         MaterialTheme.colorScheme.third
+    )
+    BaseResText.weekDayList = listOf(
+        stringResource(Res.string.web_sun),
+        stringResource(Res.string.web_mon),
+        stringResource(Res.string.web_tue),
+        stringResource(Res.string.web_wed),
+        stringResource(Res.string.web_thu),
+        stringResource(Res.string.web_fri),
+        stringResource(Res.string.web_sat),
+        stringResource(Res.string.web_sun),
     )
 }
 

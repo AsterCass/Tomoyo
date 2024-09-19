@@ -53,6 +53,13 @@ import tomoyo.composeapp.generated.resources.user_zodiac_sagittarius
 import tomoyo.composeapp.generated.resources.user_zodiac_scorpio
 import tomoyo.composeapp.generated.resources.user_zodiac_taurus
 import tomoyo.composeapp.generated.resources.user_zodiac_virgo
+import tomoyo.composeapp.generated.resources.web_fri
+import tomoyo.composeapp.generated.resources.web_mon
+import tomoyo.composeapp.generated.resources.web_sat
+import tomoyo.composeapp.generated.resources.web_sun
+import tomoyo.composeapp.generated.resources.web_thu
+import tomoyo.composeapp.generated.resources.web_tue
+import tomoyo.composeapp.generated.resources.web_wed
 
 
 enum class RoleTypeEnum(
@@ -190,6 +197,19 @@ enum class GenderTypeEnum(
             return ret
         }
     }
+
+}
+
+enum class DayOfWeek(
+    val label: StringResource,
+) {
+    MON(Res.string.web_mon),
+    TUE(Res.string.web_tue),
+    WED(Res.string.web_wed),
+    THU(Res.string.web_thu),
+    FRI(Res.string.web_fri),
+    SAT(Res.string.web_sat),
+    SUN(Res.string.web_sun),
 
 }
 

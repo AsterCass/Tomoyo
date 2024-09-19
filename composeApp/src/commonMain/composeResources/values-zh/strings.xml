@@ -51,6 +51,14 @@
     <string name="user_gender_ah">武装直升飞机</string>
     <string name="user_gender_wsb">沃尔玛购物袋</string>
 
+    <string name="web_mon">星期一</string>
+    <string name="web_tue">星期二</string>
+    <string name="web_wed">星期三</string>
+    <string name="web_thu">星期四</string>
+    <string name="web_fri">星期五</string>
+    <string name="web_sat">星期六</string>
+    <string name="web_sun">星期日</string>
+
     <string name="user_chat_btn">聊天</string>
     <string name="user_follow_btn">关注</string>
     <string name="user_unfollow_btn">取关</string>

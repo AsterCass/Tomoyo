@@ -78,6 +78,7 @@ object BaseResText {
     var userNoLogin: String = ""
     var underDevelopment: String = ""
     var bgColorList: List<Color> = listOf(Color.White, Color.White, Color.White)
+    var weekDayList: List<String> = listOf("", "", "", "", "", "", "", "")
 }
 
 const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"

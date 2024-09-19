@@ -26,6 +26,10 @@ val androidx.compose.material3.ColorScheme.third: Color
     get() = if (this.background == LightColorScheme.background)
         Color((0XFFF26E56)) else Color.Transparent
 
+val androidx.compose.material3.ColorScheme.onThird: Color
+    get() = if (this.background == LightColorScheme.background)
+        Color((0xFFE9E9E9)) else Color.Transparent
+
 val androidx.compose.material3.ColorScheme.inverseThird: Color
     get() = if (this.background == LightColorScheme.background)
         Color((0XFFf6b5a9)) else Color.Transparent

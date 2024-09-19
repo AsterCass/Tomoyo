@@ -51,6 +51,14 @@
     <string name="user_gender_ah">Attack Helicopter</string>
     <string name="user_gender_wsb">Walmart Shopping Bag</string>
 
+    <string name="web_mon">Monday</string>
+    <string name="web_tue">Tuesday</string>
+    <string name="web_wed">Wednesday</string>
+    <string name="web_thu">Thursday</string>
+    <string name="web_fri">Friday</string>
+    <string name="web_sat">Saturday</string>
+    <string name="web_sun">Sunday</string>
+
 
     <string name="user_chat_btn">Chat</string>
     <string name="user_follow_btn">Follow</string>
