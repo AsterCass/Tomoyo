@@ -61,7 +61,10 @@ fun SwipeToRevealCard(
             for (opt in optionList) {
                 Box(
                     modifier = Modifier.fillMaxHeight().width(opt.width).background(opt.optBgColor)
-                        .clickable { opt.optionOperation }, contentAlignment = Alignment.Center
+                        .clickable {
+                            offsetX = 0f
+                            opt.optionOperation()
+                        }, contentAlignment = Alignment.Center
                 ) {
                     Text(
                         modifier = Modifier, text = opt.optionText, color = opt.optColor
@@ -77,10 +80,10 @@ fun SwipeToRevealCard(
                     val newOffset = offsetX + dragAmount
                     offsetX = max(-maxOffset, min(0f, newOffset))
                 }, onDragEnd = {
-                    if (offsetX < -maxOffset / 2) {
-                        offsetX = (-maxOffset)
+                    offsetX = if (offsetX < -maxOffset / 2) {
+                        (-maxOffset)
                     } else {
-                        offsetX = 0f
+                        0f
                     }
                 })
             }) {

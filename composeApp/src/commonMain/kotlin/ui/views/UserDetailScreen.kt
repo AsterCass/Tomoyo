@@ -72,7 +72,6 @@ import compose.icons.fontawesomeicons.solid.Paw
 import compose.icons.fontawesomeicons.solid.StarAndCrescent
 import constant.BaseResText
 import constant.enums.GenderTypeEnum
-import constant.enums.NotificationType
 import constant.enums.RoleTypeEnum
 import constant.enums.UserDetailTabScreenTabModel
 import data.UserDetailModel
@@ -97,7 +96,7 @@ import tomoyo.composeapp.generated.resources.user_following
 import tomoyo.composeapp.generated.resources.user_friends
 import tomoyo.composeapp.generated.resources.user_no_friend
 import tomoyo.composeapp.generated.resources.user_thoughts
-import ui.components.MainNotification
+import ui.components.MainDialogAlert
 import ui.components.NotificationManager
 
 
@@ -236,10 +235,11 @@ class UserDetailScreen(
                                             if (token.isNotBlank()) {
                                                 navigator.push(UserChatScreen(userId))
                                             } else {
-                                                NotificationManager.showNotification(
-                                                    MainNotification(
-                                                        BaseResText.userNoLogin,
-                                                        NotificationType.SUCCESS
+                                                NotificationManager.createDialogAlert(
+                                                    //todo jump to login
+                                                    MainDialogAlert(
+                                                        message = BaseResText.userNoLogin,
+                                                        cancelOperationText = BaseResText.cancelBtn
                                                     )
                                                 )
                                             }

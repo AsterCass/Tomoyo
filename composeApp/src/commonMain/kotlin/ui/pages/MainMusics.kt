@@ -63,7 +63,6 @@ import compose.icons.fontawesomeicons.regular.Heart
 import compose.icons.fontawesomeicons.solid.Heart
 import constant.BaseResText
 import constant.enums.MusicPlayScreenTabModel
-import constant.enums.NotificationType
 import data.AudioSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
@@ -84,9 +83,9 @@ import tomoyo.composeapp.generated.resources.play_audio_playing
 import tomoyo.composeapp.generated.resources.search_keyword
 import tomoyo.composeapp.generated.resources.under_development
 import ui.components.MainBaseCardBox
-import ui.components.MainNotification
-import ui.views.MusicsPlayerScreen
+import ui.components.MainDialogAlert
 import ui.components.NotificationManager
+import ui.views.MusicsPlayerScreen
 
 
 object MainMusicsScreen : Screen {
@@ -531,10 +530,10 @@ fun MusicGlobalPlayRow(
                 .padding(end = 15.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
-                    NotificationManager.showNotification(
-                        MainNotification(
-                            BaseResText.underDevelopment,
-                            NotificationType.SUCCESS
+                    NotificationManager.createDialogAlert(
+                        MainDialogAlert(
+                            message = BaseResText.underDevelopment,
+                            cancelOperationText = BaseResText.cancelBtn
                         )
                     )
                 }

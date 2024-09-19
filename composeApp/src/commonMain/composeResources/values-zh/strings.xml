@@ -22,8 +22,10 @@
     <string name="login_success">登录成功</string>
     <string name="login_passwd_error">密码错误</string>
     <string name="logout_btn"> 登出 </string>
-    <string name="under_development"> 开发中 </string>
+    <string name="under_development"> 该功能正在开发中，敬请期待 </string>
     <string name="search_keyword"> 检索关键字 </string>
+    <string name="btn_cancel">取消</string>
+    <string name="btn_confirm">确认</string>
 
     <string name="play_model_random">随机播放</string>
     <string name="play_model_order">顺序循环</string>
@@ -58,6 +60,10 @@
     <string name="web_fri">星期五</string>
     <string name="web_sat">星期六</string>
     <string name="web_sun">星期日</string>
+
+    <string name="chat_pin">置顶</string>
+    <string name="chat_unread">标记未读</string>
+    <string name="chat_delete">删除</string>
 
     <string name="user_chat_btn">聊天</string>
     <string name="user_follow_btn">关注</string>

@@ -77,6 +77,7 @@ import tomoyo.composeapp.generated.resources.bili_70
 object BaseResText {
     var userNoLogin: String = ""
     var underDevelopment: String = ""
+    var cancelBtn: String = ""
     var bgColorList: List<Color> = listOf(Color.White, Color.White, Color.White)
     var weekDayList: List<String> = listOf("", "", "", "", "", "", "", "")
 }

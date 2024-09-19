@@ -22,8 +22,10 @@
     <string name="login_success">Login successful</string>
     <string name="login_passwd_error">Passwd not match</string>
     <string name="logout_btn"> Log Out </string>
-    <string name="under_development"> coming soon </string>
+    <string name="under_development"> This feature is under development. Stay tuned </string>
     <string name="search_keyword"> search keyword </string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_confirm">Confirm</string>
 
     <string name="play_model_random">Shuffle</string>
     <string name="play_model_order">Repeat All</string>
@@ -58,6 +60,10 @@
     <string name="web_fri">Friday</string>
     <string name="web_sat">Saturday</string>
     <string name="web_sun">Sunday</string>
+
+    <string name="chat_pin">Pin</string>
+    <string name="chat_unread">Mark Unread</string>
+    <string name="chat_delete">Delete</string>
 
 
     <string name="user_chat_btn">Chat</string>

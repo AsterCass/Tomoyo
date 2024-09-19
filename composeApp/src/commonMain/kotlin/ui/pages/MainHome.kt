@@ -35,11 +35,13 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Circle
 import compose.icons.fontawesomeicons.solid.InfoCircle
+import constant.BaseResText
 import data.UserChattingSimple
 import data.model.ChatScreenModel
 import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import data.store.DataStorageManager
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import theme.inverseThird
@@ -47,12 +49,17 @@ import theme.onThird
 import theme.subTextColor
 import theme.third
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.chat_delete
+import tomoyo.composeapp.generated.resources.chat_pin
+import tomoyo.composeapp.generated.resources.chat_unread
 import tomoyo.composeapp.generated.resources.notification_check_network
 import tomoyo.composeapp.generated.resources.notification_no_permission_notification
 import tomoyo.composeapp.generated.resources.notification_user_login_suggest
 import tomoyo.composeapp.generated.resources.user_no_motto
 import ui.components.CheckAppNotificationPermission
+import ui.components.MainDialogAlert
 import ui.components.MainHomeNotificationBox
+import ui.components.NotificationManager
 import ui.components.SwipeToRevealCard
 import ui.components.SwipeToRevealCardOption
 
@@ -83,6 +90,7 @@ fun MainHomeScreen(
     //data
     val socketConnected = globalDataModel.socketConnected.collectAsState().value
     val chatData = chatDataModel.chatData.collectAsState().value
+    val updateStatus = chatDataModel.updateStatus.collectAsState().value
     val chatDataList = chatData.toList()
     val netStatus = globalDataModel.netStatus.collectAsState().value
     val userState = mainModel.userState.collectAsState().value
@@ -137,22 +145,45 @@ fun MainHomeScreen(
                             modifier = Modifier.height(70.dp),
                             optionList = listOf(
                                 SwipeToRevealCardOption(
-                                    optionText = "To Top",
-                                    optionOperation = {},
-                                    optColor = MaterialTheme.colorScheme.onPrimary,
-                                    optBgColor = MaterialTheme.colorScheme.primary,
-                                    width = 120.dp,
-                                ),
-                                SwipeToRevealCardOption(
-                                    optionText = "Edit",
-                                    optionOperation = {},
+                                    optionText = stringResource(Res.string.chat_pin),
+                                    optionOperation = {
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
+                                            )
+                                        )
+                                    },
                                     optColor = MaterialTheme.colorScheme.onSecondary,
                                     optBgColor = MaterialTheme.colorScheme.secondary,
                                     width = 75.dp,
                                 ),
                                 SwipeToRevealCardOption(
-                                    optionText = "Delete",
-                                    optionOperation = {},
+                                    optionText = stringResource(Res.string.chat_unread),
+                                    optionOperation = {
+                                        commonApiCoroutine.launch {
+                                            chatDataModel.readMessage(
+                                                token = token,
+                                                chatId =
+                                                chatDataList[index].second.chatId ?: "",
+                                                messageId = ""
+                                            )
+                                        }
+                                    },
+                                    optColor = MaterialTheme.colorScheme.onPrimary,
+                                    optBgColor = MaterialTheme.colorScheme.primary,
+                                    width = 125.dp,
+                                ),
+                                SwipeToRevealCardOption(
+                                    optionText = stringResource(Res.string.chat_delete),
+                                    optionOperation = {
+                                        commonApiCoroutine.launch {
+                                            chatDataModel.hideChat(
+                                                token = token,
+                                                chatId = chatDataList[index].second.chatId ?: ""
+                                            )
+                                        }
+                                    },
                                     optColor = MaterialTheme.colorScheme.onThird,
                                     optBgColor = MaterialTheme.colorScheme.third,
                                     width = 75.dp,
@@ -161,7 +192,17 @@ fun MainHomeScreen(
                             content = {
                                 UserChatListItem(
                                     item = chatDataList[index].second,
-                                    onClick = {},
+                                    onClick = {
+                                        commonApiCoroutine.launch {
+                                            chatDataModel.readMessage(
+                                                token = token,
+                                                chatId =
+                                                chatDataList[index].second.chatId ?: "",
+                                                messageId =
+                                                chatDataList[index].second.lastMessageId ?: ""
+                                            )
+                                        }
+                                    },
                                 )
                             }
                         )
@@ -193,9 +234,6 @@ fun UserChatListItem(
 
     //context for image
     val context = LocalPlatformContext.current
-
-
-
 
     Row(
         modifier = Modifier

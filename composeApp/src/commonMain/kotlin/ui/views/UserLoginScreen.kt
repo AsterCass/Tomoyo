@@ -95,6 +95,7 @@ import tomoyo.composeapp.generated.resources.login_subtitle
 import tomoyo.composeapp.generated.resources.login_title
 import tomoyo.composeapp.generated.resources.reddit
 import ui.components.MainBaseCardBox
+import ui.components.MainDialogAlert
 import ui.components.MainNotification
 import ui.components.NotificationManager
 
@@ -299,10 +300,10 @@ class UserLoginScreen : Screen {
                                 .clip(RoundedCornerShape(5.dp))
 
                                 .clickable {
-                                    NotificationManager.showNotification(
-                                        MainNotification(
-                                            BaseResText.underDevelopment,
-                                            NotificationType.SUCCESS
+                                    NotificationManager.createDialogAlert(
+                                        MainDialogAlert(
+                                            message = BaseResText.underDevelopment,
+                                            cancelOperationText = BaseResText.cancelBtn
                                         )
                                     )
                                 }
@@ -396,10 +397,10 @@ class UserLoginScreen : Screen {
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .clickable {
-                                        NotificationManager.showNotification(
-                                            MainNotification(
-                                                BaseResText.underDevelopment,
-                                                NotificationType.SUCCESS
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
                                             )
                                         )
                                     },
@@ -421,10 +422,10 @@ class UserLoginScreen : Screen {
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .clickable {
-                                        NotificationManager.showNotification(
-                                            MainNotification(
-                                                BaseResText.underDevelopment,
-                                                NotificationType.SUCCESS
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
                                             )
                                         )
                                     },
@@ -446,10 +447,10 @@ class UserLoginScreen : Screen {
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .clickable {
-                                        NotificationManager.showNotification(
-                                            MainNotification(
-                                                BaseResText.underDevelopment,
-                                                NotificationType.SUCCESS
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
                                             )
                                         )
                                     },
@@ -488,12 +489,11 @@ class UserLoginScreen : Screen {
                             color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(5.dp))
-
                                 .clickable {
-                                    NotificationManager.showNotification(
-                                        MainNotification(
-                                            BaseResText.underDevelopment,
-                                            NotificationType.SUCCESS
+                                    NotificationManager.createDialogAlert(
+                                        MainDialogAlert(
+                                            message = BaseResText.underDevelopment,
+                                            cancelOperationText = BaseResText.cancelBtn
                                         )
                                     )
                                 }

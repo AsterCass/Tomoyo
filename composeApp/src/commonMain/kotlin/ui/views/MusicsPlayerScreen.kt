@@ -66,7 +66,6 @@ import compose.icons.fontawesomeicons.regular.ThumbsUp
 import compose.icons.fontawesomeicons.solid.CandyCane
 import constant.BaseResText
 import constant.enums.MusicPlayModel
-import constant.enums.NotificationType
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
 import org.jetbrains.compose.resources.painterResource
@@ -82,7 +81,7 @@ import tomoyo.composeapp.generated.resources.media_next
 import tomoyo.composeapp.generated.resources.media_previous
 import tomoyo.composeapp.generated.resources.nezuko
 import ui.components.MainBaseCardBox
-import ui.components.MainNotification
+import ui.components.MainDialogAlert
 import ui.components.NotificationManager
 
 class MusicsPlayerScreen : Screen {
@@ -189,10 +188,10 @@ class MusicsPlayerScreen : Screen {
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(5.dp))
                                     .clickable {
-                                        NotificationManager.showNotification(
-                                            MainNotification(
-                                                BaseResText.underDevelopment,
-                                                NotificationType.SUCCESS
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
                                             )
                                         )
                                     }
@@ -205,10 +204,10 @@ class MusicsPlayerScreen : Screen {
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(5.dp))
                                     .clickable {
-                                        NotificationManager.showNotification(
-                                            MainNotification(
-                                                BaseResText.underDevelopment,
-                                                NotificationType.SUCCESS
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
                                             )
                                         )
                                     }
@@ -221,10 +220,10 @@ class MusicsPlayerScreen : Screen {
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(5.dp))
                                     .clickable {
-                                        NotificationManager.showNotification(
-                                            MainNotification(
-                                                BaseResText.underDevelopment,
-                                                NotificationType.SUCCESS
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
                                             )
                                         )
                                     }
@@ -355,10 +354,10 @@ class MusicsPlayerScreen : Screen {
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(10.dp))
                                     .clickable {
-                                        NotificationManager.showNotification(
-                                            MainNotification(
-                                                BaseResText.underDevelopment,
-                                                NotificationType.SUCCESS
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
                                             )
                                         )
                                     }

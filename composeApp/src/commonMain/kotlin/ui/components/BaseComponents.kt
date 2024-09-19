@@ -15,13 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import api.ApiResText
 import api.BaseApi
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -45,6 +46,7 @@ import org.jetbrains.compose.resources.stringResource
 import theme.third
 import theme.unselectedColor
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.btn_cancel
 import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
 import tomoyo.composeapp.generated.resources.nezuko
@@ -175,29 +177,64 @@ fun MainAlertDialog(
     confirmOperationText: String = "",
     confirmOperation: () -> Unit = {},
 ) {
-    AlertDialog(
+    Dialog(
         onDismissRequest = onDismissed,
-        text = {
-            Text(
-                text = message,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        },
-        confirmButton = {
-            if (confirmOperationText.isNotBlank()) {
-                TextButton(onClick = confirmOperation) {
-                    Text(text = confirmOperationText)
+    ) {
+        Surface(
+            shape = RoundedCornerShape(10.dp),
+            color = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onBackground,
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(
+                    top = 20.dp, start = 10.dp, end = 10.dp, bottom = 10.dp
+                ),
+                horizontalAlignment =
+                if (cancelOperationText.isNotBlank() || confirmOperationText.isNotBlank())
+                    Alignment.Start else Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 5.dp, end = 5.dp, bottom = 10.dp),
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Row {
+                    if (confirmOperationText.isNotBlank()) {
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = if (cancelOperationText.isNotBlank())
+                                Alignment.CenterStart else Alignment.Center
+                        ) {
+                            TextButton(
+                                onClick = confirmOperation,
+                                shape = RoundedCornerShape(10.dp),
+                            ) {
+                                Text(text = confirmOperationText)
+                            }
+                        }
+                    }
+                    if (cancelOperationText.isNotBlank()) {
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = if ((confirmOperationText.isNotBlank()))
+                                Alignment.CenterEnd else Alignment.Center
+                        ) {
+
+                            TextButton(
+                                onClick = onDismissed,
+                                shape = RoundedCornerShape(10.dp),
+                            ) {
+                                Text(text = cancelOperationText)
+                            }
+                        }
+                    }
+
                 }
-            }
-        },
-        dismissButton = {
-            if (cancelOperationText.isNotBlank()) {
-                TextButton(onClick = onDismissed) {
-                    Text(text = cancelOperationText)
-                }
+
             }
         }
-    )
+    }
 }
 
 
@@ -211,6 +248,7 @@ fun InitForNoComposableRes() {
         )
     )
     BaseResText.underDevelopment = stringResource(Res.string.under_development)
+    BaseResText.cancelBtn = stringResource(Res.string.btn_cancel)
     BaseResText.userNoLogin = stringResource(Res.string.notification_user_no_login)
     BaseResText.bgColorList = listOf(
         MaterialTheme.colorScheme.primary,

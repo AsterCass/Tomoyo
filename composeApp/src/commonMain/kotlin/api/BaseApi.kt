@@ -321,5 +321,23 @@ class BaseApi {
         }
     }
 
+    suspend fun hideChat(token: String, chatId: String) {
+        client.safeRequest<String>(
+            getUrl("/yui/user/chat/hide/auth?hideChatId=${chatId}")
+        ) {
+            method = HttpMethod.Post
+            header("User-Token", token)
+        }
+    }
+
+    suspend fun readMessage(token: String, chatId: String, messageId: String) {
+        client.safeRequest<String>(
+            getUrl("/yui/user/chat/read/message/auth?chatId=${chatId}&messageId=${messageId}")
+        ) {
+            method = HttpMethod.Post
+            header("User-Token", token)
+        }
+    }
+
 
 }

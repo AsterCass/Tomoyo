@@ -82,5 +82,19 @@ class ChatScreenModel : ScreenModel {
         }
     }
 
+    suspend fun hideChat(token: String, chatId: String) {
+        _chatData.value.remove(chatId)
+        _updateStatus.value++
+        BaseApi().hideChat(token, chatId)
+        updateChatData(token)
+    }
+
+    suspend fun readMessage(token: String, chatId: String, messageId: String) {
+        BaseApi().readMessage(token, chatId, messageId)
+        _chatData.value[chatId]?.latestRead = "" != messageId
+        _updateStatus.value++
+//        updateChatData(token)
+    }
+
 
 }
