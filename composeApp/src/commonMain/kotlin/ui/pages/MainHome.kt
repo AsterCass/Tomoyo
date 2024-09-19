@@ -28,6 +28,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import biz.getLastTime
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.request.ImageRequest
@@ -62,6 +64,7 @@ import ui.components.MainHomeNotificationBox
 import ui.components.NotificationManager
 import ui.components.SwipeToRevealCard
 import ui.components.SwipeToRevealCardOption
+import ui.views.UserChatScreen
 
 
 object MainHomeScreen : Screen {
@@ -86,6 +89,12 @@ fun MainHomeScreen(
 
     //coroutine
     val commonApiCoroutine = rememberCoroutineScope()
+
+    //navigation
+    mainModel.updateShowNavBar(true)
+    val navigator = LocalNavigator.currentOrThrow
+    val loadingScreen = mainModel.loadingScreen.collectAsState().value
+    if (loadingScreen) return
 
     //data
     val socketConnected = globalDataModel.socketConnected.collectAsState().value
@@ -113,6 +122,7 @@ fun MainHomeScreen(
                     )
                 }
                 return
+                //todo show some dialogs
             }
 
             LazyColumn {
@@ -201,6 +211,13 @@ fun MainHomeScreen(
                                                 messageId =
                                                 chatDataList[index].second.lastMessageId ?: ""
                                             )
+                                            navigator.push(
+                                                UserChatScreen(
+                                                    "",
+                                                    chatDataList[index].second.chatId ?: ""
+                                                )
+                                            )
+                                            mainModel.updateShowNavBar(false)
                                         }
                                     },
                                 )

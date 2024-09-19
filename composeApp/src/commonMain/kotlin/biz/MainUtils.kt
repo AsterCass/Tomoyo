@@ -7,6 +7,7 @@ import constant.BaseResText
 import constant.enums.UserChineseZodiac
 import constant.enums.UserZodiac
 import kotlinx.datetime.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 fun formatSeconds(seconds: Int): String {
@@ -48,5 +49,6 @@ fun getLastTime(time: String?): String {
     if (now.dayOfMonth != dateTime.dayOfMonth) {
         return BaseResText.weekDayList[dateTime.dayOfWeek.value]
     }
-    return "${dateTime.hour}:${dateTime.minute}"
+
+    return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
 }

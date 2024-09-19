@@ -52,7 +52,8 @@ import ui.components.MessageCard
 import ui.components.UserInput
 
 class UserChatScreen(
-    private val userId: String,
+    private val inputUserId: String,
+    private val inputChatId: String,
 ) : Screen {
 
     override val key: ScreenKey = uniqueScreenKey
@@ -93,9 +94,14 @@ class UserChatScreen(
             return
         }
 
-        chatApiCoroutine.launch {
-            chatScreenModel.updateCurrentChatDataWithUserId(token, userId)
+        if (inputUserId.isNotEmpty()) {
+            chatApiCoroutine.launch {
+                chatScreenModel.updateCurrentChatDataWithUserId(token, inputUserId)
+            }
+        } else if (inputChatId.isNotBlank()) {
+            chatScreenModel.updateCurrentChatData(inputChatId)
         }
+
 
 
         //chat data

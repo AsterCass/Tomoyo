@@ -28,19 +28,22 @@ class ChatScreenModel : ScreenModel {
         _chatData.value[chatId] = input
     }
 
-    fun pushChatMessage(token: String, chatRow: ChatRowModel) {
+    suspend fun pushChatMessage(token: String, chatRow: ChatRowModel) {
         if (_chatData.value.containsKey(chatRow.fromChatId)) {
             val newMessage = UserChatMsgDto(
                 sendUserNickname = chatRow.sendUserNickname,
                 message = chatRow.sendMessage,
-                messageId = chatRow.sendMessageId
+                messageId = chatRow.sendMessageId,
             )
-            _chatData.value[chatRow.fromChatId]?.userChattingData?.add(0, newMessage)
-            if (_currentChatData.value.chatId == chatRow.fromChatId) {
-                _updateStatus.value++
-            }
+            val thisChat = _chatData.value[chatRow.fromChatId]
+            thisChat?.userChattingData?.add(0, newMessage)
+            thisChat?.lastMessageTime = chatRow.sendDate
+            thisChat?.lastMessageId = chatRow.sendMessageId
+            thisChat?.lastMessageText = chatRow.sendMessage
+            thisChat?.latestRead = _currentChatData.value.chatId == chatRow.fromChatId
+            _updateStatus.value++
         } else {
-            //todo reference web function baseDataInit(webIsLogin)
+            updateChatData(token)
         }
     }
 
@@ -70,6 +73,12 @@ class ChatScreenModel : ScreenModel {
                 _chatData.value[chatId]?.userChattingData?.addAll(moreMessage)
             }
             _updateStatus.value++
+        }
+    }
+
+    fun updateCurrentChatData(chatId: String) {
+        if (_chatData.value.containsKey(chatId)) {
+            _currentChatData.value = _chatData.value[chatId] ?: UserChattingSimple()
         }
     }
 

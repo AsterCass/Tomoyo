@@ -233,7 +233,7 @@ class UserDetailScreen(
                                     Button(
                                         onClick = {
                                             if (token.isNotBlank()) {
-                                                navigator.push(UserChatScreen(userId))
+                                                navigator.push(UserChatScreen(userId, ""))
                                             } else {
                                                 NotificationManager.createDialogAlert(
                                                     //todo jump to login

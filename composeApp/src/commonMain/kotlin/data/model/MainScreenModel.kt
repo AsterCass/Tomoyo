@@ -163,7 +163,6 @@ class MainScreenModel : ScreenModel {
                 subscription.collect { msg ->
                     val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
                     chatScreenModel.pushChatMessage(_userState.value.token, chatRow)
-                    chatScreenModel.updateChatData(_userState.value.token)
                 }
             }
 
