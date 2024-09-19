@@ -64,7 +64,7 @@ class ChatScreenModel : ScreenModel {
 
     suspend fun loadMoreMessage(token: String) {
         val chatId = _currentChatData.value.chatId
-        val lastMessageId = _currentChatData.value.userChattingData.last().messageId
+        val lastMessageId = _currentChatData.value.userChattingData.lastOrNull()?.messageId
         if (!_currentChatData.value.clientLoadAllHistoryMessage && null != chatId) {
             val moreMessage = BaseApi().moreMessage(token, chatId, lastMessageId ?: "")
             if (moreMessage.isEmpty()) {
