@@ -1,7 +1,6 @@
 package ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,7 +42,6 @@ import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.Bell
 import constant.BaseResText
 import constant.enums.MainNavigationEnum
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import theme.third
 import theme.unselectedColor
@@ -49,7 +49,6 @@ import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.btn_cancel
 import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
-import tomoyo.composeapp.generated.resources.nezuko
 import tomoyo.composeapp.generated.resources.notification_user_no_login
 import tomoyo.composeapp.generated.resources.service_error
 import tomoyo.composeapp.generated.resources.under_development
@@ -79,27 +78,18 @@ fun MainAppBar(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(
-                    painter = painterResource(Res.drawable.nezuko),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(35.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .border(
-                            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                        .clickable {
-                            sendAppNotification("1234", "456")
-//                            NotificationManager.showNotification(
-//                                MainNotification(
-//                                    BaseResText.underDevelopment,
-//                                    NotificationType.SUCCESS
-//                                )
-//                            )
-                        }
-                )
 
+                Icon(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .clickable {
+                            sendAppNotification("Test Title", "Test content some data")
+                        }
+                        .size(28.dp),
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground,
+                )
                 Text(title)
 
                 Icon(
@@ -107,12 +97,6 @@ fun MainAppBar(
                         .clip(RoundedCornerShape(5.dp))
                         .clickable {
                             clearAppNotification()
-//                            NotificationManager.showNotification(
-//                                MainNotification(
-//                                    BaseResText.underDevelopment,
-//                                    NotificationType.SUCCESS
-//                                )
-//                            )
                         }
                         .size(22.dp),
                     imageVector = FontAwesomeIcons.Regular.Bell,

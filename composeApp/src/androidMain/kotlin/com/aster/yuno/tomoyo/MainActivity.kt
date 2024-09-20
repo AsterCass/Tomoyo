@@ -14,6 +14,7 @@ import data.PlatformInitData
 import di.KoinInit
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.GlobalContext
 import ui.components.createAppNotificationChannel
 
 
@@ -36,11 +37,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
-
-        KoinInit().init {
-            androidLogger()
-            androidContext(thisContext)
-            modules()
+        
+        if (GlobalContext.getOrNull() == null) {
+            KoinInit().init {
+                androidLogger()
+                androidContext(thisContext)
+                modules()
+            }
         }
 
         createAppNotificationChannel(this)

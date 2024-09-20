@@ -157,6 +157,7 @@ class UserChatScreen(
                             .fillMaxHeight()
                             .padding(horizontal = 15.dp),
                         verticalArrangement = Arrangement.SpaceEvenly,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
                             text = chatData.chatName ?: "",
