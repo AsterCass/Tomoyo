@@ -20,7 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.List
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,12 +32,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import constant.BaseResText
 import data.model.ChatScreenModel
 import data.model.GlobalDataModel
 import data.model.MainScreenModel
@@ -48,7 +50,9 @@ import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.sendText
 import org.koin.compose.koinInject
 import theme.halfTransSurfaceVariant
+import ui.components.MainDialogAlert
 import ui.components.MessageCard
+import ui.components.NotificationManager
 import ui.components.UserInput
 
 class UserChatScreen(
@@ -146,7 +150,22 @@ class UserChatScreen(
                             contentDescription = null,
                         )
                     }
-                    Text(chatData.chatName ?: "")
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(horizontal = 15.dp),
+                        verticalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+                        Text(
+                            text = chatData.chatName ?: "",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+
+                    }
+
                     Button(
                         shape = RoundedCornerShape(15.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -154,9 +173,16 @@ class UserChatScreen(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                         contentPadding = PaddingValues(0.dp),
-                        onClick = { }) {
+                        onClick = {
+                            NotificationManager.createDialogAlert(
+                                MainDialogAlert(
+                                    message = BaseResText.underDevelopment,
+                                    cancelOperationText = BaseResText.cancelBtn
+                                )
+                            )
+                        }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.List,
+                            imageVector = Icons.Outlined.Person,
                             contentDescription = null,
                         )
                     }

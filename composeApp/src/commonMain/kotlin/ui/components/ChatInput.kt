@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Circle
+import constant.BaseResText
 import constant.biliEmojiMap
 import constant.maxNumEmojiPage
 import kotlinx.coroutines.launch
@@ -331,7 +332,8 @@ private fun UserInputText(
                 .clickable {
                     NotificationManager.createDialogAlert(
                         MainDialogAlert(
-                            message = "xxxxxxxxxxxxxx",
+                            message = BaseResText.underDevelopment,
+                            cancelOperationText = BaseResText.cancelBtn
                         )
                     )
                 }
