@@ -118,8 +118,7 @@ class MainScreenModel : ScreenModel {
             val thisToken = _userState.value.userData.token
             if (!thisToken.isNullOrBlank()) {
                 _syncUserData.value = true
-            } else {
-                chatScreenModel.updateChatData(thisToken!!)
+                chatScreenModel.updateChatData(thisToken)
             }
         } else {
             _userState.value.userData = dbData
