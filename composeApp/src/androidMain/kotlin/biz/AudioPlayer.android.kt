@@ -67,7 +67,7 @@ class MediaPlaybackService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Media Player")
             .setContentText("Playing media")
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.logo_pro_background)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .build()

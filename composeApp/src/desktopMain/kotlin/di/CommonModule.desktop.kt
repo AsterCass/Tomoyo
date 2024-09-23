@@ -30,7 +30,7 @@ actual fun platformModule(): Module = module {
     single<BufferedImage>(qualifier = named("showIcon")) {
         ImageIO.read(
             Thread.currentThread().contextClassLoader
-                .getResource("snow.png")
+                .getResource("logo_pro_round.png")
         )
 
     }
