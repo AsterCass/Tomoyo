@@ -8,9 +8,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/tomoyo_logo"
+        android:icon="@mipmap/tomoyo_logo_pro"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/tomoyo_logo_round"
+        android:roundIcon="@mipmap/tomoyo_logo_pro_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
@@ -30,6 +30,8 @@
             android:name="biz.MediaPlaybackService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
+
+
     </application>
 
 
