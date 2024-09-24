@@ -42,6 +42,7 @@ import data.UserChattingSimple
 import data.model.ChatScreenModel
 import data.model.GlobalDataModel
 import data.model.MainScreenModel
+import data.model.MusicScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -64,6 +65,7 @@ import ui.components.MainHomeNotificationBox
 import ui.components.NotificationManager
 import ui.components.SwipeToRevealCard
 import ui.components.SwipeToRevealCardOption
+import ui.views.MusicsPlayerScreen
 import ui.views.UserChatScreen
 
 
@@ -85,6 +87,7 @@ fun MainHomeScreen(
     val globalDataModel: GlobalDataModel = koinInject()
     val dataStorageManager: DataStorageManager = koinInject()
     val mainModel: MainScreenModel = koinInject()
+    val musicScreenModel: MusicScreenModel = koinInject()
     val chatDataModel: ChatScreenModel = koinInject()
 
     //coroutine
@@ -97,6 +100,7 @@ fun MainHomeScreen(
     if (loadingScreen) return
 
     //data
+    val musicPlayerState = musicScreenModel.playerState.collectAsState().value
     val socketConnected = globalDataModel.socketConnected.collectAsState().value
     val chatData = chatDataModel.chatData.collectAsState().value
     val updateStatus = chatDataModel.updateStatus.collectAsState().value
@@ -144,6 +148,20 @@ fun MainHomeScreen(
                             icon = FontAwesomeIcons.Solid.InfoCircle,
                         ) {
                             func()
+                        }
+                    }
+
+                    if (musicPlayerState.currentPlayId.isNotBlank()) {
+                        val currentMusic = musicScreenModel.getCurrentMusicData()
+                        //todo chinese
+                        MainHomeNotificationBox(
+                            icon = FontAwesomeIcons.Solid.InfoCircle,
+                            isTranslating = musicPlayerState.isPlaying,
+                            text = if (musicPlayerState.isPlaying) "音乐正在播放：" + currentMusic.audioName
+                            else "音乐正在播放：" + currentMusic.audioName + "（暂停 ）",
+                        ) {
+                            navigator.push(MusicsPlayerScreen())
+                            mainModel.updateShowNavBar(false)
                         }
                     }
 

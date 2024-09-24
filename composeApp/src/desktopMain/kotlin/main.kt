@@ -2,6 +2,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.toPainter
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowPosition
@@ -69,12 +70,10 @@ fun main() {
             onCloseRequest = { visible = false },
             visible = visible,
             title = "Tomoyo",
-//            icon = MyAppIcon,
+            icon = superLowDpiIcon.toPainter(),
             state = winState,
         ) {
-            val showIcon: BufferedImage = koin.get(named("superLowDpiIcon"))
-            window.iconImage = showIcon
-
+            window.iconImage = superLowDpiIcon
 
             MainApp(
                 platformData = PlatformInitData(

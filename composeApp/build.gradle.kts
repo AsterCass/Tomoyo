@@ -210,9 +210,9 @@ compose.desktop {
             includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.3.1"
+            packageVersion = "1.3.4"
 
-            description = "Aster Casc Yuno Door Multiplatform App"
+            description = "Tomoyo"
             copyright = "astercasc.com. All rights reserved."
             vendor = "Aster Casc"
 
@@ -222,7 +222,7 @@ compose.desktop {
             //appResourcesRootDir.set(project.layout.projectDirectory.dir("libs"))
 
             windows {
-                console = true
+//                console = true
                 menuGroup = "Tomoyo"
                 iconFile.set(project.file("src/desktopMain/resources/logo_pro.ico"))
                 upgradeUuid = "a33226c1-436e-44e4-9f4a-f9fbc6fc0dde"

@@ -1,5 +1,12 @@
 package ui.components
 
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,11 +34,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import api.ApiResText
@@ -42,7 +56,9 @@ import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.Bell
 import constant.BaseResText
 import constant.enums.MainNavigationEnum
+import data.model.MainScreenModel
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import theme.third
 import theme.unselectedColor
 import tomoyo.composeapp.generated.resources.Res
@@ -310,12 +326,30 @@ fun MainBaseCardBox(
 
 @Composable
 fun MainHomeNotificationBox(
+    isTranslating: Boolean = false,
     text: String,
     icon: ImageVector? = null,
     color: Color = MaterialTheme.colorScheme.primary,
     bgColor: Color = MaterialTheme.colorScheme.inversePrimary,
     onClick: () -> Unit = {}
 ) {
+
+
+    val mainModel: MainScreenModel = koinInject()
+    val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
+    val minWidth = constraints.maxWidth.toFloat()
+    var initWidth by remember { mutableStateOf(-minWidth) }
+    val infiniteTransition = rememberInfiniteTransition()
+    val scale by infiniteTransition.animateFloat(
+        initialValue = initWidth,
+        targetValue = minWidth,
+        animationSpec = if (isTranslating) infiniteRepeatable(
+            tween(5000, easing = LinearEasing), RepeatMode.Restart
+        ) else InfiniteRepeatableSpec(
+            animation = tween(durationMillis = 1),
+            repeatMode = RepeatMode.Reverse
+        ),
+    )
 
     Column(
         modifier = Modifier
@@ -324,7 +358,10 @@ fun MainHomeNotificationBox(
             .height(40.dp).fillMaxWidth().background(bgColor)
             .clickable {
                 onClick()
-            }.padding(horizontal = 10.dp),
+            }
+            .padding(horizontal = 10.dp)
+            //不再加这个clip的话，动画效果会忽略end的部分的padding，原因不明
+            .clip(RoundedCornerShape(5.dp)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -332,6 +369,7 @@ fun MainHomeNotificationBox(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
 
             if (icon != null) {
                 Icon(
@@ -342,12 +380,27 @@ fun MainHomeNotificationBox(
                 )
             }
 
-            Text(
-                modifier = Modifier,
-                text = text,
-                color = color,
-                style = MaterialTheme.typography.bodySmall
-            )
+
+            Box(modifier = Modifier
+                .onGloballyPositioned { layoutCoordinates ->
+                    initWidth = -layoutCoordinates.size.width.toFloat()
+                }) {
+
+                Text(
+                    modifier = Modifier
+                        .graphicsLayer {
+                            if (isTranslating) {
+                                translationX = scale
+                            }
+                        },
+                    text = text,
+                    color = color,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+
+
         }
     }
 
