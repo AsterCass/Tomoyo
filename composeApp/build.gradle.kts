@@ -205,12 +205,12 @@ compose.desktop {
         }
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            //targetFormats(TargetFormat.Exe)
+//            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Exe)
             includeAllModules = true
 
             packageName = "Tomoyo"
-            packageVersion = "1.2.23"
+            packageVersion = "1.3.1"
 
             description = "Aster Casc Yuno Door Multiplatform App"
             copyright = "astercasc.com. All rights reserved."
@@ -224,7 +224,7 @@ compose.desktop {
             windows {
                 console = true
                 menuGroup = "Tomoyo"
-                iconFile.set(project.file("src/desktopMain/resources/logo_pro_round_256.ico"))
+                iconFile.set(project.file("src/desktopMain/resources/logo_pro.ico"))
                 upgradeUuid = "a33226c1-436e-44e4-9f4a-f9fbc6fc0dde"
             }
 

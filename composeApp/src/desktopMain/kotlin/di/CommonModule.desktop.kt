@@ -34,13 +34,6 @@ actual fun platformModule(): Module = module {
         )
     }
 
-    single<BufferedImage>(qualifier = named("lowDpiIcon")) {
-        ImageIO.read(
-            Thread.currentThread().contextClassLoader
-                .getResource("logo_pro_round_low_dpi.png")
-        )
-    }
-
     single<BufferedImage>(qualifier = named("showIcon")) {
         ImageIO.read(
             Thread.currentThread().contextClassLoader
