@@ -224,7 +224,7 @@ compose.desktop {
             windows {
                 console = true
                 menuGroup = "Tomoyo"
-                iconFile.set(project.file("src/desktopMain/resources/snow.ico"))
+                iconFile.set(project.file("src/desktopMain/resources/logo_pro_round_256.ico"))
                 upgradeUuid = "a33226c1-436e-44e4-9f4a-f9fbc6fc0dde"
             }
 

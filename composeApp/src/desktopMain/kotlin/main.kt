@@ -33,8 +33,8 @@ fun main() {
     //init javafx
     JFXPanel()
 
-    val showIcon: BufferedImage = koin.get(named("showIcon"))
-    val trayIcon = TrayIcon(showIcon, "Tomoyo")
+    val superLowDpiIcon: BufferedImage = koin.get(named("superLowDpiIcon"))
+    val trayIcon = TrayIcon(superLowDpiIcon, "Tomoyo")
     tray.add(trayIcon)
 
     application {
@@ -72,6 +72,10 @@ fun main() {
 //            icon = MyAppIcon,
             state = winState,
         ) {
+            val showIcon: BufferedImage = koin.get(named("superLowDpiIcon"))
+            window.iconImage = showIcon
+
+
             MainApp(
                 platformData = PlatformInitData(
                     extraNavigationList = listOf(

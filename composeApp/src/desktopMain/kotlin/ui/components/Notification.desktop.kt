@@ -10,7 +10,7 @@ import javax.swing.Timer
 
 val timer = Timer(500, object : ActionListener {
     var toggle = true
-    val showIcon: BufferedImage = koin.get(named("showIcon"))
+    val showIcon: BufferedImage = koin.get(named("superLowDpiIcon"))
     val hideIcon: BufferedImage = koin.get(named("hideIcon"))
 
 
@@ -33,7 +33,7 @@ actual fun CheckAppNotificationPermission(
 
 actual fun clearAppNotification() {
     timer.stop()
-    val showIcon: BufferedImage = koin.get(named("showIcon"))
+    val showIcon: BufferedImage = koin.get(named("superLowDpiIcon"))
 
     tray.trayIcons[0].image = showIcon
 }
