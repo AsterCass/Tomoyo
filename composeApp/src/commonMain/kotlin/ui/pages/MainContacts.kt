@@ -97,7 +97,6 @@ fun MainContactsScreen(
                     item = publicUserDataList[index],
                     onClick = {
                         navigator.push(UserDetailScreen(it))
-                        mainModel.updateShowNavBar(false)
                     }
                 )
             }

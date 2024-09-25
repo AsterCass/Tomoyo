@@ -71,6 +71,7 @@ class UserChatScreen(
         val dataStorageManager: DataStorageManager = koinInject()
 
         //navigation
+        mainModel.updateShowNavBar(false)
         val navigator = LocalNavigator.currentOrThrow
         val loadingScreen = mainModel.loadingScreen.collectAsState().value
 
@@ -105,7 +106,6 @@ class UserChatScreen(
         } else if (inputChatId.isNotBlank()) {
             chatScreenModel.updateCurrentChatData(inputChatId)
         }
-
 
 
         //chat data

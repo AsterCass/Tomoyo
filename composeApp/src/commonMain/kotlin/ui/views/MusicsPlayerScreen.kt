@@ -95,6 +95,7 @@ class MusicsPlayerScreen : Screen {
         val musicScreenModel: MusicScreenModel = koinInject()
 
         //navigation
+        mainModel.updateShowNavBar(false)
         val navigator = LocalNavigator.currentOrThrow
         val loadingScreen = mainModel.loadingScreen.collectAsState().value
         val token = mainModel.userState.value.token

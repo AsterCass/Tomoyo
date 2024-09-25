@@ -360,7 +360,7 @@ fun MainHomeNotificationBox(
                 onClick()
             }
             .padding(horizontal = 10.dp)
-            //不再加这个clip的话，动画效果会忽略end的部分的padding，原因不明
+            //不再加这个clip的话，动画效果会忽略end的部分的padding
             .clip(RoundedCornerShape(5.dp)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -380,25 +380,31 @@ fun MainHomeNotificationBox(
                 )
             }
 
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    //不再加这个clip的话，动画效果会忽略部分的padding
+                    .clip(RoundedCornerShape(5.dp))
+            ) {
+                Box(modifier = Modifier
+                    .onGloballyPositioned { layoutCoordinates ->
+                        initWidth = -layoutCoordinates.size.width.toFloat()
+                        println(initWidth)
+                    }) {
 
-            Box(modifier = Modifier
-                .onGloballyPositioned { layoutCoordinates ->
-                    initWidth = -layoutCoordinates.size.width.toFloat()
-                }) {
-
-                Text(
-                    modifier = Modifier
-                        .graphicsLayer {
-                            if (isTranslating) {
-                                translationX = scale
-                            }
-                        },
-                    text = text,
-                    color = color,
-                    style = MaterialTheme.typography.bodySmall
-                )
+                    Text(
+                        modifier = Modifier
+                            .graphicsLayer {
+                                if (isTranslating) {
+                                    translationX = scale
+                                }
+                            },
+                        text = text,
+                        color = color,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
-
 
 
         }

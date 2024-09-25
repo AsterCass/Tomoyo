@@ -110,6 +110,7 @@ class UserLoginScreen : Screen {
         val dataStorageManager: DataStorageManager = koinInject()
 
         //navigation
+        mainModel.updateShowNavBar(false)
         val navigator = LocalNavigator.currentOrThrow
         val loadingScreen = mainModel.loadingScreen.collectAsState().value
 

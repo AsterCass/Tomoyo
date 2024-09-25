@@ -32,6 +32,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.LocalPlatformContext
+import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -89,6 +90,10 @@ fun MainHomeScreen(
     val mainModel: MainScreenModel = koinInject()
     val musicScreenModel: MusicScreenModel = koinInject()
     val chatDataModel: ChatScreenModel = koinInject()
+    val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
+
+    //context for image
+    val localPlatformContext = LocalPlatformContext.current
 
     //coroutine
     val commonApiCoroutine = rememberCoroutineScope()
@@ -161,7 +166,6 @@ fun MainHomeScreen(
                             else "音乐正在播放：" + currentMusic.audioName + "（暂停 ）",
                         ) {
                             navigator.push(MusicsPlayerScreen())
-                            mainModel.updateShowNavBar(false)
                         }
                     }
 
@@ -219,6 +223,8 @@ fun MainHomeScreen(
                             ),
                             content = {
                                 UserChatListItem(
+                                    configBlock = configBlock,
+                                    localPlatformContext = localPlatformContext,
                                     item = chatDataList[index].second,
                                     onClick = {
                                         commonApiCoroutine.launch {
@@ -235,7 +241,6 @@ fun MainHomeScreen(
                                                     chatDataList[index].second.chatId ?: ""
                                                 )
                                             )
-                                            mainModel.updateShowNavBar(false)
                                         }
                                     },
                                 )
@@ -259,16 +264,14 @@ fun MainHomeScreen(
 fun UserChatListItem(
     item: UserChattingSimple,
     onClick: (String) -> Unit,
-    configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
+    configBlock: (ImageRequest.Builder.() -> Unit),
+    localPlatformContext: PlatformContext,
 ) {
 
     val chatId = item.chatId
     if (chatId.isNullOrBlank()) {
         return
     }
-
-    //context for image
-    val context = LocalPlatformContext.current
 
     Row(
         modifier = Modifier
@@ -282,7 +285,7 @@ fun UserChatListItem(
 
         AsyncImage(
             request = ImageRequest(
-                context = context,
+                context = localPlatformContext,
                 uri = item.chatAvatar,
                 configBlock = configBlock,
             ),

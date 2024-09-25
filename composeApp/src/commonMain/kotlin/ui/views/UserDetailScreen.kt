@@ -121,6 +121,7 @@ class UserDetailScreen(
         val userDetailApiCoroutine = rememberCoroutineScope()
 
         //navigation
+        mainModel.updateShowNavBar(false)
         val navigator = LocalNavigator.currentOrThrow
         val loadingScreen = mainModel.loadingScreen.collectAsState().value
 

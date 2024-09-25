@@ -16,12 +16,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import api.baseJsonConf
 import biz.StatusBar
-import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabDisposable
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import data.PlatformInitData
@@ -82,17 +82,21 @@ fun MainApp(
             }
 
             //navigation
+            val tabs = remember {
+                listOf(
+                    HomeTab, ArticlesTab, MusicsTab,
+                    VideosTab, ContactsTab, SettingTab
+                )
+            }
             TabNavigator(
                 tab = HomeTab,
                 tabDisposable = {
                     TabDisposable(
                         navigator = it,
-                        tabs = listOf(
-                            HomeTab, ArticlesTab, MusicsTab, VideosTab, ContactsTab, SettingTab
-                        )
+                        tabs = tabs
                     )
                 },
-            ) { _ ->
+            ) { tabNavigator ->
 
                 Scaffold(
                     contentWindowInsets = WindowInsets.navigationBars,
@@ -146,8 +150,27 @@ fun MainApp(
                             val constraints = this.constraints
                             mainModel.updateMainPageContainerConstraints(constraints)
 
-                            //screen
-                            CurrentTab()
+                            //screen1
+//                            CurrentTab()
+
+                            //screen2
+//                            Crossfade(
+//                                targetState = tabNavigator.current,
+//                                animationSpec = tween(durationMillis = 1000)
+//                            ) { selectedTab ->
+//                                selectedTab.Content()
+//                            }
+
+                            //screen3
+                            tabs.forEach { tab ->
+                                AnimatedVisibility(
+                                    visible = tabNavigator.current == tab,
+                                    enter = fadeIn(animationSpec = tween(durationMillis = 1000)),
+                                    exit = fadeOut(animationSpec = tween(durationMillis = 1000)),
+                                ) {
+                                    tab.Content()
+                                }
+                            }
 
                             //notification
                             Box(modifier = Modifier.align(Alignment.BottomCenter)) {

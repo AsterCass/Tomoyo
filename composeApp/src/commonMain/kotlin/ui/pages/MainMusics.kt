@@ -273,7 +273,6 @@ fun MainMusicsScreen(
                                             )
                                             if (it) {
                                                 navigator.push(MusicsPlayerScreen())
-                                                mainModel.updateShowNavBar(false)
                                             }
                                         },
                                         onFav = { isFav, id ->
@@ -339,7 +338,6 @@ fun MainMusicsScreen(
                                             )
                                             if (it) {
                                                 navigator.push(MusicsPlayerScreen())
-                                                mainModel.updateShowNavBar(false)
                                             }
                                         },
                                         onFav = { isFav, id ->
@@ -399,7 +397,6 @@ fun MainMusicsScreen(
                     Column(
                         modifier = Modifier.clickable {
                             navigator.push(MusicsPlayerScreen())
-                            mainModel.updateShowNavBar(false)
                         }
                     ) {
 
