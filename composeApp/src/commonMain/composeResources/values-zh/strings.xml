@@ -35,6 +35,8 @@
     <string name="play_audio_tab_private">其他音乐集</string>
     <string name="play_audio_playing">播放中</string>
     <string name="play_audio_play_all">播放全部</string>
+    <string name="play_audio_playing_home">正在播放：</string>
+    <string name="play_audio_playing_pause">（暂停）</string>
 
     <string name="user_no_motto">这个人很懒，什么都没有留下</string>
     <string name="user_role_alien">外星人</string>

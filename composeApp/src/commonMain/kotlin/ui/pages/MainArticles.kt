@@ -1,9 +1,6 @@
 package ui.pages
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,12 +49,10 @@ import data.ArticleSimpleModel
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
-import tomoyo.composeapp.generated.resources.nezuko
 import tomoyo.composeapp.generated.resources.search_keyword
 import ui.components.MainBaseCardBox
 import ui.views.ArticleDetailScreen
@@ -218,21 +213,8 @@ fun ArticleListItem(
         ) {
             //保证子组件高度相同
             Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-                Image(
-                    painter = painterResource(Res.drawable.nezuko),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .weight(0.2f)
-                        .align(Alignment.CenterVertically)
-                        .padding(end = 10.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .border(
-                            border = BorderStroke(2.dp, Color.Black),
-                            shape = RoundedCornerShape(15.dp)
-                        )
-                )
                 Column(
-                    modifier = Modifier.weight(0.8f).fillMaxHeight(),
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Text(

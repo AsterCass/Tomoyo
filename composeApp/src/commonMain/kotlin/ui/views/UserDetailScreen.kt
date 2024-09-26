@@ -263,7 +263,14 @@ class UserDetailScreen(
                                     }
 
                                     Button(
-                                        onClick = {},
+                                        onClick = {
+                                            NotificationManager.createDialogAlert(
+                                                MainDialogAlert(
+                                                    message = BaseResText.underDevelopment,
+                                                    cancelOperationText = BaseResText.cancelBtn
+                                                )
+                                            )
+                                        },
                                         shape = RoundedCornerShape(5.dp),
                                         contentPadding = PaddingValues(
                                             vertical = 3.dp,

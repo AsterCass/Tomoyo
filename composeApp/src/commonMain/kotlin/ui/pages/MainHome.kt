@@ -59,6 +59,8 @@ import tomoyo.composeapp.generated.resources.chat_unread
 import tomoyo.composeapp.generated.resources.notification_check_network
 import tomoyo.composeapp.generated.resources.notification_no_permission_notification
 import tomoyo.composeapp.generated.resources.notification_user_login_suggest
+import tomoyo.composeapp.generated.resources.play_audio_playing_home
+import tomoyo.composeapp.generated.resources.play_audio_playing_pause
 import tomoyo.composeapp.generated.resources.user_no_motto
 import ui.components.CheckAppNotificationPermission
 import ui.components.MainDialogAlert
@@ -158,12 +160,15 @@ fun MainHomeScreen(
 
                     if (musicPlayerState.currentPlayId.isNotBlank()) {
                         val currentMusic = musicScreenModel.getCurrentMusicData()
-                        //todo chinese
                         MainHomeNotificationBox(
                             icon = FontAwesomeIcons.Solid.InfoCircle,
                             isTranslating = musicPlayerState.isPlaying,
-                            text = if (musicPlayerState.isPlaying) "音乐正在播放：" + currentMusic.audioName
-                            else "音乐正在播放：" + currentMusic.audioName + "（暂停 ）",
+                            text = if (musicPlayerState.isPlaying)
+                                stringResource(Res.string.play_audio_playing_home)
+                                        + currentMusic.audioName
+                            else stringResource(Res.string.play_audio_playing_home)
+                                    + currentMusic.audioName +
+                                    stringResource(Res.string.play_audio_playing_pause)
                         ) {
                             navigator.push(MusicsPlayerScreen())
                         }

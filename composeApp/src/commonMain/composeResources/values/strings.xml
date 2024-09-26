@@ -35,6 +35,9 @@
     <string name="play_audio_tab_private">Collections</string>
     <string name="play_audio_playing">Playing</string>
     <string name="play_audio_play_all">Play All</string>
+    <string name="play_audio_playing_home">Now playing: </string>
+    <string name="play_audio_playing_pause"> (Pause) </string>
+
 
     <string name="user_no_motto">This person is very lazy and didn't leave anything behind.</string>
     <string name="user_role_alien">Alien</string>

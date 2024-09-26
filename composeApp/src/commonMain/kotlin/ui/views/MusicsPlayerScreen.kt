@@ -74,12 +74,12 @@ import org.koin.compose.koinInject
 import theme.halfTransSurfaceVariant
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.logo_pro_round_512
 import tomoyo.composeapp.generated.resources.media_audio
 import tomoyo.composeapp.generated.resources.media_circle_pause
 import tomoyo.composeapp.generated.resources.media_circle_play
 import tomoyo.composeapp.generated.resources.media_next
 import tomoyo.composeapp.generated.resources.media_previous
-import tomoyo.composeapp.generated.resources.nezuko
 import ui.components.MainBaseCardBox
 import ui.components.MainDialogAlert
 import ui.components.NotificationManager
@@ -158,7 +158,7 @@ class MusicsPlayerScreen : Screen {
                 ) {
 
                     Image(
-                        painter = painterResource(Res.drawable.nezuko),
+                        painter = painterResource(Res.drawable.logo_pro_round_512),
                         contentDescription = null,
                         modifier = Modifier
                             .padding(vertical = 30.dp, horizontal = 20.dp)
@@ -166,7 +166,7 @@ class MusicsPlayerScreen : Screen {
                             .rotate(rotationAngle)
                             .clip(CircleShape)
                             .border(
-                                border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
+                                border = BorderStroke(3.dp, MaterialTheme.colorScheme.onBackground),
                                 shape = CircleShape
                             )
                     )

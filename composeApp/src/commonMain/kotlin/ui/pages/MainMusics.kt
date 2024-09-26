@@ -74,10 +74,10 @@ import org.koin.compose.koinInject
 import theme.deepIconColor
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.logo_pro
 import tomoyo.composeapp.generated.resources.media_audio
 import tomoyo.composeapp.generated.resources.media_pause
 import tomoyo.composeapp.generated.resources.media_play
-import tomoyo.composeapp.generated.resources.nezuko
 import tomoyo.composeapp.generated.resources.play_audio_play_all
 import tomoyo.composeapp.generated.resources.play_audio_playing
 import tomoyo.composeapp.generated.resources.search_keyword
@@ -236,6 +236,12 @@ fun MainMusicsScreen(
                                         onSearch = {
                                             searchKey = ""
                                             keyboardController?.hide()
+                                            NotificationManager.createDialogAlert(
+                                                MainDialogAlert(
+                                                    message = BaseResText.underDevelopment,
+                                                    cancelOperationText = BaseResText.cancelBtn
+                                                )
+                                            )
                                         },
                                     ),
                                 )
@@ -321,7 +327,10 @@ fun MainMusicsScreen(
                                         MusicPlayScreenTabModel.entries[tabOrdinal.value].collectionId
                             )
 
-                            LazyColumn(state = listStateFav) {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                state = listStateFav
+                            ) {
 
                                 items(playFavMap.size) { index ->
                                     val playingItem = playFavMap.values.toList()[index]
@@ -654,7 +663,7 @@ fun MusicPlayItem(
     ) {
 
         Image(
-            painter = painterResource(Res.drawable.nezuko),
+            painter = painterResource(Res.drawable.logo_pro),
             contentDescription = null,
             modifier = Modifier
                 .weight(0.15f)

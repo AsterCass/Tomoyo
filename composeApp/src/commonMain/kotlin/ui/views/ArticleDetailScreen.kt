@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -46,15 +45,15 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.panpf.sketch.AsyncImage
+import com.github.panpf.sketch.LocalPlatformContext
+import com.github.panpf.sketch.request.ImageRequest
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import theme.halfTransSurfaceVariant
 import theme.subTextColor
-import tomoyo.composeapp.generated.resources.Res
-import tomoyo.composeapp.generated.resources.nezuko
 
 
 class ArticleDetailScreen : Screen {
@@ -66,6 +65,10 @@ class ArticleDetailScreen : Screen {
         //inject
         val mainModel: MainScreenModel = koinInject()
         val articleScreenModel: ArticleScreenModel = koinInject()
+        val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
+
+        //context for image
+        val localPlatformContext = LocalPlatformContext.current
 
         //navigation
         mainModel.updateShowNavBar(false)
@@ -141,8 +144,13 @@ class ArticleDetailScreen : Screen {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Image(
-                                    painter = painterResource(Res.drawable.nezuko),
+
+                                AsyncImage(
+                                    request = ImageRequest(
+                                        context = localPlatformContext,
+                                        uri = articleData.authorAvatar,
+                                        configBlock = configBlock,
+                                    ),
                                     contentDescription = null,
                                     modifier = Modifier
                                         .padding(end = 5.dp)
@@ -153,6 +161,7 @@ class ArticleDetailScreen : Screen {
                                             shape = RoundedCornerShape(20.dp)
                                         )
                                 )
+
                                 Text(
                                     text = articleData.authorName ?: "",
                                     style = MaterialTheme.typography.bodySmall,
