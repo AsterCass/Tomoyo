@@ -20,7 +20,7 @@
 
     <string name="service_error">Error</string>
     <string name="login_success">Login successful</string>
-    <string name="login_passwd_error">Passwd not match</string>
+    <string name="login_passwd_error">Incorrect account or password</string>
     <string name="logout_btn"> Log Out </string>
     <string name="under_development"> This feature is under development. Stay tuned </string>
     <string name="search_keyword"> search keyword </string>

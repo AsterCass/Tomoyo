@@ -20,7 +20,7 @@
 
     <string name="service_error">服务器开小差了，待会再来试试吧</string>
     <string name="login_success">登录成功</string>
-    <string name="login_passwd_error">密码错误</string>
+    <string name="login_passwd_error">账号或密码错误</string>
     <string name="logout_btn"> 登出 </string>
     <string name="under_development"> 该功能正在开发中，敬请期待 </string>
     <string name="search_keyword"> 检索关键字 </string>

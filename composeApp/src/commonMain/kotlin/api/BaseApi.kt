@@ -150,6 +150,13 @@ class BaseApi {
                         NotificationType.SUCCESS
                     )
                 )
+            } else {
+                NotificationManager.showNotification(
+                    MainNotification(
+                        apiResText.loginPasswdErrorDes,
+                        NotificationType.SUCCESS
+                    )
+                )
             }
 
             return body.data ?: UserDataModel()
