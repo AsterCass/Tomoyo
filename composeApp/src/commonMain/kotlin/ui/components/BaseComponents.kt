@@ -57,7 +57,9 @@ import compose.icons.fontawesomeicons.regular.Bell
 import constant.BaseResText
 import constant.enums.MainNavigationEnum
 import data.model.MainScreenModel
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import theme.third
 import theme.unselectedColor
@@ -65,6 +67,8 @@ import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.btn_cancel
 import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
+import tomoyo.composeapp.generated.resources.logo_pro_trans_128
+import tomoyo.composeapp.generated.resources.logo_pro_trans_unselected
 import tomoyo.composeapp.generated.resources.notification_user_no_login
 import tomoyo.composeapp.generated.resources.service_error
 import tomoyo.composeapp.generated.resources.under_development
@@ -139,6 +143,7 @@ fun MainAppNavigationBar(
             val isSelected = tabNavigator.current == nav.tab
 
             if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
+
                 NavigationBarItem(
                     modifier = Modifier.padding(0.dp)
                         .clip(RoundedCornerShape(100.dp)),
@@ -149,16 +154,41 @@ fun MainAppNavigationBar(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(
-                                imageVector = nav.icon,
-                                contentDescription = nav.name,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Text(
-                                modifier = Modifier.padding(top = 1.dp),
-                                text = stringResource(nav.title),
-                                style = MaterialTheme.typography.bodySmall,
-                            )
+                            //todo use svg instead png
+                            if (nav == MainNavigationEnum.HOME) {
+                                if (isSelected) {
+                                    Icon(
+                                        painter = painterResource(
+                                            Res.drawable.logo_pro_trans_128
+                                        ),
+                                        contentDescription = nav.name,
+                                        modifier = Modifier.size(45.dp),
+                                        tint = Color.Unspecified
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = vectorResource(
+                                            Res.drawable.logo_pro_trans_unselected
+                                        ),
+                                        contentDescription = nav.name,
+                                        modifier = Modifier.size(31.dp),
+                                        tint = Color.Unspecified
+                                    )
+                                }
+
+                            } else {
+                                Icon(
+                                    imageVector = nav.icon,
+                                    contentDescription = nav.name,
+                                    modifier = Modifier.size(20.dp),
+                                )
+                                Text(
+                                    modifier = Modifier.padding(top = 1.dp),
+                                    text = stringResource(nav.title),
+                                    style = MaterialTheme.typography.bodySmall,
+                                )
+                            }
+
                         }
                     },
                     selected = isSelected,

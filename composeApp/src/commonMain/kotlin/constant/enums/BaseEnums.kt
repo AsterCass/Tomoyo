@@ -77,10 +77,9 @@ enum class MainNavigationEnum(
     val icon: ImageVector,
     val tab: Tab,
 ) {
-
-    HOME("home", Res.string.home, FontAwesomeIcons.Solid.CandyCane, HomeTab),
     ARTICLES("articles", Res.string.articles, FontAwesomeIcons.Solid.Book, ArticlesTab),
     MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music, MusicsTab),
+    HOME("home", Res.string.home, FontAwesomeIcons.Solid.CandyCane, HomeTab),
     VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film, VideosTab),
     Contacts("contacts", Res.string.contacts, FontAwesomeIcons.Solid.AddressBook, ContactsTab),
     SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, SettingTab),
