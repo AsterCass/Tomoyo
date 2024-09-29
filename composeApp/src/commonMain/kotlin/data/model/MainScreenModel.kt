@@ -41,7 +41,7 @@ class MainScreenModel : ScreenModel {
     private val _showNavBar = MutableStateFlow(true)
     val showNavBar = _showNavBar.asStateFlow()
     fun updateShowNavBar(value: Boolean) {
-        if (value != _showNavBar.value) {
+        if (value != _showNavBar.value && !_loadingScreen.value) {
             _showNavBar.value = value
             _loadingScreen.value = true
             _commonCoroutine.launch {

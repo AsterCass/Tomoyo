@@ -48,6 +48,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import data.ArticleSimpleModel
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -183,6 +184,7 @@ fun MainArticlesScreen(
             }
 
             articleApiCoroutine.launch {
+                delay(1000)
                 screenModel.updateArticleList()
             }
         }

@@ -25,6 +25,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -66,6 +67,7 @@ import constant.enums.MusicPlayScreenTabModel
 import data.AudioSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -127,9 +129,6 @@ fun MainMusicsScreen(
     val currentPlayId = screenModel.playerState.collectAsState().value.currentPlayId
     val currentCollectionId = screenModel.playerState.value.currentCollectionId
     val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
-
-    //update data
-    musicApiCoroutine.launch { screenModel.updateAllAudioList() }
 
     //layout
     val density = LocalDensity.current
@@ -289,6 +288,23 @@ fun MainMusicsScreen(
                                         onPause = { screenModel.onPause() },
                                         onPlay = { screenModel.onPlay() },
                                     )
+                                }
+
+                                item {
+                                    if (musicPlayMap.isEmpty()) {
+                                        Box(
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            CircularProgressIndicator(
+                                                modifier = Modifier.padding(16.dp)
+                                            )
+                                        }
+                                    }
+                                    musicApiCoroutine.launch {
+                                        delay(1000)
+                                        musicApiCoroutine.launch { screenModel.updateAllAudioList() }
+                                    }
                                 }
 
                                 item {

@@ -42,6 +42,7 @@ import constant.enums.RoleTypeEnum
 import data.PublicUserSimpleModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -115,6 +116,7 @@ fun MainContactsScreen(
                 }
 
                 contactApiCoroutine.launch {
+                    delay(1000)
                     screenModel.loadPublicUser()
                 }
             }

@@ -2,6 +2,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
@@ -88,6 +89,7 @@ fun MainApp(
                     VideosTab, ContactsTab, SettingTab
                 )
             }
+            var lastTabIndex = HomeTab.options.index
             TabNavigator(
                 tab = HomeTab,
                 tabDisposable = {
@@ -163,12 +165,22 @@ fun MainApp(
 
                             //screen3
                             tabs.forEach { tab ->
+                                val isToRight = tabNavigator.current.options.index > lastTabIndex
                                 AnimatedVisibility(
                                     visible = tabNavigator.current == tab,
-                                    enter = fadeIn(animationSpec = tween(durationMillis = 1000)),
-                                    exit = fadeOut(animationSpec = tween(durationMillis = 1000)),
+                                    enter = slideInHorizontally(
+                                        initialOffsetX = { fullHeight ->
+                                            if (isToRight)
+                                                fullHeight else -fullHeight
+                                        },
+                                        animationSpec = tween(
+                                            durationMillis = 800,
+                                        ),
+                                    ),
+                                    exit = fadeOut(animationSpec = tween(durationMillis = 400)),
                                 ) {
                                     tab.Content()
+                                    lastTabIndex = tab.options.index
                                 }
                             }
 
