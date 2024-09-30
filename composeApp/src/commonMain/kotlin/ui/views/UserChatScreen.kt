@@ -119,6 +119,8 @@ class UserChatScreen(
 
         if (null == chatId) return
 
+        chatScreenModel.rebuildMessageTime()
+
         AnimatedVisibility(
             visible = !loadingScreen,
             enter = fadeIn(animationSpec = tween(durationMillis = 1000)),

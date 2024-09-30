@@ -52,3 +52,29 @@ fun getLastTime(time: String?): String {
 
     return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
 }
+
+fun getLastTimeInChatting(time: String?): String {
+    if (time.isNullOrBlank()) return ""
+    val dateTime = DateTime(time, DatePattern.NORM_DATETIME_FORMAT).toLocalDateTime()
+    val now = DateTime.now().toLocalDateTime()
+    if (null == now || null == dateTime) return ""
+    if (now.year != dateTime.year) {
+        return dateTime.format(
+            DateTimeFormatter.ofPattern(
+                DatePattern.NORM_DATETIME_MINUTE_PATTERN
+            )
+        )
+    }
+    if (now.isAfter(dateTime.plusWeeks(1))) {
+        return dateTime.format(
+            DateTimeFormatter.ofPattern(
+                "MM-dd HH:mm"
+            )
+        )
+    }
+    if (now.dayOfMonth != dateTime.dayOfMonth) {
+        return BaseResText.weekDayList[dateTime.dayOfWeek.value]
+    }
+
+    return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+}

@@ -31,6 +31,8 @@ data class UserChatMsgDto(
     var sendUserRoleType: Int? = null,
     var sendDate: String? = null,
     var message: String? = null,
+    //web
+    var webChatLabel: String? = null,
 )
 
 @Serializable

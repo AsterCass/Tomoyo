@@ -3,10 +3,12 @@ package ui.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -23,12 +25,49 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import biz.getLastTimeInChatting
+import cn.hutool.core.date.DatePattern
+import cn.hutool.core.date.DateTime
 import constant.EMOJI_REPLACE_KEY
 import constant.biliEmojiMap
 import data.UserChatMsgDto
 import org.jetbrains.compose.resources.painterResource
+import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bili_00
+import java.time.Duration
+
+
+fun messageTimeLabelBuilder(listAsc: List<UserChatMsgDto>, lastTime: String? = null) {
+    if (listAsc.isEmpty()) return
+    val list = listAsc.reversed()
+
+    listAsc[list.size - 1].webChatLabel = getLastTimeInChatting(listAsc[0].sendDate)
+
+    val lastIndex = list.size - 2
+    for (count in lastIndex downTo 0) {
+
+        val sendDateTime = DateTime(
+            list[count].sendDate,
+            DatePattern.NORM_DATETIME_FORMAT
+        ).toLocalDateTime()
+
+        var waitLastSec: Long? = null
+        if (count < lastIndex) {
+            val lastSendDateTime = DateTime(
+                list[count + 1].sendDate,
+                DatePattern.NORM_DATETIME_FORMAT
+            ).toLocalDateTime()
+            waitLastSec = Duration.between(sendDateTime, lastSendDateTime).seconds
+        }
+
+        list[count].webChatLabel = getLastTimeInChatting(list[count].sendDate)
+
+        if (waitLastSec != null && waitLastSec < 600) {
+            list[count + 1].webChatLabel = ""
+        }
+    }
+}
 
 fun parseTextWithEmojis(text: String): AnnotatedString {
     val builder = AnnotatedString.Builder()
@@ -52,7 +91,7 @@ fun parseTextWithEmojis(text: String): AnnotatedString {
 @Composable
 fun MessageCard(item: UserChatMsgDto) {
 
-    Row(modifier = Modifier.padding(all = 8.dp)) {
+    Row(modifier = Modifier.padding(all = 8.dp).fillMaxWidth()) {
 //        Image(
 //            painter = rememberAsyncImagePainter(item.sendUserAvatar),
 //            contentDescription = null,
@@ -63,14 +102,28 @@ fun MessageCard(item: UserChatMsgDto) {
 //        )
         Spacer(modifier = Modifier.width(8.dp))
 
-
-        // surfaceColor will be updated gradually from one color to the other
         val surfaceColor by animateColorAsState(
             MaterialTheme.colorScheme.surface
         )
 
-        // We toggle the isExpanded variable when we click on this Column
-        Column {
+        Column(modifier = Modifier.fillMaxWidth()) {
+
+
+            if (!item.webChatLabel.isNullOrBlank()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = item.webChatLabel ?: "",
+                        color = MaterialTheme.colorScheme.subTextColor,
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+
+            }
+
+
             Text(
                 text = item.sendUserNickname ?: "",
                 color = MaterialTheme.colorScheme.secondary,
