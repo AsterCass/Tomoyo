@@ -7,6 +7,7 @@ import data.UserChatMsgDto
 import data.UserChattingSimple
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.springframework.beans.BeanUtils
 
 class ChatScreenModel : ScreenModel {
 
@@ -24,8 +25,15 @@ class ChatScreenModel : ScreenModel {
     val currentChatData = _currentChatData.asStateFlow()
     private val _chatData = MutableStateFlow(mutableMapOf<String, UserChattingSimple>())
     val chatData = _chatData.asStateFlow()
+    private val _chatDataList = MutableStateFlow(mutableListOf<UserChattingSimple>())
+    val chatDataList = _chatDataList.asStateFlow()
     private fun pushChatData(chatId: String, input: UserChattingSimple) {
         _chatData.value[chatId] = input
+        _chatDataList.value.forEach {
+            if (chatId == it.chatId) {
+                BeanUtils.copyProperties(input, it)
+            }
+        }
     }
 
     suspend fun pushChatMessage(token: String, chatRow: ChatRowModel) {
@@ -35,12 +43,33 @@ class ChatScreenModel : ScreenModel {
                 message = chatRow.sendMessage,
                 messageId = chatRow.sendMessageId,
             )
-            val thisChat = _chatData.value[chatRow.fromChatId]
-            thisChat?.userChattingData?.add(0, newMessage)
-            thisChat?.lastMessageTime = chatRow.sendDate
-            thisChat?.lastMessageId = chatRow.sendMessageId
-            thisChat?.lastMessageText = chatRow.sendMessage
-            thisChat?.latestRead = _currentChatData.value.chatId == chatRow.fromChatId
+            //update map
+//            val thisChat = _chatData.value[chatRow.fromChatId]
+//            thisChat?.userChattingData?.add(0, newMessage)
+//            thisChat?.lastMessageTime = chatRow.sendDate
+//            thisChat?.lastMessageId = chatRow.sendMessageId
+//            thisChat?.lastMessageText = chatRow.sendMessage
+//            thisChat?.latestRead = _currentChatData.value.chatId == chatRow.fromChatId
+            //update list
+            var lastChatIdIndex = -1
+            for (index in _chatDataList.value) {
+                _chatDataList.value.forEachIndexed { index, it ->
+                    if (it.chatId == chatRow.fromChatId) {
+                        it.userChattingData.add(0, newMessage)
+                        it.lastMessageTime = chatRow.sendDate
+                        it.lastMessageId = chatRow.sendMessageId
+                        it.lastMessageText = chatRow.sendMessage
+                        it.latestRead = _currentChatData.value.chatId == chatRow.fromChatId
+                        lastChatIdIndex = index
+                    }
+                }
+            }
+            if (lastChatIdIndex > 0) {
+                val element = _chatDataList.value.removeAt(lastChatIdIndex)
+                _chatDataList.value.add(0, element)
+            }
+
+            //update status
             _updateStatus.value++
         } else {
             updateChatData(token)
@@ -52,14 +81,13 @@ class ChatScreenModel : ScreenModel {
         if (newChatData.isEmpty()) {
             return
         }
-        for (chat in newChatData) {
-            val data = newChatData
-                .associateBy { it.chatId }
-                .filterKeys { null != it }
-                .mapKeys { it.key!! }
-                .toMutableMap()
-            _chatData.value = data
-        }
+        val data = newChatData
+            .associateBy { it.chatId }
+            .filterKeys { null != it }
+            .mapKeys { it.key!! }
+            .toMutableMap()
+        _chatData.value = data
+        _chatDataList.value = data.values.toMutableList()
     }
 
     suspend fun loadMoreMessage(token: String) {
@@ -71,6 +99,11 @@ class ChatScreenModel : ScreenModel {
                 _currentChatData.value.clientLoadAllHistoryMessage = true
             } else {
                 _chatData.value[chatId]?.userChattingData?.addAll(moreMessage)
+                _chatDataList.value.forEach {
+                    if (it.chatId == chatId) {
+                        it.userChattingData.addAll(moreMessage)
+                    }
+                }
             }
             _updateStatus.value++
         }
@@ -93,6 +126,7 @@ class ChatScreenModel : ScreenModel {
 
     suspend fun hideChat(token: String, chatId: String) {
         _chatData.value.remove(chatId)
+        _chatDataList.value.removeIf { it.chatId == chatId }
         _updateStatus.value++
         BaseApi().hideChat(token, chatId)
         updateChatData(token)
@@ -101,6 +135,9 @@ class ChatScreenModel : ScreenModel {
     suspend fun readMessage(token: String, chatId: String, messageId: String) {
         BaseApi().readMessage(token, chatId, messageId)
         _chatData.value[chatId]?.latestRead = "" != messageId
+        _chatDataList.value.forEach { obj ->
+            if (obj.chatId == chatId) obj.latestRead = "" != messageId
+        }
         _updateStatus.value++
 //        updateChatData(token)
     }

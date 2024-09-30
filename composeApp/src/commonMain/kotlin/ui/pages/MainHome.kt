@@ -109,9 +109,8 @@ fun MainHomeScreen(
     //data
     val musicPlayerState = musicScreenModel.playerState.collectAsState().value
     val socketConnected = globalDataModel.socketConnected.collectAsState().value
-    val chatData = chatDataModel.chatData.collectAsState().value
+    val chatDataList = chatDataModel.chatDataList.collectAsState().value
     val updateStatus = chatDataModel.updateStatus.collectAsState().value
-    val chatDataList = chatData.toList()
     val netStatus = globalDataModel.netStatus.collectAsState().value
     val userState = mainModel.userState.collectAsState().value
     val token = userState.token
@@ -202,7 +201,7 @@ fun MainHomeScreen(
                                             chatDataModel.readMessage(
                                                 token = token,
                                                 chatId =
-                                                chatDataList[index].second.chatId ?: "",
+                                                chatDataList[index].chatId ?: "",
                                                 messageId = ""
                                             )
                                         }
@@ -217,7 +216,7 @@ fun MainHomeScreen(
                                         commonApiCoroutine.launch {
                                             chatDataModel.hideChat(
                                                 token = token,
-                                                chatId = chatDataList[index].second.chatId ?: ""
+                                                chatId = chatDataList[index].chatId ?: ""
                                             )
                                         }
                                     },
@@ -230,20 +229,20 @@ fun MainHomeScreen(
                                 UserChatListItem(
                                     configBlock = configBlock,
                                     localPlatformContext = localPlatformContext,
-                                    item = chatDataList[index].second,
+                                    item = chatDataList[index],
                                     onClick = {
                                         commonApiCoroutine.launch {
                                             chatDataModel.readMessage(
                                                 token = token,
                                                 chatId =
-                                                chatDataList[index].second.chatId ?: "",
+                                                chatDataList[index].chatId ?: "",
                                                 messageId =
-                                                chatDataList[index].second.lastMessageId ?: ""
+                                                chatDataList[index].lastMessageId ?: ""
                                             )
                                             navigator.push(
                                                 UserChatScreen(
                                                     "",
-                                                    chatDataList[index].second.chatId ?: ""
+                                                    chatDataList[index].chatId ?: ""
                                                 )
                                             )
                                         }

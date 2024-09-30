@@ -150,6 +150,7 @@ class MainScreenModel : ScreenModel {
             } catch (ignore: Exception) {
             }
 
+            println("[op:login] Socket connect successful")
             _socketSession.value = _socketClient.value.connect(
                 "https://api.astercasc.com/yui/chat-websocket/socketAuthNoError?" +
                         "User-Token=${_userState.value.token}"
@@ -161,6 +162,7 @@ class MainScreenModel : ScreenModel {
             _collectorJob.value = _commonCoroutine.launch(socketExceptionHandlerWithReconnect) {
                 subscription.collect { msg ->
                     val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
+                    println("[op:login] Socket get message from ${chatRow.fromChatId}")
                     chatScreenModel.pushChatMessage(_userState.value.token, chatRow)
                 }
             }
