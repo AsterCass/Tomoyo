@@ -168,19 +168,25 @@ fun MainApp(
                                 val isToRight = tabNavigator.current.options.index > lastTabIndex
                                 AnimatedVisibility(
                                     visible = tabNavigator.current == tab,
-                                    enter = slideInHorizontally(
-                                        initialOffsetX = { fullHeight ->
-                                            if (isToRight)
-                                                fullHeight else -fullHeight
-                                        },
+                                    enter = if (tab == HomeTab) fadeIn(
                                         animationSpec = tween(
-                                            durationMillis = 800,
+                                            durationMillis = 800
+                                        )
+                                    )
+                                    else
+                                        slideInHorizontally(
+                                            initialOffsetX = { fullHeight ->
+                                                if (isToRight)
+                                                    fullHeight else -fullHeight
+                                            },
+                                            animationSpec = tween(
+                                                durationMillis = 800,
+                                            ),
                                         ),
-                                    ),
                                     exit = fadeOut(animationSpec = tween(durationMillis = 400)),
                                 ) {
-                                    tab.Content()
                                     lastTabIndex = tab.options.index
+                                    tab.Content()
                                 }
                             }
 

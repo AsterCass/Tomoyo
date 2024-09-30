@@ -60,7 +60,8 @@ fun SwipeToRevealCard(
 
             for (opt in optionList) {
                 Box(
-                    modifier = Modifier.fillMaxHeight().width(opt.width).background(opt.optBgColor)
+                    modifier = Modifier.fillMaxHeight()
+                        .width(opt.width).background(opt.optBgColor)
                         .clickable {
                             offsetX = 0f
                             opt.optionOperation()
