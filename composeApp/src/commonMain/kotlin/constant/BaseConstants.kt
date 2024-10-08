@@ -87,16 +87,20 @@ const val EMOJI_REPLACE_KEY = "EMOJI_PLACEHOLDER"
 const val NETWORK_CHECK_HOST = "www.baidu.com"
 const val MAX_TIME_SPE_SEC = 600
 
+//私人编码：
+//Basic Multilingual Plane : U+E000 至 U+F8FF (57344 - 59647)
+//Supplementary Private Use Area-A : U+F0000 至 U+FFFFD
+//Supplementary Private Use Area-B： U+100000 (\uD800\uDC00) 至 U+10FFFD (\uDBFF\uDFFD)
 
 const val maxNumEmojiPage = 36
 val biliEmojiMap = mapOf(
-    "[#b00]" to Res.drawable.bili_00,
-    "[#b01]" to Res.drawable.bili_01,
-    "[#b02]" to Res.drawable.bili_02,
-    "[#b03]" to Res.drawable.bili_03,
-    "[#b04]" to Res.drawable.bili_04,
-    "[#b05]" to Res.drawable.bili_05,
-    "[#b06]" to Res.drawable.bili_06,
+    "\uE000" to Res.drawable.bili_00,
+    "\uE001" to Res.drawable.bili_01,
+    "\uE002" to Res.drawable.bili_02,
+    "\uE003" to Res.drawable.bili_03,
+    "\uE004" to Res.drawable.bili_04,
+    "\uE005" to Res.drawable.bili_05,
+    "\uE006" to Res.drawable.bili_06,
     "[#b07]" to Res.drawable.bili_07,
     "[#b08]" to Res.drawable.bili_08,
     "[#b09]" to Res.drawable.bili_09,

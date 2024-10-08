@@ -94,15 +94,30 @@ fun messageTimeLabelBuilder(
 fun parseTextWithEmojis(text: String): AnnotatedString {
     val builder = AnnotatedString.Builder()
     var currentIndex = 0
-    val regex = Regex("\\[#b[0-9][0-9]]")
-    regex.findAll(text).forEach { result ->
-        val match = result.value
-        if (biliEmojiMap.containsKey(match)) {
-            builder.append(text.substring(currentIndex, result.range.first))
-            builder.appendInlineContent(EMOJI_REPLACE_KEY, match)
-            currentIndex = result.range.last + 1
+//    val regex = Regex("\\[#b[0-9][0-9]]")
+//    regex.findAll(text).forEach { result ->
+//        val match = result.value
+//        if (biliEmojiMap.containsKey(match)) {
+//            builder.append(text.substring(currentIndex, result.range.first))
+//            builder.appendInlineContent(EMOJI_REPLACE_KEY, match)
+//            currentIndex = result.range.last + 1
+//        }
+//    }
+
+    var thisCharSite = 0
+    text.codePoints().forEach { codePoint ->
+        println(codePoint)
+        if (codePoint in 57344..59647) {
+            val match = codePoint.toChar().toString()
+            if (biliEmojiMap.containsKey(match)) {
+                builder.append(text.substring(currentIndex, thisCharSite))
+                builder.appendInlineContent(EMOJI_REPLACE_KEY, match)
+                currentIndex = thisCharSite + 1
+            }
         }
+        ++thisCharSite;
     }
+
     if (currentIndex < text.length) {
         builder.append(text.substring(currentIndex))
     }
