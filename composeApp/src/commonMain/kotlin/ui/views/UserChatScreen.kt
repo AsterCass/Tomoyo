@@ -122,6 +122,7 @@ class UserChatScreen(
 
         //chat status
         DisposableEffect(Unit) {
+            chatScreenModel.rebuildMessageTime()
             chatScreenModel.resetChattingId(chatId)
             onDispose {
                 chatScreenModel.resetChattingId()

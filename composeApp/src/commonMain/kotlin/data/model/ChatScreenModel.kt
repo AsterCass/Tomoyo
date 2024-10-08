@@ -171,7 +171,7 @@ class ChatScreenModel : ScreenModel {
 //        updateChatData(token)
     }
 
-    private fun rebuildMessageTime() {
+    fun rebuildMessageTime() {
         if (_currentChatData.value.userChattingData.size > 0) {
             messageTimeLabelBuilder(
                 _currentChatData.value.userChattingData
