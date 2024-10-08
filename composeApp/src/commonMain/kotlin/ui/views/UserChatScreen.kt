@@ -92,10 +92,11 @@ class UserChatScreen(
         //user data
         val userState = mainModel.userState.collectAsState().value
         val token = userState.token
+        val thisUserId = userState.userData.id
         val socketSession = mainModel.socketSession.collectAsState().value
 
         //finish login
-        if (token.isBlank()) {
+        if (token.isBlank() || thisUserId.isNullOrBlank()) {
             navigator.pop()
             return
         }
@@ -209,7 +210,7 @@ class UserChatScreen(
                     )
                     {
                         items(chatRowList.size) { index ->
-                            MessageCard(item = chatRowList[index])
+                            MessageCard(item = chatRowList[index], thisUserId = thisUserId)
                         }
                         item {
                             if (!loadAllHistoryMessage) {

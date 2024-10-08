@@ -85,6 +85,7 @@ object BaseResText {
 const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"
 const val EMOJI_REPLACE_KEY = "EMOJI_PLACEHOLDER"
 const val NETWORK_CHECK_HOST = "www.baidu.com"
+const val MAX_TIME_SPE_SEC = 600
 
 
 const val maxNumEmojiPage = 36

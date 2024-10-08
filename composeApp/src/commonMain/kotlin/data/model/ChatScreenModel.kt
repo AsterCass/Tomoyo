@@ -58,6 +58,7 @@ class ChatScreenModel : ScreenModel {
             sendUserGender = chatRow.sendUserGender,
             sendUserRoleType = chatRow.sendUserRoleType,
             sendDate = chatRow.sendDate,
+            sendUserId = chatRow.sendUserId,
         )
 
         //update map

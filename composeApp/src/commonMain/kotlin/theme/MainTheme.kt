@@ -43,6 +43,10 @@ val androidx.compose.material3.ColorScheme.halfTransSurfaceVariant: Color
     get() = if (this.background == LightColorScheme.background)
         Color(0XE0E0E0E0) else Color.Black
 
+val androidx.compose.material3.ColorScheme.pureColor: Color
+    get() = if (this.background == LightColorScheme.background)
+        Color.White else Color.Black
+
 
 
 

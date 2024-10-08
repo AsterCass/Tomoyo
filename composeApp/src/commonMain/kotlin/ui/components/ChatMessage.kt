@@ -1,6 +1,5 @@
 package ui.components
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
@@ -29,9 +28,11 @@ import biz.getLastTimeInChatting
 import cn.hutool.core.date.DatePattern
 import cn.hutool.core.date.DateTime
 import constant.EMOJI_REPLACE_KEY
+import constant.MAX_TIME_SPE_SEC
 import constant.biliEmojiMap
 import data.UserChatMsgDto
 import org.jetbrains.compose.resources.painterResource
+import theme.pureColor
 import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bili_00
@@ -54,7 +55,7 @@ fun newMessageLabel(time: String?, lastTime: String?): String {
         DatePattern.NORM_DATETIME_FORMAT
     ).toLocalDateTime()
     val waitLastSec = Duration.between(thisSendDateTime, lastSendDateTime).seconds.absoluteValue
-    return if (waitLastSec < 600) "" else ret
+    return if (waitLastSec < MAX_TIME_SPE_SEC) "" else ret
 }
 
 fun messageTimeLabelBuilder(
@@ -75,7 +76,7 @@ fun messageTimeLabelBuilder(
 
         if (null != lastTime) {
             val waitLastSec = Duration.between(thisSendDateTime, lastTime).seconds
-            if (waitLastSec.absoluteValue < 600) {
+            if (waitLastSec.absoluteValue < MAX_TIME_SPE_SEC) {
                 list[count].webChatLabel = ""
             }
         }
@@ -107,7 +108,9 @@ fun parseTextWithEmojis(text: String): AnnotatedString {
 
 
 @Composable
-fun MessageCard(item: UserChatMsgDto) {
+fun MessageCard(item: UserChatMsgDto, thisUserId: String) {
+
+    val isSelf = thisUserId == item.sendUserId
 
     Row(modifier = Modifier.padding(all = 8.dp).fillMaxWidth()) {
 //        Image(
@@ -120,11 +123,10 @@ fun MessageCard(item: UserChatMsgDto) {
 //        )
         Spacer(modifier = Modifier.width(8.dp))
 
-        val surfaceColor by animateColorAsState(
-            MaterialTheme.colorScheme.surface
-        )
-
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = if (isSelf) Alignment.End else Alignment.Start
+        ) {
 
 
             if (!item.webChatLabel.isNullOrBlank()) {
@@ -138,32 +140,34 @@ fun MessageCard(item: UserChatMsgDto) {
                         style = MaterialTheme.typography.titleSmall
                     )
                 }
-
             }
-
 
             Text(
                 text = item.sendUserNickname ?: "",
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleSmall
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             Surface(
-                shape = MaterialTheme.shapes.medium,
+                shape = MaterialTheme.shapes.small,
                 shadowElevation = 1.dp,
-                color = surfaceColor,
+                color = if (isSelf) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.pureColor,
                 modifier = Modifier.animateContentSize().padding(1.dp)
             ) {
                 val annotatedString = parseTextWithEmojis(item.message ?: "")
                 Text(
                     text = annotatedString,
-                    modifier = Modifier.padding(all = 4.dp),
-                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(
+                        horizontal = 8.dp,
+                        vertical = 4.dp
+                    ),
+                    style = MaterialTheme.typography.bodyLarge,
                     inlineContent = mapOf(
                         EMOJI_REPLACE_KEY to InlineTextContent(
-                            Placeholder(20.sp, 20.sp, PlaceholderVerticalAlign.TextCenter)
+                            Placeholder(25.sp, 25.sp, PlaceholderVerticalAlign.TextCenter)
                         ) { emoji ->
                             Image(
                                 painter = painterResource(
@@ -173,7 +177,9 @@ fun MessageCard(item: UserChatMsgDto) {
                                 contentDescription = null,
                             )
                         }
-                    )
+                    ),
+                    color = if (isSelf) MaterialTheme.colorScheme.onPrimary
+                    else MaterialTheme.colorScheme.onBackground
                 )
             }
         }
