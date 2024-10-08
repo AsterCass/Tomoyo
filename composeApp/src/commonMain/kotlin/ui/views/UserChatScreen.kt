@@ -175,7 +175,6 @@ class UserChatScreen(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
-
                     }
 
                     Button(

@@ -141,6 +141,7 @@ class MainScreenModel : ScreenModel {
             }
         }
 
+        println("[op:login] Socket connect start")
         CoroutineScope(Dispatchers.IO).launch(socketExceptionHandlerWithReconnect) {
             try {
                 _collectorJob.value?.cancel()

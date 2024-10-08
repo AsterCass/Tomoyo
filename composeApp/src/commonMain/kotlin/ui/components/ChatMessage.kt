@@ -1,6 +1,7 @@
 package ui.components
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ import data.UserChatMsgDto
 import org.jetbrains.compose.resources.painterResource
 import theme.pureColor
 import theme.subTextColor
+import theme.third
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bili_00
 import java.time.Duration
@@ -107,6 +110,7 @@ fun parseTextWithEmojis(text: String): AnnotatedString {
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MessageCard(item: UserChatMsgDto, thisUserId: String) {
 
@@ -153,34 +157,38 @@ fun MessageCard(item: UserChatMsgDto, thisUserId: String) {
             Surface(
                 shape = MaterialTheme.shapes.small,
                 shadowElevation = 1.dp,
-                color = if (isSelf) MaterialTheme.colorScheme.primary
+                color = if (isSelf) MaterialTheme.colorScheme.third
                 else MaterialTheme.colorScheme.pureColor,
                 modifier = Modifier.animateContentSize().padding(1.dp)
             ) {
                 val annotatedString = parseTextWithEmojis(item.message ?: "")
-                Text(
-                    text = annotatedString,
-                    modifier = Modifier.padding(
-                        horizontal = 8.dp,
-                        vertical = 4.dp
-                    ),
-                    style = MaterialTheme.typography.bodyLarge,
-                    inlineContent = mapOf(
-                        EMOJI_REPLACE_KEY to InlineTextContent(
-                            Placeholder(25.sp, 25.sp, PlaceholderVerticalAlign.TextCenter)
-                        ) { emoji ->
-                            Image(
-                                painter = painterResource(
-                                    biliEmojiMap[emoji] ?: Res.drawable.bili_00
-                                ),
-                                modifier = Modifier.fillMaxSize(),
-                                contentDescription = null,
-                            )
-                        }
-                    ),
-                    color = if (isSelf) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.onBackground
-                )
+                SelectionContainer(
+                    modifier = Modifier
+                ) {
+                    Text(
+                        text = annotatedString,
+                        modifier = Modifier.padding(
+                            horizontal = 8.dp,
+                            vertical = 4.dp
+                        ),
+                        style = MaterialTheme.typography.bodyLarge,
+                        inlineContent = mapOf(
+                            EMOJI_REPLACE_KEY to InlineTextContent(
+                                Placeholder(25.sp, 25.sp, PlaceholderVerticalAlign.TextCenter)
+                            ) { emoji ->
+                                Image(
+                                    painter = painterResource(
+                                        biliEmojiMap[emoji] ?: Res.drawable.bili_00
+                                    ),
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentDescription = null,
+                                )
+                            }
+                        ),
+                        color = if (isSelf) MaterialTheme.colorScheme.onPrimary
+                        else MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
         }
     }
