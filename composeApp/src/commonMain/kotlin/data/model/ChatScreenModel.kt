@@ -77,13 +77,15 @@ class ChatScreenModel : ScreenModel {
                 it.lastMessageTime = chatRow.sendDate
                 it.lastMessageId = chatRow.sendMessageId
                 it.lastMessageText = chatRow.sendMessage
-                it.latestRead = _currentChatData.value.chatId == chatRow.fromChatId
+                it.latestRead = false
                 lastChatIdIndex = index
             }
         }
-        if (lastChatIdIndex > 0) {
-            val element = _chatDataList.value.removeAt(lastChatIdIndex)
-            _chatDataList.value.add(0, element)
+        if (lastChatIdIndex >= 0) {
+            if (0 != lastChatIdIndex) {
+                val element = _chatDataList.value.removeAt(lastChatIdIndex)
+                _chatDataList.value.add(0, element)
+            }
             //update status
             _updateStatus.value++
         } else {
@@ -122,6 +124,7 @@ class ChatScreenModel : ScreenModel {
                         }
                     }
                 }
+                rebuildMessageTime()
                 _updateStatus.value++
             }
         }
@@ -163,10 +166,8 @@ class ChatScreenModel : ScreenModel {
 //        updateChatData(token)
     }
 
-    fun rebuildMessageTime() {
-        if (_currentChatData.value.userChattingData.size > 0
-            && null != _currentChatData.value.userChattingData[0].webChatLabel
-        ) {
+    private fun rebuildMessageTime() {
+        if (_currentChatData.value.userChattingData.size > 0) {
             messageTimeLabelBuilder(
                 _currentChatData.value.userChattingData
             )

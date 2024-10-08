@@ -36,37 +36,38 @@ import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bili_00
 import java.time.Duration
+import java.time.LocalDateTime
+import kotlin.math.absoluteValue
 
 
-fun messageTimeLabelBuilder(listAsc: List<UserChatMsgDto>, lastTime: String? = null) {
-    if (listAsc.isEmpty()) return
-    val list = listAsc.reversed()
+fun messageTimeLabelBuilder(
+    list: List<UserChatMsgDto>,
+) {
+    if (list.isEmpty()) return
 
-    listAsc[list.size - 1].webChatLabel = getLastTimeInChatting(listAsc[0].sendDate)
-
-    val lastIndex = list.size - 2
+    val lastIndex = list.size - 1
+    var lastTime: LocalDateTime? = null
     for (count in lastIndex downTo 0) {
 
-        val sendDateTime = DateTime(
+        val thisSendDateTime = DateTime(
             list[count].sendDate,
             DatePattern.NORM_DATETIME_FORMAT
         ).toLocalDateTime()
-
-        var waitLastSec: Long? = null
-        if (count < lastIndex) {
-            val lastSendDateTime = DateTime(
-                list[count + 1].sendDate,
-                DatePattern.NORM_DATETIME_FORMAT
-            ).toLocalDateTime()
-            waitLastSec = Duration.between(sendDateTime, lastSendDateTime).seconds
-        }
-
+        val alreadyBuildTime = null != list[count].webChatLabel
         list[count].webChatLabel = getLastTimeInChatting(list[count].sendDate)
 
-        if (waitLastSec != null && waitLastSec < 600) {
-            list[count + 1].webChatLabel = ""
+        if (null != lastTime) {
+            val waitLastSec = Duration.between(thisSendDateTime, lastTime).seconds
+            if (waitLastSec.absoluteValue < 600) {
+                list[count].webChatLabel = ""
+            }
         }
+        if (alreadyBuildTime) {
+            break
+        }
+        lastTime = thisSendDateTime
     }
+
 }
 
 fun parseTextWithEmojis(text: String): AnnotatedString {
