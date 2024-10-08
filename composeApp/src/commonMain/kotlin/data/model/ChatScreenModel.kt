@@ -16,6 +16,11 @@ class ChatScreenModel : ScreenModel {
 
     private val mutex = Mutex()
 
+    private val _chattingId = MutableStateFlow("")
+    fun resetChattingId(id: String = "") {
+        _chattingId.value = id
+    }
+
     private val _inputContent = MutableStateFlow(emptyMap<String, String>())
     val inputContent = _inputContent.asStateFlow()
     fun updateInputContent(userId: String, input: String) {
@@ -77,7 +82,7 @@ class ChatScreenModel : ScreenModel {
                 it.lastMessageTime = chatRow.sendDate
                 it.lastMessageId = chatRow.sendMessageId
                 it.lastMessageText = chatRow.sendMessage
-                it.latestRead = false
+                it.latestRead = _chattingId.value == it.chatId
                 lastChatIdIndex = index
             }
         }

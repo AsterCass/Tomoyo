@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -118,6 +119,14 @@ class UserChatScreen(
         val thisInputContent = inputContent[chatId] ?: ""
 
         if (null == chatId) return
+
+        //chat status
+        DisposableEffect(Unit) {
+            chatScreenModel.resetChattingId(chatId)
+            onDispose {
+                chatScreenModel.resetChattingId()
+            }
+        }
 
         AnimatedVisibility(
             visible = !loadingScreen,
