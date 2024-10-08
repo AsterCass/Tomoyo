@@ -40,6 +40,23 @@ import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
 
+fun newMessageLabel(time: String?, lastTime: String?): String {
+    val ret = getLastTimeInChatting(time)
+    if (null == lastTime) {
+        return ret
+    }
+    val thisSendDateTime = DateTime(
+        time,
+        DatePattern.NORM_DATETIME_FORMAT
+    ).toLocalDateTime()
+    val lastSendDateTime = DateTime(
+        lastTime,
+        DatePattern.NORM_DATETIME_FORMAT
+    ).toLocalDateTime()
+    val waitLastSec = Duration.between(thisSendDateTime, lastSendDateTime).seconds.absoluteValue
+    return if (waitLastSec < 600) "" else ret
+}
+
 fun messageTimeLabelBuilder(
     list: List<UserChatMsgDto>,
 ) {

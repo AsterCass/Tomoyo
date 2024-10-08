@@ -11,6 +11,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.springframework.beans.BeanUtils
 import ui.components.messageTimeLabelBuilder
+import ui.components.newMessageLabel
 
 class ChatScreenModel : ScreenModel {
 
@@ -78,6 +79,8 @@ class ChatScreenModel : ScreenModel {
         var lastChatIdIndex = -1
         _chatDataList.value.forEachIndexed { index, it ->
             if (it.chatId == chatRow.fromChatId) {
+                val lastChatTime = it.userChattingData.getOrNull(0)?.sendDate
+                newMessage.webChatLabel = newMessageLabel(newMessage.sendDate, lastChatTime)
                 it.userChattingData.add(0, newMessage)
                 it.lastMessageTime = chatRow.sendDate
                 it.lastMessageId = chatRow.sendMessageId
