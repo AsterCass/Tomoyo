@@ -2,6 +2,7 @@ package ui.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,11 +24,20 @@ import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import biz.copyToClipboard
 import biz.getLastTimeInChatting
 import cn.hutool.core.date.DatePattern
@@ -132,13 +142,13 @@ fun parseTextWithEmojis(text: String): AnnotatedString {
     return builder.toAnnotatedString()
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MessageCard(item: UserChatMsgDto, thisUserId: String) {
+fun MessageCard(item: UserChatMsgDto, thisUserId: String, isMobile: Boolean) {
 
     val isSelf = thisUserId == item.sendUserId
-    val tooltipState = rememberTooltipState(isPersistent = true)
+    val baseHeight = 35.dp
+    var showPopup by remember { mutableStateOf(false) }
 
     Row(modifier = Modifier.padding(all = 8.dp).fillMaxWidth()) {
 //        Image(
@@ -176,96 +186,164 @@ fun MessageCard(item: UserChatMsgDto, thisUserId: String) {
                 style = MaterialTheme.typography.titleSmall
             )
 
+
+            //if(isMobile) MessageCardMobile(item, isSelf) else
             Spacer(modifier = Modifier.height(5.dp))
 
-            TooltipBox(
-                positionProvider = TooltipDefaults
-                    .rememberPlainTooltipPositionProvider(),
-                tooltip = {
-                    Row(
-                        modifier = Modifier
-                            .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(MaterialTheme.colorScheme.baseBackgroundBlack)
-                            .height(35.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-
-                    ) {
-                        TextButton(
-                            shape = RoundedCornerShape(5.dp),
-                            contentPadding = PaddingValues(0.dp),
-                            onClick = {
-                                copyToClipboard(item.message ?: "")
-                                NotificationManager.showNotification(
-                                    MainNotification(
-                                        BaseResText.copyTip,
-                                        NotificationType.SUCCESS
-                                    )
-                                )
-                                tooltipState.dismiss()
+            Surface(
+                shape = MaterialTheme.shapes.small,
+                shadowElevation = 1.dp,
+                color = if (isSelf) MaterialTheme.colorScheme.third
+                else MaterialTheme.colorScheme.pureColor,
+                modifier = Modifier.animateContentSize().padding(1.dp)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onDoubleTap = { _ ->
+                                showPopup = true
                             },
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.chat_copy),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                            )
-                        }
-
-                        VerticalDivider(
-                            modifier = Modifier
-                                .padding(0.dp).height(12.dp)
-                        )
-
-                        TextButton(
-                            shape = RoundedCornerShape(5.dp),
-                            contentPadding = PaddingValues(0.dp),
-                            onClick = {
-                                NotificationManager.createDialogAlert(
-                                    MainDialogAlert(
-                                        message = BaseResText.underDevelopment,
-                                        cancelOperationText = BaseResText.cancelBtn
-                                    )
-                                )
-                                tooltipState.dismiss()
+                            onLongPress = { _ ->
+                                showPopup = true
                             }
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.chat_relay),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                            )
+                        )
+                    }
+            ) {
+                val annotatedString = parseTextWithEmojis(item.message ?: "")
+
+                if (showPopup) {
+                    val baseHeightPx = with(LocalDensity.current) { (baseHeight + 5.dp).toPx() }
+                    Popup(
+                        alignment = Alignment.TopCenter,
+                        offset = IntOffset(0, -baseHeightPx.toInt()),
+                        onDismissRequest = {
+                            showPopup = false
+                        }
+                    ) {
+                        MessageCardOperation(item, baseHeight) {
+                            showPopup = false
                         }
                     }
-
-                },
-                state = tooltipState,
-
-                ) {
-                Surface(
-                    shape = MaterialTheme.shapes.small,
-                    shadowElevation = 1.dp,
-                    color = if (isSelf) MaterialTheme.colorScheme.third
-                    else MaterialTheme.colorScheme.pureColor,
-                    modifier = Modifier.animateContentSize().padding(1.dp)
-                ) {
-                    val annotatedString = parseTextWithEmojis(item.message ?: "")
-                    Text(
-                        text = annotatedString,
-                        modifier = Modifier.padding(
-                            horizontal = 8.dp,
-                            vertical = 4.dp
-                        ),
-                        style = MaterialTheme.typography.bodyLarge,
-                        inlineContent = ANN_TEXT_MAP,
-                        color = if (isSelf) MaterialTheme.colorScheme.onPrimary
-                        else MaterialTheme.colorScheme.onBackground
-                    )
                 }
+
+                Text(
+                    text = annotatedString,
+                    modifier = Modifier.padding(
+                        horizontal = 8.dp,
+                        vertical = 4.dp
+                    ),
+                    style = MaterialTheme.typography.bodyLarge,
+                    inlineContent = ANN_TEXT_MAP,
+                    color = if (isSelf) MaterialTheme.colorScheme.onPrimary
+                    else MaterialTheme.colorScheme.onBackground
+                )
             }
 
 
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MessageCardMobile(
+    item: UserChatMsgDto,
+    isSelf: Boolean,
+    baseHeight: Dp,
+) {
+    val tooltipState = rememberTooltipState(isPersistent = true)
+    TooltipBox(
+        positionProvider = TooltipDefaults
+            .rememberPlainTooltipPositionProvider(),
+        tooltip = {
+            MessageCardOperation(item, baseHeight) {
+                tooltipState.dismiss()
+            }
+        },
+        state = tooltipState,
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.small,
+            shadowElevation = 1.dp,
+            color = if (isSelf) MaterialTheme.colorScheme.third
+            else MaterialTheme.colorScheme.pureColor,
+            modifier = Modifier.animateContentSize().padding(1.dp)
+        ) {
+            val annotatedString = parseTextWithEmojis(item.message ?: "")
+            Text(
+                text = annotatedString,
+                modifier = Modifier.padding(
+                    horizontal = 8.dp,
+                    vertical = 4.dp
+                ),
+                style = MaterialTheme.typography.bodyLarge,
+                inlineContent = ANN_TEXT_MAP,
+                color = if (isSelf) MaterialTheme.colorScheme.onPrimary
+                else MaterialTheme.colorScheme.onBackground
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun MessageCardOperation(
+    item: UserChatMsgDto,
+    baseHeight: Dp,
+    dismiss: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
+            .clip(RoundedCornerShape(5.dp))
+            .background(MaterialTheme.colorScheme.baseBackgroundBlack)
+            .height(baseHeight),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+
+    ) {
+        TextButton(
+            shape = RoundedCornerShape(5.dp),
+            contentPadding = PaddingValues(0.dp),
+            onClick = {
+                copyToClipboard(item.message ?: "")
+                NotificationManager.showNotification(
+                    MainNotification(
+                        BaseResText.copyTip,
+                        NotificationType.SUCCESS
+                    )
+                )
+                dismiss()
+            },
+        ) {
+            Text(
+                text = stringResource(Res.string.chat_copy),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onPrimary,
+            )
+        }
+
+        VerticalDivider(
+            modifier = Modifier
+                .padding(0.dp).height(12.dp)
+        )
+
+        TextButton(
+            shape = RoundedCornerShape(5.dp),
+            contentPadding = PaddingValues(0.dp),
+            onClick = {
+                NotificationManager.createDialogAlert(
+                    MainDialogAlert(
+                        message = BaseResText.underDevelopment,
+                        cancelOperationText = BaseResText.cancelBtn
+                    )
+                )
+                dismiss()
+            }
+        ) {
+            Text(
+                text = stringResource(Res.string.chat_relay),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onPrimary,
+            )
         }
     }
 }

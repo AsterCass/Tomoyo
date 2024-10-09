@@ -50,6 +50,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.sendText
 import org.koin.compose.koinInject
+import org.koin.core.qualifier.named
 import theme.halfTransSurfaceVariant
 import ui.components.MainDialogAlert
 import ui.components.MessageCard
@@ -70,6 +71,7 @@ class UserChatScreen(
         val chatScreenModel: ChatScreenModel = koinInject()
         val globalDataModel: GlobalDataModel = koinInject()
         val dataStorageManager: DataStorageManager = koinInject()
+        val isMobile: Boolean = koinInject(qualifier = named("isMobile"))
 
         //navigation
         mainModel.updateShowNavBar(false)
@@ -209,7 +211,10 @@ class UserChatScreen(
                     )
                     {
                         items(chatRowList.size) { index ->
-                            MessageCard(item = chatRowList[index], thisUserId = thisUserId)
+                            MessageCard(
+                                item = chatRowList[index], thisUserId = thisUserId,
+                                isMobile = isMobile
+                            )
                         }
                         item {
                             if (!loadAllHistoryMessage) {
