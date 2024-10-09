@@ -53,7 +53,6 @@ import org.jetbrains.compose.resources.stringResource
 import theme.baseBackgroundBlack
 import theme.pureColor
 import theme.subTextColor
-import theme.third
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.chat_copy
 import tomoyo.composeapp.generated.resources.chat_relay
@@ -193,7 +192,7 @@ fun MessageCard(item: UserChatMsgDto, thisUserId: String, isMobile: Boolean) {
             Surface(
                 shape = MaterialTheme.shapes.small,
                 shadowElevation = 1.dp,
-                color = if (isSelf) MaterialTheme.colorScheme.third
+                color = if (isSelf) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.pureColor,
                 modifier = Modifier.animateContentSize().padding(1.dp)
                     .pointerInput(Unit) {
@@ -263,7 +262,7 @@ private fun MessageCardMobile(
         Surface(
             shape = MaterialTheme.shapes.small,
             shadowElevation = 1.dp,
-            color = if (isSelf) MaterialTheme.colorScheme.third
+            color = if (isSelf) MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.pureColor,
             modifier = Modifier.animateContentSize().padding(1.dp)
         ) {
