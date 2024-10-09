@@ -65,6 +65,7 @@ import theme.third
 import theme.unselectedColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.btn_cancel
+import tomoyo.composeapp.generated.resources.chat_copy_success
 import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
 import tomoyo.composeapp.generated.resources.logo_pro_trans_128
@@ -279,6 +280,7 @@ fun InitForNoComposableRes() {
     )
     BaseResText.underDevelopment = stringResource(Res.string.under_development)
     BaseResText.cancelBtn = stringResource(Res.string.btn_cancel)
+    BaseResText.copyTip = stringResource(Res.string.chat_copy_success)
     BaseResText.userNoLogin = stringResource(Res.string.notification_user_no_login)
     BaseResText.bgColorList = listOf(
         MaterialTheme.colorScheme.primary,

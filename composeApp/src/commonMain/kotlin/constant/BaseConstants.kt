@@ -1,6 +1,14 @@
 package constant
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bili_00
 import tomoyo.composeapp.generated.resources.bili_01
@@ -78,6 +86,7 @@ object BaseResText {
     var userNoLogin: String = ""
     var underDevelopment: String = ""
     var cancelBtn: String = ""
+    var copyTip: String = ""
     var bgColorList: List<Color> = listOf(Color.White, Color.White, Color.White)
     var weekDayList: List<String> = listOf("", "", "", "", "", "", "", "")
 }
@@ -86,6 +95,23 @@ const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"
 const val EMOJI_REPLACE_KEY = "EMOJI_PLACEHOLDER"
 const val NETWORK_CHECK_HOST = "www.baidu.com"
 const val MAX_TIME_SPE_SEC = 600
+val ANN_TEXT_MAP = mapOf(
+    EMOJI_REPLACE_KEY to InlineTextContent(
+        Placeholder(
+            width = 25.sp,
+            height = 25.sp,
+            placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+        )
+    ) { emoji ->
+        Image(
+            painter = painterResource(
+                biliEmojiMap[emoji] ?: Res.drawable.bili_00
+            ),
+            modifier = Modifier.fillMaxSize(),
+            contentDescription = null,
+        )
+    }
+)
 
 //私人编码：
 //Basic Multilingual Plane : U+E000 至 U+F8FF (57344 - 59647)
@@ -94,13 +120,13 @@ const val MAX_TIME_SPE_SEC = 600
 
 const val maxNumEmojiPage = 36
 val biliEmojiMap = mapOf(
-    "\uE000" to Res.drawable.bili_00,
-    "\uE001" to Res.drawable.bili_01,
-    "\uE002" to Res.drawable.bili_02,
-    "\uE003" to Res.drawable.bili_03,
-    "\uE004" to Res.drawable.bili_04,
-    "\uE005" to Res.drawable.bili_05,
-    "\uE006" to Res.drawable.bili_06,
+    "[#b00]" to Res.drawable.bili_00,
+    "[#b01]" to Res.drawable.bili_01,
+    "[#b02]" to Res.drawable.bili_02,
+    "[#b03]" to Res.drawable.bili_03,
+    "[#b04]" to Res.drawable.bili_04,
+    "[#b05]" to Res.drawable.bili_05,
+    "[#b06]" to Res.drawable.bili_06,
     "[#b07]" to Res.drawable.bili_07,
     "[#b08]" to Res.drawable.bili_08,
     "[#b09]" to Res.drawable.bili_09,

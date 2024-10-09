@@ -19,7 +19,7 @@
     <string name="notification_check_network">No network connection. Please check your internet</string>
 
     <string name="service_error">Error</string>
-    <string name="login_success">Login successful</string>
+    <string name="login_success">Login success</string>
     <string name="login_passwd_error">Incorrect account or password</string>
     <string name="logout_btn"> Log Out </string>
     <string name="under_development"> This feature is under development. Stay tuned </string>
@@ -119,6 +119,8 @@
     <string name="login_notification_passwd"> Please enter your password </string>
 
     <string name="chat_send"> Send </string>
-
+    <string name="chat_relay"> Relay </string>
+    <string name="chat_copy"> Copy </string>
+    <string name="chat_copy_success"> Copy success </string>
 
 </resources>

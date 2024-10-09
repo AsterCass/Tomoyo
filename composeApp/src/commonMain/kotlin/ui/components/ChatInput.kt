@@ -435,6 +435,9 @@ private fun BoxScope.UserInputTextField(
         maxLines = 1,
         //todo for show image in extField decorationBox = {innerTextField -> innerTextField()}
         //https://stackoverflow.com/questions/78145214/android-compose-textfield-with-image-using-inlinetextcontent
+        //这个方法还是不好用，两个问题，第一个问题光标位置，如果我们使用私域emoji图标去处理，那么占位很小和实际图片占位不符，
+        //第二个问题，我们使用Box去框住渲染的Text和本来的innerTextField，会同时出现两段文字，这个虽然可以用透明色解决，
+        //但是还是需要对齐两段文字。主要还是第一个问题，光标位置处理不了，除非手写innerTextField的各种处理
     )
 }
 

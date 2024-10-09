@@ -10,6 +10,8 @@ import kotlinx.datetime.LocalDate
 import java.time.format.DateTimeFormatter
 
 
+expect fun copyToClipboard(text: String)
+
 fun formatSeconds(seconds: Int): String {
     val hours = seconds / 3600
     val minutes = (seconds % 3600) / 60
