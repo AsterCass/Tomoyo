@@ -421,7 +421,6 @@ fun MainHomeNotificationBox(
                 Box(modifier = Modifier
                     .onGloballyPositioned { layoutCoordinates ->
                         initWidth = -layoutCoordinates.size.width.toFloat()
-                        println(initWidth)
                     }) {
 
                     Text(

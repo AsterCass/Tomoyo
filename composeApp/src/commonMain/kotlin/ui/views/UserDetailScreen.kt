@@ -231,63 +231,64 @@ class UserDetailScreen(
                                     horizontalAlignment = Alignment.End
                                 ) {
 
-                                    Button(
-                                        onClick = {
-                                            if (token.isNotBlank()) {
-                                                navigator.push(UserChatScreen(userId, ""))
-                                            } else {
+                                    if (userState.userData.id != userId) {
+                                        Button(
+                                            onClick = {
+                                                if (token.isNotBlank()) {
+                                                    navigator.push(UserChatScreen(userId, ""))
+                                                } else {
+                                                    NotificationManager.createDialogAlert(
+                                                        //todo jump to login
+                                                        MainDialogAlert(
+                                                            message = BaseResText.userNoLogin,
+                                                            cancelOperationText = BaseResText.cancelBtn
+                                                        )
+                                                    )
+                                                }
+                                            },
+                                            shape = RoundedCornerShape(5.dp),
+                                            contentPadding = PaddingValues(
+                                                vertical = 3.dp,
+                                                horizontal = 1.dp
+                                            ),
+                                            colors = ButtonDefaults.buttonColors().copy(
+                                                containerColor = MaterialTheme.colorScheme.secondary
+                                            ),
+                                            modifier = Modifier
+                                                .height(22.dp)
+                                        ) {
+                                            Text(
+                                                text = stringResource(Res.string.user_chat_btn),
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        }
+
+                                        Button(
+                                            onClick = {
                                                 NotificationManager.createDialogAlert(
-                                                    //todo jump to login
                                                     MainDialogAlert(
-                                                        message = BaseResText.userNoLogin,
+                                                        message = BaseResText.underDevelopment,
                                                         cancelOperationText = BaseResText.cancelBtn
                                                     )
                                                 )
-                                            }
-                                        },
-                                        shape = RoundedCornerShape(5.dp),
-                                        contentPadding = PaddingValues(
-                                            vertical = 3.dp,
-                                            horizontal = 1.dp
-                                        ),
-                                        colors = ButtonDefaults.buttonColors().copy(
-                                            containerColor = MaterialTheme.colorScheme.secondary
-                                        ),
-                                        modifier = Modifier
-                                            .height(22.dp)
-                                    ) {
-                                        Text(
-                                            text = stringResource(Res.string.user_chat_btn),
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-                                    }
-
-                                    Button(
-                                        onClick = {
-                                            NotificationManager.createDialogAlert(
-                                                MainDialogAlert(
-                                                    message = BaseResText.underDevelopment,
-                                                    cancelOperationText = BaseResText.cancelBtn
-                                                )
+                                            },
+                                            shape = RoundedCornerShape(5.dp),
+                                            contentPadding = PaddingValues(
+                                                vertical = 3.dp,
+                                                horizontal = 1.dp
+                                            ),
+                                            colors = ButtonDefaults.buttonColors().copy(
+                                                containerColor = MaterialTheme.colorScheme.primary
+                                            ),
+                                            modifier = Modifier
+                                                .height(22.dp)
+                                        ) {
+                                            Text(
+                                                text = stringResource(Res.string.user_follow_btn),
+                                                style = MaterialTheme.typography.bodySmall,
                                             )
-                                        },
-                                        shape = RoundedCornerShape(5.dp),
-                                        contentPadding = PaddingValues(
-                                            vertical = 3.dp,
-                                            horizontal = 1.dp
-                                        ),
-                                        colors = ButtonDefaults.buttonColors().copy(
-                                            containerColor = MaterialTheme.colorScheme.primary
-                                        ),
-                                        modifier = Modifier
-                                            .height(22.dp)
-                                    ) {
-                                        Text(
-                                            text = stringResource(Res.string.user_follow_btn),
-                                            style = MaterialTheme.typography.bodySmall,
-                                        )
+                                        }
                                     }
-
 
                                 }
 

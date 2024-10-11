@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import org.springframework.beans.BeanUtils
 import ui.components.messageTimeLabelBuilder
 import ui.components.newMessageLabel
 
@@ -41,10 +40,20 @@ class ChatScreenModel : ScreenModel {
     val chatDataList = _chatDataList.asStateFlow()
     private fun pushChatData(chatId: String, input: UserChattingSimple) {
 //        _chatData.value[chatId] = input
+        var alreadyChatting = false
         _chatDataList.value.forEach {
             if (chatId == it.chatId) {
-                BeanUtils.copyProperties(input, it)
+                alreadyChatting = true
+                it.userChattingData.clear()
+                it.userChattingData.addAll(input.userChattingData)
+                it.lastMessageTime = input.lastMessageTime
+                it.lastMessageText = input.lastMessageText
+                it.lastMessageId = input.lastMessageId
+                it.latestRead = input.latestRead
             }
+        }
+        if (!alreadyChatting) {
+            _chatDataList.value.add(0, input)
         }
     }
 
@@ -80,6 +89,12 @@ class ChatScreenModel : ScreenModel {
         var lastChatIdIndex = -1
         _chatDataList.value.forEachIndexed { index, it ->
             if (it.chatId == chatRow.fromChatId) {
+
+                println("====================")
+                println(_chattingId.value)
+                println(it.chatId)
+                println("====================")
+
                 val lastChatTime = it.userChattingData.getOrNull(0)?.sendDate
                 newMessage.webChatLabel = newMessageLabel(newMessage.sendDate, lastChatTime)
                 it.userChattingData.add(0, newMessage)
@@ -151,6 +166,11 @@ class ChatScreenModel : ScreenModel {
     suspend fun updateCurrentChatDataWithUserId(token: String, userId: String) {
         if (userId == _currentChatData.value.chatUserId) return
         val data = BaseApi().privateInitChat(token, userId)
+        //fix
+        data.lastMessageText = data.userChattingData.getOrNull(0)?.message ?: ""
+        data.lastMessageId = data.userChattingData.getOrNull(0)?.messageId ?: ""
+        data.latestRead = true
+        //assign
         if (!data.chatId.isNullOrBlank()) {
             _currentChatData.value = data
             pushChatData(data.chatId!!, data)
@@ -160,6 +180,9 @@ class ChatScreenModel : ScreenModel {
     suspend fun hideChat(token: String, chatId: String) {
 //        _chatData.value.remove(chatId)
         _chatDataList.value.removeIf { it.chatId == chatId }
+        if (_currentChatData.value.chatId == chatId) {
+            _currentChatData.value = UserChattingSimple()
+        }
         _updateStatus.value++
         BaseApi().hideChat(token, chatId)
         updateChatData(token)
@@ -168,6 +191,7 @@ class ChatScreenModel : ScreenModel {
     suspend fun readMessage(token: String, chatId: String, messageId: String) {
         BaseApi().readMessage(token, chatId, messageId)
 //        _chatData.value[chatId]?.latestRead = "" != messageId
+        println("=================== $messageId")
         _chatDataList.value.forEach { obj ->
             if (obj.chatId == chatId) obj.latestRead = "" != messageId
         }
