@@ -40,6 +40,8 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.panpf.sketch.LocalPlatformContext
+import com.github.panpf.sketch.request.ImageRequest
 import constant.BaseResText
 import data.model.ChatScreenModel
 import data.model.GlobalDataModel
@@ -71,6 +73,7 @@ class UserChatScreen(
         val chatScreenModel: ChatScreenModel = koinInject()
         val globalDataModel: GlobalDataModel = koinInject()
         val dataStorageManager: DataStorageManager = koinInject()
+        val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
         val isMobile: Boolean = koinInject(qualifier = named("isMobile"))
 
         //navigation
@@ -80,6 +83,9 @@ class UserChatScreen(
 
         //coroutine
         val chatApiCoroutine = rememberCoroutineScope()
+
+        //context for image
+        val localPlatformContext = LocalPlatformContext.current
 
 //        //soft keyboard
 //        val keyboardController = LocalSoftwareKeyboardController.current
@@ -212,8 +218,11 @@ class UserChatScreen(
                     {
                         items(chatRowList.size) { index ->
                             MessageCard(
+                                configBlock = configBlock,
+                                localPlatformContext = localPlatformContext,
                                 item = chatRowList[index], thisUserId = thisUserId,
-                                isMobile = isMobile
+                                isMobile = isMobile,
+                                isLatest = index == 0,
                             )
                         }
                         item {

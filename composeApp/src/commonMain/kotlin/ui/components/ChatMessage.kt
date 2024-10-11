@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +43,9 @@ import biz.copyToClipboard
 import biz.getLastTimeInChatting
 import cn.hutool.core.date.DatePattern
 import cn.hutool.core.date.DateTime
+import com.github.panpf.sketch.AsyncImage
+import com.github.panpf.sketch.PlatformContext
+import com.github.panpf.sketch.request.ImageRequest
 import constant.ANN_TEXT_MAP
 import constant.BaseResText
 import constant.EMOJI_REPLACE_KEY
@@ -141,104 +145,148 @@ fun parseTextWithEmojis(text: String): AnnotatedString {
     return builder.toAnnotatedString()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun MessageCard(item: UserChatMsgDto, thisUserId: String, isMobile: Boolean) {
+fun MessageCard(
+    isLatest: Boolean,
+    item: UserChatMsgDto,
+    thisUserId: String,
+    isMobile: Boolean,
+    configBlock: (ImageRequest.Builder.() -> Unit),
+    localPlatformContext: PlatformContext,
+) {
 
     val isSelf = thisUserId == item.sendUserId
     val baseHeight = 35.dp
     var showPopup by remember { mutableStateOf(false) }
 
-    Row(modifier = Modifier.padding(all = 8.dp).fillMaxWidth()) {
-//        Image(
-//            painter = rememberAsyncImagePainter(item.sendUserAvatar),
-//            contentDescription = null,
-//            modifier = Modifier
-//                .size(40.dp)
-//                .clip(CircleShape)
-//                .border(1.5.dp, MaterialTheme.colorScheme.secondary, CircleShape)
-//        )
-        Spacer(modifier = Modifier.width(8.dp))
+    Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp).fillMaxWidth()) {
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = if (isSelf) Alignment.End else Alignment.Start,
+        if (!item.webChatLabel.isNullOrBlank()) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = item.webChatLabel ?: "",
+                    color = MaterialTheme.colorScheme.subTextColor,
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = if (isLatest) 10.dp else 0.dp),
+            verticalAlignment = Alignment.Top
         ) {
-
-
-            if (!item.webChatLabel.isNullOrBlank()) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = item.webChatLabel ?: "",
-                        color = MaterialTheme.colorScheme.subTextColor,
-                        style = MaterialTheme.typography.titleSmall
+            if (!isSelf) {
+                Row {
+                    AsyncImage(
+                        request = ImageRequest(
+                            context = localPlatformContext,
+                            uri = item.sendUserAvatar,
+                            configBlock = configBlock,
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(top = 10.dp, end = 5.dp)
+                            .size(45.dp)
+                            .align(Alignment.CenterVertically)
+                            .clip(CircleShape)
                     )
                 }
             }
 
-            Text(
-                text = item.sendUserNickname ?: "",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.titleSmall
-            )
 
 
-            //if(isMobile) MessageCardMobile(item, isSelf) else
-            Spacer(modifier = Modifier.height(5.dp))
-
-            Surface(
-                shape = MaterialTheme.shapes.small,
-                shadowElevation = 1.dp,
-                color = if (isSelf) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.pureColor,
-                modifier = Modifier.animateContentSize().padding(1.dp)
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onDoubleTap = { _ ->
-                                showPopup = true
-                            },
-                            onLongPress = { _ ->
-                                showPopup = true
-                            }
-                        )
-                    }
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = if (isSelf) Alignment.End else Alignment.Start,
             ) {
-                val annotatedString = parseTextWithEmojis(item.message ?: "")
-
-                if (showPopup) {
-                    val baseHeightPx = with(LocalDensity.current) { (baseHeight + 5.dp).toPx() }
-                    Popup(
-                        alignment = Alignment.TopCenter,
-                        offset = IntOffset(0, -baseHeightPx.toInt()),
-                        onDismissRequest = {
-                            showPopup = false
-                        }
-                    ) {
-                        MessageCardOperation(item, baseHeight) {
-                            showPopup = false
-                        }
-                    }
-                }
 
                 Text(
-                    text = annotatedString,
-                    modifier = Modifier.padding(
-                        horizontal = 8.dp,
-                        vertical = 4.dp
-                    ),
-                    style = MaterialTheme.typography.bodyLarge,
-                    inlineContent = ANN_TEXT_MAP,
-                    color = if (isSelf) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.onBackground
+                    text = item.sendUserNickname ?: "",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleSmall
                 )
+
+
+                //if(isMobile) MessageCardMobile(item, isSelf) else
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Surface(
+                    shape = MaterialTheme.shapes.small,
+                    shadowElevation = 1.dp,
+                    color = if (isSelf) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.pureColor,
+                    modifier = Modifier.animateContentSize().padding(1.dp)
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onDoubleTap = { _ ->
+                                    showPopup = true
+                                },
+                                onLongPress = { _ ->
+                                    showPopup = true
+                                }
+                            )
+                        }
+                ) {
+                    val annotatedString = parseTextWithEmojis(item.message ?: "")
+
+                    if (showPopup) {
+                        val baseHeightPx = with(LocalDensity.current) { (baseHeight + 5.dp).toPx() }
+                        Popup(
+                            alignment = Alignment.TopCenter,
+                            offset = IntOffset(0, -baseHeightPx.toInt()),
+                            onDismissRequest = {
+                                showPopup = false
+                            }
+                        ) {
+                            MessageCardOperation(item, baseHeight) {
+                                showPopup = false
+                            }
+                        }
+                    }
+
+                    Text(
+                        text = annotatedString,
+                        modifier = Modifier.padding(
+                            horizontal = 8.dp,
+                            vertical = 4.dp
+                        ),
+                        style = MaterialTheme.typography.bodyLarge,
+                        inlineContent = ANN_TEXT_MAP,
+                        color = if (isSelf) MaterialTheme.colorScheme.onPrimary
+                        else MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
 
 
+            if (isSelf) {
+                Row {
+                    AsyncImage(
+                        request = ImageRequest(
+                            context = localPlatformContext,
+                            uri = item.sendUserAvatar,
+                            configBlock = configBlock,
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(top = 10.dp, start = 5.dp)
+                            .size(45.dp)
+                            .align(Alignment.CenterVertically)
+                            .clip(CircleShape)
+                    )
+                }
+            }
         }
+
     }
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
