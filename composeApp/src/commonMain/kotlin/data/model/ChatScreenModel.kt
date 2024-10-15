@@ -90,11 +90,6 @@ class ChatScreenModel : ScreenModel {
         _chatDataList.value.forEachIndexed { index, it ->
             if (it.chatId == chatRow.fromChatId) {
 
-                println("====================")
-                println(_chattingId.value)
-                println(it.chatId)
-                println("====================")
-
                 val lastChatTime = it.userChattingData.getOrNull(0)?.sendDate
                 newMessage.webChatLabel = newMessageLabel(newMessage.sendDate, lastChatTime)
                 it.userChattingData.add(0, newMessage)
@@ -191,7 +186,6 @@ class ChatScreenModel : ScreenModel {
     suspend fun readMessage(token: String, chatId: String, messageId: String) {
         BaseApi().readMessage(token, chatId, messageId)
 //        _chatData.value[chatId]?.latestRead = "" != messageId
-        println("=================== $messageId")
         _chatDataList.value.forEach { obj ->
             if (obj.chatId == chatId) obj.latestRead = "" != messageId
         }

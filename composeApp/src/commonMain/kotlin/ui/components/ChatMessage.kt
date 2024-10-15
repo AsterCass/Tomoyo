@@ -221,7 +221,7 @@ fun MessageCard(
                     shadowElevation = 1.dp,
                     color = if (isSelf) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.pureColor,
-                    modifier = Modifier.animateContentSize().padding(1.dp)
+                    modifier = Modifier.padding(1.dp)
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onDoubleTap = { _ ->

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -41,15 +42,16 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.LocalPlatformContext
+import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
 import constant.BaseResText
+import data.UserChattingSimple
 import data.model.ChatScreenModel
-import data.model.GlobalDataModel
 import data.model.MainScreenModel
-import data.store.DataStorageManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.sendText
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
@@ -71,8 +73,8 @@ class UserChatScreen(
     override fun Content() {
         val mainModel: MainScreenModel = koinInject()
         val chatScreenModel: ChatScreenModel = koinInject()
-        val globalDataModel: GlobalDataModel = koinInject()
-        val dataStorageManager: DataStorageManager = koinInject()
+//        val globalDataModel: GlobalDataModel = koinInject()
+//        val dataStorageManager: DataStorageManager = koinInject()
         val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
         val isMobile: Boolean = koinInject(qualifier = named("isMobile"))
 
@@ -117,17 +119,9 @@ class UserChatScreen(
             chatScreenModel.updateCurrentChatData(inputChatId)
         }
 
-
         //chat data
-        val updateCount = chatScreenModel.updateStatus.collectAsState().value
         val chatData = chatScreenModel.currentChatData.collectAsState().value
-        val chatId = chatData.chatId
-        val chatRowList = chatData.userChattingData
-        val loadAllHistoryMessage = chatData.clientLoadAllHistoryMessage
-        val inputContent = chatScreenModel.inputContent.collectAsState().value
-        val thisInputContent = inputContent[chatId] ?: ""
-
-        if (null == chatId) return
+        val chatId = chatData.chatId ?: return
 
         //chat status
         DisposableEffect(Unit) {
@@ -211,61 +205,106 @@ class UserChatScreen(
                     modifier = Modifier.weight(1f).fillMaxSize()
                 ) {
                     //todo 这里之后可以自定义背景
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        reverseLayout = true
+                    BaseUserChatColumn(
+                        chatData,
+                        configBlock,
+                        localPlatformContext,
+                        thisUserId,
+                        isMobile,
+                        chatApiCoroutine,
+                        chatScreenModel,
+                        token
                     )
-                    {
-                        items(chatRowList.size) { index ->
-                            MessageCard(
-                                configBlock = configBlock,
-                                localPlatformContext = localPlatformContext,
-                                item = chatRowList[index], thisUserId = thisUserId,
-                                isMobile = isMobile,
-                                isLatest = index == 0,
-                            )
-                        }
-                        item {
-                            if (!loadAllHistoryMessage) {
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.padding(16.dp)
-                                    )
-                                }
-
-                                chatApiCoroutine.launch {
-                                    chatScreenModel.loadMoreMessage(token)
-                                }
-                            }
-                        }
-                    }
                 }
 
-
                 Row {
-                    UserInput(
-                        onMessageSent = { msg ->
-                            CoroutineScope(Dispatchers.IO).launch(mainModel.socketExceptionHandler) {
-                                socketSession?.sendText(
-                                    "/socket/message/send",
-                                    "{\"chatId\": \"${chatId}\", " +
-                                            "\"message\": \"$msg\"}"
-                                )
-                                chatScreenModel.updateInputContent(chatId, "")
-                        }
-                        },
-                        inputText = thisInputContent,
-                        updateInput = {
-                            chatScreenModel.updateInputContent(chatId, it)
-                        }
-                    )
+                    BaseUserInput(mainModel, socketSession, chatId)
                 }
 
 
             }
         }
     }
+
+    @Composable
+    private fun BaseUserChatColumn(
+        chatData: UserChattingSimple,
+        configBlock: ImageRequest.Builder.() -> Unit,
+        localPlatformContext: PlatformContext,
+        thisUserId: String,
+        isMobile: Boolean,
+        chatApiCoroutine: CoroutineScope,
+        chatScreenModel: ChatScreenModel,
+        token: String
+    ) {
+
+        val chatRowList = chatData.userChattingData
+        val loadAllHistoryMessage = chatData.clientLoadAllHistoryMessage
+        val updateCount = chatScreenModel.updateStatus.collectAsState().value
+
+        LazyColumn(
+            state = rememberLazyListState(),
+            modifier = Modifier.fillMaxSize(),
+            reverseLayout = true
+        )
+        {
+            items(
+                count = chatRowList.size,
+                key = { index -> index }
+            ) { index ->
+                MessageCard(
+                    configBlock = configBlock,
+                    localPlatformContext = localPlatformContext,
+                    item = chatRowList[index], thisUserId = thisUserId,
+                    isMobile = isMobile,
+                    isLatest = index == 0,
+                )
+            }
+            item {
+                if (!loadAllHistoryMessage) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+
+                    chatApiCoroutine.launch {
+                        chatScreenModel.loadMoreMessage(token)
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun BaseUserInput(
+        mainModel: MainScreenModel,
+        socketSession: StompSession?,
+        chatId: String,
+    ) {
+        val chatScreenModel: ChatScreenModel = koinInject()
+        val inputContent = chatScreenModel.inputContent.collectAsState().value
+        val thisInputContent = inputContent[chatId] ?: ""
+
+        UserInput(
+            onMessageSent = { msg ->
+                CoroutineScope(Dispatchers.IO).launch(mainModel.socketExceptionHandler) {
+                    socketSession?.sendText(
+                        "/socket/message/send",
+                        "{\"chatId\": \"${chatId}\", " +
+                                "\"message\": \"$msg\"}"
+                    )
+                    chatScreenModel.updateInputContent(chatId, "")
+                }
+            },
+            inputText = thisInputContent,
+            updateInput = {
+                chatScreenModel.updateInputContent(chatId, it)
+            }
+        )
+    }
+
 }
