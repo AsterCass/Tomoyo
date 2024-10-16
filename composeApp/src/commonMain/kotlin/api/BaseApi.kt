@@ -1,6 +1,7 @@
 package api
 
 import constant.BASE_SERVER_ADDRESS
+import constant.NETWORK_CHECK_HOST
 import constant.enums.NotificationType
 import data.ArticleSimpleModel
 import data.AudioSimpleModel
@@ -21,6 +22,7 @@ import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.request
@@ -121,6 +123,16 @@ class BaseApi : KoinComponent {
             globalDataModel.checkNetwork()
             ApiResponse.Error.SerializationError
         }
+
+
+    suspend fun checkNetwork(): Boolean {
+        try {
+            val response = client.get(NETWORK_CHECK_HOST)
+            return response.status.value == 200
+        } catch (ex: Exception) {
+            return false
+        }
+    }
 
     suspend fun login(account: String, passwd: String): UserDataModel {
         try {

@@ -73,7 +73,7 @@ class MusicScreenModel(
     }
 
     fun getCurrentMusicData() =
-        _musicPlayMap.value.getOrDefault(_playerState.value.currentPlayId, AudioSimpleModel())
+        _musicPlayMap.value.getOrElse(_playerState.value.currentPlayId) { AudioSimpleModel() }
 
     fun nextPlayModel() {
         _playerState.value.playModel = _playerState.value.playModel

@@ -12,6 +12,7 @@ import io.ktor.client.plugins.websocket.WebSockets
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -66,7 +67,6 @@ class MainScreenModel : ScreenModel, KoinComponent {
     private val socketExceptionHandlerWithReconnect = CoroutineExceptionHandler { _, exception ->
         println("Reconnect CoroutineException Caught $exception")
         globalDataModel.resetSocketConnected(false)
-        globalDataModel.checkNetwork()
         CoroutineScope(Dispatchers.IO).launch {
             delay(3000)
             if (globalDataModel.userState.value.token.isNotBlank()) {
@@ -81,7 +81,6 @@ class MainScreenModel : ScreenModel, KoinComponent {
     val socketExceptionHandler = CoroutineExceptionHandler { _, exception ->
         println("CoroutineException Caught $exception")
         globalDataModel.resetSocketConnected(false)
-        globalDataModel.checkNetwork()
         //  logout()
     }
 

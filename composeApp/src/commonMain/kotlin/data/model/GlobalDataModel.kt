@@ -1,14 +1,10 @@
 package data.model
 
-import constant.NETWORK_CHECK_HOST
+import api.BaseApi
 import data.UserDataModel
 import data.UserState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import java.net.InetAddress
 
 class GlobalDataModel {
 
@@ -25,15 +21,8 @@ class GlobalDataModel {
     private val _netStatus = MutableStateFlow(true)
     val netStatus = _netStatus.asStateFlow()
 
-    fun checkNetwork() {
-        CoroutineScope(Dispatchers.IO).launch {
-            _netStatus.value = try {
-                val address = InetAddress.getByName(NETWORK_CHECK_HOST)
-                !address.equals("")
-            } catch (e: Exception) {
-                false
-            }
-        }
+    suspend fun checkNetwork() {
+        _netStatus.value = BaseApi().checkNetwork()
     }
 
     fun resetNetStatus(status: Boolean) {

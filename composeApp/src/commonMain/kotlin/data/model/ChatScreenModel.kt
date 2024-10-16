@@ -174,7 +174,7 @@ class ChatScreenModel : ScreenModel {
 
     suspend fun hideChat(token: String, chatId: String) {
 //        _chatData.value.remove(chatId)
-        _chatDataList.value.removeIf { it.chatId == chatId }
+        _chatDataList.value.removeAll { it.chatId == chatId }
         if (_currentChatData.value.chatId == chatId) {
             _currentChatData.value = UserChattingSimple()
         }
