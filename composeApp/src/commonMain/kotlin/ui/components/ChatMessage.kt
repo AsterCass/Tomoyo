@@ -41,8 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import biz.copyToClipboard
 import biz.getLastTimeInChatting
-import cn.hutool.core.date.DatePattern
-import cn.hutool.core.date.DateTime
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
@@ -53,6 +51,11 @@ import constant.MAX_TIME_SPE_SEC
 import constant.biliEmojiMap
 import constant.enums.NotificationType
 import data.UserChatMsgDto
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
 import theme.baseBackgroundBlack
 import theme.pureColor
@@ -60,46 +63,52 @@ import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.chat_copy
 import tomoyo.composeapp.generated.resources.chat_relay
-import java.time.Duration
-import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
 
+@OptIn(FormatStringsInDatetimeFormats::class)
 fun newMessageLabel(time: String?, lastTime: String?): String {
     val ret = getLastTimeInChatting(time)
-    if (null == lastTime) {
+    if (null == lastTime || null == time) {
         return ret
     }
-    val thisSendDateTime = DateTime(
-        time,
-        DatePattern.NORM_DATETIME_FORMAT
-    ).toLocalDateTime()
-    val lastSendDateTime = DateTime(
-        lastTime,
-        DatePattern.NORM_DATETIME_FORMAT
-    ).toLocalDateTime()
-    val waitLastSec = Duration.between(thisSendDateTime, lastSendDateTime).seconds.absoluteValue
+    val systemTZ = TimeZone.currentSystemDefault()
+
+    val thisSendDateTime = LocalDateTime.Format {
+        byUnicodePattern("yyyy-MM-dd HH:mm:ss")
+    }.parse(time)
+
+    val lastSendDateTime = LocalDateTime.Format {
+        byUnicodePattern("yyyy-MM-dd HH:mm:ss")
+    }.parse(lastTime)
+
+    val waitLastSec = (thisSendDateTime.toInstant(systemTZ).epochSeconds -
+            lastSendDateTime.toInstant(systemTZ).epochSeconds).absoluteValue
     return if (waitLastSec < MAX_TIME_SPE_SEC) "" else ret
 }
 
+@OptIn(FormatStringsInDatetimeFormats::class)
 fun messageTimeLabelBuilder(
     list: List<UserChatMsgDto>,
 ) {
     if (list.isEmpty()) return
+    val systemTZ = TimeZone.currentSystemDefault()
 
     val lastIndex = list.size - 1
     var lastTime: LocalDateTime? = null
     for (count in lastIndex downTo 0) {
 
-        val thisSendDateTime = DateTime(
-            list[count].sendDate,
-            DatePattern.NORM_DATETIME_FORMAT
-        ).toLocalDateTime()
+        val thisSendDateTime = LocalDateTime.Format {
+            byUnicodePattern("yyyy-MM-dd HH:mm:ss")
+        }.parse(list[count].sendDate ?: continue)
+
         val alreadyBuildTime = null != list[count].webChatLabel
         list[count].webChatLabel = getLastTimeInChatting(list[count].sendDate)
 
         if (null != lastTime) {
-            val waitLastSec = Duration.between(thisSendDateTime, lastTime).seconds
+            val waitLastSec = (thisSendDateTime.toInstant(systemTZ).epochSeconds -
+                    lastTime.toInstant(systemTZ).epochSeconds).absoluteValue
+
             if (waitLastSec.absoluteValue < MAX_TIME_SPE_SEC) {
                 list[count].webChatLabel = ""
             }

@@ -50,6 +50,7 @@ import data.model.ChatScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.sendText

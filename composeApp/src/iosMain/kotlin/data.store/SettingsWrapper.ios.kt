@@ -10,6 +10,6 @@ actual class SettingsWrapper {
     @OptIn(ExperimentalSettingsApi::class)
     actual fun createSettings(): FlowSettings {
         val delegate: NSUserDefaults = NSUserDefaults.standardUserDefaults
-        return NSUserDefaultsSettings().toFlowSettings()
+        return NSUserDefaultsSettings(delegate).toFlowSettings()
     }
 }
