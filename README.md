@@ -64,6 +64,10 @@ Run command `./gradlew :composeApp:run`
 
 执行命令`./gradlew :composeApp:run`
 
+### IOS
+
+[Run your application on iOS](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-create-first-app.html#run-your-application-on-ios)
+
 ## Tech Stack
 
 - [Kotlin Multiplatform](https://kotlinlang.org/lp/multiplatform/)
