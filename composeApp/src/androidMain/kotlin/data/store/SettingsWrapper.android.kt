@@ -15,7 +15,7 @@ actual class SettingsWrapper(private val context: Context) {
 
 
     @OptIn(ExperimentalSettingsImplementation::class, ExperimentalSettingsApi::class)
-    actual fun createSettings(): FlowSettings? {
+    actual fun createSettings(): FlowSettings {
         return DataStoreSettings(context.dataStore)
     }
 

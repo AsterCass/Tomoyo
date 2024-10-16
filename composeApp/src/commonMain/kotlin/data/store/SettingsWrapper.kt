@@ -5,5 +5,5 @@ import com.russhwolf.settings.coroutines.FlowSettings
 
 expect class SettingsWrapper {
     @OptIn(ExperimentalSettingsApi::class)
-    fun createSettings(): FlowSettings?
+    fun createSettings(): FlowSettings
 }
