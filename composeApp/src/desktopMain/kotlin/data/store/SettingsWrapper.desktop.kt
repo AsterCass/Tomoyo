@@ -8,7 +8,7 @@ import java.util.prefs.Preferences
 
 actual class SettingsWrapper {
     @OptIn(ExperimentalSettingsApi::class)
-    actual fun createSettings(): FlowSettings {
+    actual fun createSettings(): FlowSettings? {
         val delegate: Preferences = Preferences.userRoot()
         return PreferencesSettings(delegate).toFlowSettings()
     }
