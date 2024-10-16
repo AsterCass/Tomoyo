@@ -23,13 +23,14 @@ import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
-class MainScreenModel : ScreenModel {
+class MainScreenModel : ScreenModel, KoinComponent {
 
-    private val globalDataModel: GlobalDataModel by inject(GlobalDataModel::class.java)
-    private val chatScreenModel: ChatScreenModel by inject(ChatScreenModel::class.java)
+    private val globalDataModel: GlobalDataModel by inject()
+    private val chatScreenModel: ChatScreenModel by inject()
 
     private val _userState = globalDataModel.userState
     val userState = _userState

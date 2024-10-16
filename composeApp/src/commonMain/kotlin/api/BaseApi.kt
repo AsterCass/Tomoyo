@@ -32,12 +32,10 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.errors.IOException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import ui.components.MainNotification
 import ui.components.NotificationManager
-import java.net.ConnectException
-import java.net.UnknownHostException
-
 
 val baseJsonConf = Json {
     prettyPrint = true
@@ -62,9 +60,9 @@ sealed class ApiResponse<out T> {
     }
 }
 
-class BaseApi {
+class BaseApi : KoinComponent {
 
-    private val globalDataModel: GlobalDataModel by inject(GlobalDataModel::class.java)
+    private val globalDataModel: GlobalDataModel by inject()
 
     companion object {
         fun buildStringRes(res: ApiResText) {
@@ -83,10 +81,7 @@ class BaseApi {
             }
             handleResponseExceptionWithRequest { exception, request ->
                 when (exception) {
-                    is UnknownHostException -> {
-                        //...
-                    }
-                    is ConnectException -> {
+                    is ServerResponseException -> {
                         //...
                     }
                     is ResponseException -> {
