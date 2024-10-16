@@ -7,6 +7,8 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
 import data.UserDataModel
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.websocket.WebSockets
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +22,7 @@ import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.instrumentation.KrossbowInstrumentation
 import org.hildan.krossbow.stomp.subscribeText
-import org.hildan.krossbow.websocket.sockjs.SockJSClient
+import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 import org.koin.java.KoinJavaComponent.inject
 
 
@@ -83,7 +85,11 @@ class MainScreenModel : ScreenModel {
     }
 
     private val _collectorJob = MutableStateFlow<Job?>(null)
-    private val _socketClient = MutableStateFlow(StompClient(SockJSClient()) {
+    private val _socketClient = MutableStateFlow(StompClient(KtorWebSocketClient(
+        HttpClient {
+            install(WebSockets)
+        }
+    )) {
         instrumentation = object : KrossbowInstrumentation {
             override suspend fun onWebSocketClosed(cause: Throwable?) {
                 println(cause)
@@ -151,11 +157,12 @@ class MainScreenModel : ScreenModel {
             } catch (ignore: Exception) {
             }
 
-            println("[op:login] Socket connect successful")
+            println("[op:login] Socket connecting")
             _socketSession.value = _socketClient.value.connect(
-                "https://api.astercasc.com/yui/chat-websocket/socketAuthNoError?" +
+                "wss://api.astercasc.com/yui/chat-websocket/no-js/socketAuthNoError?" +
                         "User-Token=${_userState.value.token}"
             )
+            println("[op:login] Socket connect successful")
             val subscription: Flow<String> = _socketSession.value!!.subscribeText(
                 "/user/${_userState.value.token}/message/receive"
             )

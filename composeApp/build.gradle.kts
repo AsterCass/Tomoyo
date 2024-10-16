@@ -113,10 +113,8 @@ kotlin {
             api(libs.koin.compose)
 
             //https://github.com/joffrey-bion/krossbow
-            implementation("org.hildan.krossbow:krossbow-stomp-core:4.5.0")
-            implementation("org.hildan.krossbow:krossbow-websocket-sockjs:4.5.0")
-            implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.19")
-            implementation("com.fasterxml.jackson.core:jackson-databind:2.13.5")
+            implementation("org.hildan.krossbow:krossbow-stomp-core:8.0.0")
+            implementation("org.hildan.krossbow:krossbow-websocket-ktor:8.0.0")
 
             //https://github.com/panpf/sketch
             //https://github.com/panpf/sketch/blob/main/docs/wiki/animated_image.md
