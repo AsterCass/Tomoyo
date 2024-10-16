@@ -23,7 +23,7 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 | Android | IOS | Desktop/JVM | Web |
 |:-------:|:---:|:-----------:|:---:|
-|    √    |  ×  |      √      |  ×  |
+|    √    |  √   |      √      |  ×  |
 
 ## Documents
 
