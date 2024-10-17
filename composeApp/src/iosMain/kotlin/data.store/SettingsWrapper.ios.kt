@@ -11,6 +11,5 @@ actual class SettingsWrapper {
     actual fun createSettings(): FlowSettings {
         val delegate: NSUserDefaults = NSUserDefaults.standardUserDefaults
         return NSUserDefaultsSettings(delegate).toFlowSettings()
-//        return null;
     }
 }
