@@ -52,9 +52,9 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 ### IOS
 
-<img src="image/ios_1.jpg" width="250"/><img src="image/ios_2.jpg" width="250"/><img src="image/ios_3.jpg" width="jpg"/>
-<img src="image/ios_4.jpg" width="250"/><img src="image/ios_5.jpg" width="250"/><img src="image/ios_6.jpg" width="jpg"/>
-<img src="image/ios_7.jpg"  width="250"/><img src="image/ios_8.jpg"  width="250"/><img src="image/ios_9.jpg"  width="250"/>
+<img src="image/ios_1.png" width="250"/><img src="image/ios_2.png" width="250"/><img src="image/ios_3.png" width="jpg"/>
+<img src="image/ios_4.png" width="250"/><img src="image/ios_5.png" width="250"/><img src="image/ios_6.png" width="jpg"/>
+<img src="image/ios_7.png"  width="250"/><img src="image/ios_8.png"  width="250"/><img src="image/ios_9.png"  width="250"/>
 
 ## Run Project
 
