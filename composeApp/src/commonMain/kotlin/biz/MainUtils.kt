@@ -13,7 +13,6 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.isoDayNumber
-import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
@@ -104,15 +103,17 @@ fun getLastTime(time: String?): String {
     val systemTZ = TimeZone.currentSystemDefault()
     val now = nowCo.toLocalDateTime(systemTZ)
     if (now.year != dateTime.year) {
-        return "${dateTime.year}/${dateTime.month.number}/${dateTime.dayOfMonth}"
+        return dateTime.format(LocalDateTime.Format
+        { byUnicodePattern("yyyy/MM/dd") })
     }
     if (nowCo.epochSeconds >
         dateTime.toInstant(systemTZ)
-            .plus(1, DateTimeUnit.WEEK, systemTZ).epochSeconds
+            .plus(3, DateTimeUnit.DAY, systemTZ).epochSeconds
     ) {
-        return "${dateTime.month.number}/${dateTime.dayOfMonth}"
+        return dateTime.format(LocalDateTime.Format
+        { byUnicodePattern("MM/dd") })
     }
-    if (now.dayOfMonth != dateTime.dayOfMonth) {
+    if (now.dayOfWeek != dateTime.dayOfWeek) {
         return BaseResText.weekDayList[dateTime.dayOfWeek.isoDayNumber]
     }
     return dateTime.format(LocalDateTime.Format { byUnicodePattern("HH:mm") })
@@ -129,17 +130,20 @@ fun getLastTimeInChatting(time: String?): String {
     val now = nowCo.toLocalDateTime(systemTZ)
 
     if (now.year != dateTime.year) {
-        return "${dateTime.year}/${dateTime.month.number}/${dateTime.dayOfMonth}"
+        return dateTime.format(LocalDateTime.Format
+        { byUnicodePattern("yyyy-MM-dd HH:mm") })
     }
     if (nowCo.epochSeconds >
         dateTime.toInstant(systemTZ)
-            .plus(1, DateTimeUnit.WEEK, systemTZ).epochSeconds
+            .plus(3, DateTimeUnit.DAY, systemTZ).epochSeconds
     ) {
         return dateTime.format(LocalDateTime.Format
         { byUnicodePattern("MM-dd HH:mm") })
     }
-    if (now.dayOfMonth != dateTime.dayOfMonth) {
-        return BaseResText.weekDayList[dateTime.dayOfWeek.isoDayNumber]
+    if (now.dayOfWeek != dateTime.dayOfWeek) {
+        return BaseResText.weekDayList[dateTime.dayOfWeek.isoDayNumber] +
+                dateTime.format(LocalDateTime.Format
+                { byUnicodePattern(" HH:mm") })
     }
     return dateTime.format(LocalDateTime.Format { byUnicodePattern("HH:mm") })
 }
