@@ -211,7 +211,10 @@ fun MessageCard(
 
 
             Column(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).padding(
+                    start = if (isSelf) 20.dp else 0.dp,
+                    end = if (isSelf) 0.dp else 20.dp
+                ),
                 horizontalAlignment = if (isSelf) Alignment.End else Alignment.Start,
             ) {
 
