@@ -35,6 +35,16 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 [Building cross-platform client interfaces/构建跨平台的客户端界面](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
 
+[Global Notification Component Construction in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下全局通知组件构建](https://www.astercasc.com/article/detail?articleId=AT183303835787436441)
+
+[Custom Fonts in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下自定义字体](https://www.astercasc.com/article/detail?articleId=AT183482081114038681)
+
+[Global Notification Component Construction in Kotlin Compose Multiplatform (Part II)/Kotlin Compose Multiplatform下全局通知组件构建（续篇）](https://www.astercasc.com/article/detail?articleId=AT183632859813146214)
+
+[Data Persistence Solutions in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下数据持久化解决方案](https://www.astercasc.com/article/detail?articleId=AT183842512953804800)
+
+[Socket Solutions in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下Socket解决方案](https://www.astercasc.com/article/detail?articleId=AT184505260536629248)
+
 
 ## Screenshots
 
