@@ -113,6 +113,7 @@ class UserChatScreen(
         }
 
         if (inputUserId.isNotEmpty()) {
+            chatScreenModel.clearCurrentChatData(inputUserId)
             chatApiCoroutine.launch {
                 chatScreenModel.updateCurrentChatDataWithUserId(token, inputUserId)
             }
@@ -188,12 +189,7 @@ class UserChatScreen(
                         ),
                         contentPadding = PaddingValues(0.dp),
                         onClick = {
-                            NotificationManager.createDialogAlert(
-                                MainDialogAlert(
-                                    message = BaseResText.underDevelopment,
-                                    cancelOperationText = BaseResText.cancelBtn
-                                )
-                            )
+                            //todo
                         }) {
                         Icon(
                             imageVector = Icons.Outlined.Person,

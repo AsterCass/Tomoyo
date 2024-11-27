@@ -150,6 +150,12 @@ class ChatScreenModel : ScreenModel {
 
     }
 
+    fun clearCurrentChatData(userId: String) {
+        if (!_currentChatData.value.chatUserId.isNullOrBlank() && _currentChatData.value.chatUserId != userId) {
+            _currentChatData.value = UserChattingSimple()
+        }
+    }
+
     fun updateCurrentChatData(chatId: String) {
         _chatDataList.value.forEach {
             if (it.chatId == chatId) {
