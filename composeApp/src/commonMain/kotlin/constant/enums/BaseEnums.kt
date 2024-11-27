@@ -115,3 +115,13 @@ enum class WindowsSizeEnum(
     VH("2k", "2k", DpSize(width = 2560.dp, height = 1440.dp)),
 
 }
+
+enum class ViewEnum(
+    val code: String,
+) {
+    ARTICLE_DETAIL("article_detail_"),
+    MUSIC_PLAYER("music_player_"),
+    USER_CHAT("user_chat_"),
+    USER_DETAIL("user_detail_"),
+    USER_LOGIN("user_login_"),
+}

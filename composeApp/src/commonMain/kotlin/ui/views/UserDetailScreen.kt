@@ -74,6 +74,7 @@ import constant.BaseResText
 import constant.enums.GenderTypeEnum
 import constant.enums.RoleTypeEnum
 import constant.enums.UserDetailTabScreenTabModel
+import constant.enums.ViewEnum
 import data.UserDetailModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
@@ -104,7 +105,7 @@ class UserDetailScreen(
     private val userId: String,
 ) : Screen {
 
-    override val key: ScreenKey = uniqueScreenKey
+    override val key: ScreenKey = "${ViewEnum.USER_DETAIL.code}$uniqueScreenKey"
 
 
     @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -124,6 +125,9 @@ class UserDetailScreen(
         mainModel.updateShowNavBar(false)
         val navigator = LocalNavigator.currentOrThrow
         val loadingScreen = mainModel.loadingScreen.collectAsState().value
+        val secondLastItem = navigator.items.getOrNull(navigator.items.size - 2)
+        val secondLastItemKey = secondLastItem?.key ?: ""
+        val isFromChatScreen = secondLastItemKey.startsWith(ViewEnum.USER_CHAT.code)
 
         //data
         val userDetailData = contactScreenModel.userDetail.collectAsState().value
@@ -235,7 +239,12 @@ class UserDetailScreen(
                                         Button(
                                             onClick = {
                                                 if (token.isNotBlank()) {
-                                                    navigator.push(UserChatScreen(userId, ""))
+                                                    if (isFromChatScreen) {
+                                                        navigator.pop()
+                                                    } else {
+                                                        navigator.push(UserChatScreen(userId, ""))
+                                                    }
+
                                                 } else {
                                                     NotificationManager.createDialogAlert(
                                                         //todo jump to login

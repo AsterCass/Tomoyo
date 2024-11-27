@@ -44,7 +44,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
-import constant.BaseResText
+import constant.enums.ViewEnum
 import data.UserChattingSimple
 import data.model.ChatScreenModel
 import data.model.MainScreenModel
@@ -57,9 +57,7 @@ import org.hildan.krossbow.stomp.sendText
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import theme.halfTransSurfaceVariant
-import ui.components.MainDialogAlert
 import ui.components.MessageCard
-import ui.components.NotificationManager
 import ui.components.UserInput
 
 class UserChatScreen(
@@ -67,7 +65,7 @@ class UserChatScreen(
     private val inputChatId: String,
 ) : Screen {
 
-    override val key: ScreenKey = uniqueScreenKey
+    override val key: ScreenKey = "${ViewEnum.USER_CHAT.code}$uniqueScreenKey"
 
 
     @Composable
@@ -181,20 +179,22 @@ class UserChatScreen(
                         )
                     }
 
-                    Button(
-                        shape = RoundedCornerShape(15.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        ),
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = {
-                            //todo
-                        }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Person,
-                            contentDescription = null,
-                        )
+                    if (!chatData.chatUserId.isNullOrBlank()) {
+                        Button(
+                            shape = RoundedCornerShape(15.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            ),
+                            contentPadding = PaddingValues(0.dp),
+                            onClick = {
+                                navigator.push(UserDetailScreen(chatData.chatUserId!!))
+                            }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Person,
+                                contentDescription = null,
+                            )
+                        }
                     }
                 }
 
