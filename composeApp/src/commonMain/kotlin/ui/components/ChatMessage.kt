@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -44,11 +43,8 @@ import biz.getLastTimeInChatting
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
-import constant.ANN_TEXT_MAP
 import constant.BaseResText
-import constant.EMOJI_REPLACE_KEY
 import constant.MAX_TIME_SPE_SEC
-import constant.biliEmojiMap
 import constant.enums.NotificationType
 import data.UserChatMsgDto
 import kotlinx.datetime.LocalDateTime
@@ -125,14 +121,14 @@ fun parseTextWithEmojis(text: String): AnnotatedString {
     val builder = AnnotatedString.Builder()
     var currentIndex = 0
     val regex = Regex("\\[#b[0-9][0-9]]")
-    regex.findAll(text).forEach { result ->
-        val match = result.value
-        if (biliEmojiMap.containsKey(match)) {
-            builder.append(text.substring(currentIndex, result.range.first))
-            builder.appendInlineContent(EMOJI_REPLACE_KEY, match)
-            currentIndex = result.range.last + 1
-        }
-    }
+//    regex.findAll(text).forEach { result ->
+//        val match = result.value
+//        if (biliEmojiMap.containsKey(match)) {
+//            builder.append(text.substring(currentIndex, result.range.first))
+//            builder.appendInlineContent(EMOJI_REPLACE_KEY, match)
+//            currentIndex = result.range.last + 1
+//        }
+//    }
 
 //    var thisCharSite = 0
 //    text.codePoints().forEach { codePoint ->
@@ -269,7 +265,7 @@ fun MessageCard(
                             vertical = 4.dp
                         ),
                         style = MaterialTheme.typography.bodyLarge,
-                        inlineContent = ANN_TEXT_MAP,
+//                        inlineContent = ANN_TEXT_MAP,
                         color = if (isSelf) MaterialTheme.colorScheme.onPrimary
                         else MaterialTheme.colorScheme.onBackground
                     )
@@ -334,7 +330,7 @@ private fun MessageCardMobile(
                     vertical = 4.dp
                 ),
                 style = MaterialTheme.typography.bodyLarge,
-                inlineContent = ANN_TEXT_MAP,
+//                inlineContent = ANN_TEXT_MAP,
                 color = if (isSelf) MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.onBackground
             )
