@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,6 +54,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import constant.BaseResText
+import constant.emojiList
 import org.jetbrains.compose.resources.vectorResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.input_microphone
@@ -148,8 +150,8 @@ private fun SelectorExpanded(
 
     Surface {
         when (currentSelector) {
-//            InputSelector.EMOJI -> EmojiSelector(onTextAdded, focusRequester)
-            InputSelector.EMOJI -> ExtraSelector(onCloseRequested, focusRequester)
+            InputSelector.EMOJI -> EmojiSelector(onTextAdded, focusRequester)
+//            InputSelector.EMOJI -> ExtraSelector(onCloseRequested, focusRequester)
             InputSelector.EXTRA -> ExtraSelector(onCloseRequested, focusRequester)
             else -> {
                 FunctionalityNotAvailablePanel()
@@ -433,6 +435,28 @@ fun EmojiSelector(
     onTextAdded: (String) -> Unit,
     focusRequester: FocusRequester
 ) {
+
+    Column(
+        modifier = Modifier
+            .focusRequester(focusRequester)
+            .focusTarget()
+    ) {
+        FlowRow(
+            modifier = Modifier.padding(3.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+        ) {
+            for (emoji in emojiList) {
+                Text(
+                    modifier = Modifier.padding(5.dp).clickable {
+                        onTextAdded(emoji)
+                    },
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = emoji,
+                )
+            }
+        }
+    }
+
 
     //coroutine
 //    val thisComposableCoroutine = rememberCoroutineScope()

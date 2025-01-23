@@ -13,6 +13,7 @@ object BaseResText {
 }
 
 const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"
+const val BASE_SERVER_ADDRESS_STATIC = "https://api.astercasc.com/public/resources/"
 const val EMOJI_REPLACE_KEY = "EMOJI_PLACEHOLDER"
 const val NETWORK_CHECK_HOST = "https://www.baidu.com"
 const val MAX_TIME_SPE_SEC = 600
@@ -39,4 +40,13 @@ const val MAX_TIME_SPE_SEC = 600
 //Supplementary Private Use Area-A : U+F0000 至 U+FFFFD
 //Supplementary Private Use Area-B： U+100000 (\uD800\uDC00) 至 U+10FFFD (\uDBFF\uDFFD)
 
-const val maxNumEmojiPage = 36
+
+val emojiList = listOf(
+    "🤭", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
+    "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
+    "😋", "😛", "😜", "🤪", "😝", "🤑", "🤗", "🤭", "🤫", "🤔",
+    "🤐", "🤨", "😐", "😑", "😶", "😏", "😒", "🙄", "😬", "😔",
+    "😪", "😴", "😷", "🤒", "🤕", "🤢", "🤮", "🤧", "😵", "🤯",
+    "😳", "🥵", "🥶", "😱", "😨", "😰", "😥", "😢", "😭", "😤",
+    "😠", "😡", "🤬", "🤯", "😳", "🥱", "😤",
+)

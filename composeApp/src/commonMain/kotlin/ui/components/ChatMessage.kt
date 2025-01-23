@@ -1,6 +1,5 @@
 package ui.components
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -14,15 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +38,7 @@ import biz.getLastTimeInChatting
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
+import constant.BASE_SERVER_ADDRESS_STATIC
 import constant.BaseResText
 import constant.MAX_TIME_SPE_SEC
 import constant.enums.NotificationType
@@ -120,7 +116,7 @@ fun messageTimeLabelBuilder(
 fun parseTextWithEmojis(text: String): AnnotatedString {
     val builder = AnnotatedString.Builder()
     var currentIndex = 0
-    val regex = Regex("\\[#b[0-9][0-9]]")
+//    val regex = Regex("\\[#b[0-9][0-9]]")
 //    regex.findAll(text).forEach { result ->
 //        val match = result.value
 //        if (biliEmojiMap.containsKey(match)) {
@@ -241,37 +237,49 @@ fun MessageCard(
                             )
                         }
                 ) {
-                    val annotatedString = parseTextWithEmojis(item.message ?: "")
 
-                    if (showPopup) {
-                        val baseHeightPx = with(LocalDensity.current) { (baseHeight + 5.dp).toPx() }
-                        Popup(
-                            alignment = Alignment.TopCenter,
-                            offset = IntOffset(0, -baseHeightPx.toInt()),
-                            onDismissRequest = {
-                                showPopup = false
-                            }
-                        ) {
-                            MessageCardOperation(item, baseHeight) {
-                                showPopup = false
+                    if (true == item.message?.startsWith(BASE_SERVER_ADDRESS_STATIC)) {
+                        AsyncImage(
+                            request = ImageRequest(
+                                context = localPlatformContext,
+                                uri = item.message,
+                                configBlock = configBlock,
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5.dp))
+                        )
+                    } else {
+                        val annotatedString = parseTextWithEmojis(item.message ?: "")
+                        if (showPopup) {
+                            val baseHeightPx =
+                                with(LocalDensity.current) { (baseHeight + 5.dp).toPx() }
+                            Popup(
+                                alignment = Alignment.TopCenter,
+                                offset = IntOffset(0, -baseHeightPx.toInt()),
+                                onDismissRequest = {
+                                    showPopup = false
+                                }
+                            ) {
+                                MessageCardOperation(item, baseHeight) {
+                                    showPopup = false
+                                }
                             }
                         }
-                    }
-
-                    Text(
-                        text = annotatedString,
-                        modifier = Modifier.padding(
-                            horizontal = 8.dp,
-                            vertical = 4.dp
-                        ),
-                        style = MaterialTheme.typography.bodyLarge,
+                        Text(
+                            text = annotatedString,
+                            modifier = Modifier.padding(
+                                horizontal = 8.dp,
+                                vertical = 4.dp
+                            ),
+                            style = MaterialTheme.typography.bodyLarge,
 //                        inlineContent = ANN_TEXT_MAP,
-                        color = if (isSelf) MaterialTheme.colorScheme.onPrimary
-                        else MaterialTheme.colorScheme.onBackground
-                    )
+                            color = if (isSelf) MaterialTheme.colorScheme.onPrimary
+                            else MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                 }
             }
-
 
             if (isSelf) {
                 Row {
@@ -296,47 +304,47 @@ fun MessageCard(
 
 
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MessageCardMobile(
-    item: UserChatMsgDto,
-    isSelf: Boolean,
-    baseHeight: Dp,
-) {
-    val tooltipState = rememberTooltipState(isPersistent = true)
-    TooltipBox(
-        positionProvider = TooltipDefaults
-            .rememberPlainTooltipPositionProvider(),
-        tooltip = {
-            MessageCardOperation(item, baseHeight) {
-                tooltipState.dismiss()
-            }
-        },
-        state = tooltipState,
-    ) {
-        Surface(
-            shape = MaterialTheme.shapes.small,
-            shadowElevation = 1.dp,
-            color = if (isSelf) MaterialTheme.colorScheme.primary
-            else MaterialTheme.colorScheme.pureColor,
-            modifier = Modifier.animateContentSize().padding(1.dp)
-        ) {
-            val annotatedString = parseTextWithEmojis(item.message ?: "")
-            Text(
-                text = annotatedString,
-                modifier = Modifier.padding(
-                    horizontal = 8.dp,
-                    vertical = 4.dp
-                ),
-                style = MaterialTheme.typography.bodyLarge,
-//                inlineContent = ANN_TEXT_MAP,
-                color = if (isSelf) MaterialTheme.colorScheme.onPrimary
-                else MaterialTheme.colorScheme.onBackground
-            )
-        }
-    }
-}
+//
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//private fun MessageCardMobile(
+//    item: UserChatMsgDto,
+//    isSelf: Boolean,
+//    baseHeight: Dp,
+//) {
+//    val tooltipState = rememberTooltipState(isPersistent = true)
+//    TooltipBox(
+//        positionProvider = TooltipDefaults
+//            .rememberPlainTooltipPositionProvider(),
+//        tooltip = {
+//            MessageCardOperation(item, baseHeight) {
+//                tooltipState.dismiss()
+//            }
+//        },
+//        state = tooltipState,
+//    ) {
+//        Surface(
+//            shape = MaterialTheme.shapes.small,
+//            shadowElevation = 1.dp,
+//            color = if (isSelf) MaterialTheme.colorScheme.primary
+//            else MaterialTheme.colorScheme.pureColor,
+//            modifier = Modifier.animateContentSize().padding(1.dp)
+//        ) {
+//            val annotatedString = parseTextWithEmojis(item.message ?: "")
+//            Text(
+//                text = annotatedString,
+//                modifier = Modifier.padding(
+//                    horizontal = 8.dp,
+//                    vertical = 4.dp
+//                ),
+//                style = MaterialTheme.typography.bodyLarge,
+////                inlineContent = ANN_TEXT_MAP,
+//                color = if (isSelf) MaterialTheme.colorScheme.onPrimary
+//                else MaterialTheme.colorScheme.onBackground
+//            )
+//        }
+//    }
+//}
 
 
 @Composable
