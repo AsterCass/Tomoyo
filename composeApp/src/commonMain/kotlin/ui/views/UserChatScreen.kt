@@ -235,9 +235,8 @@ class UserChatScreen(
         token: String
     ) {
 
-        val chatRowList = chatData.userChattingData
-        val loadAllHistoryMessage = chatData.clientLoadAllHistoryMessage
-        val updateCount = chatScreenModel.updateStatus.collectAsState().value
+        val chatRowList = chatData.userChattingDataFlow.collectAsState().value
+        val loadAllHistoryMessage = chatData.clientLoadAllHistoryMessage.collectAsState().value
 
         LazyColumn(
             state = rememberLazyListState(),

@@ -110,7 +110,6 @@ fun MainHomeScreen(
     val musicPlayerState = musicScreenModel.playerState.collectAsState().value
     val socketConnected = globalDataModel.socketConnected.collectAsState().value
     val chatDataList = chatDataModel.chatDataList.collectAsState().value
-    val updateStatus = chatDataModel.updateStatus.collectAsState().value
     val netStatus = globalDataModel.netStatus.collectAsState().value
     val userState = mainModel.userState.collectAsState().value
     val token = userState.token
@@ -176,6 +175,10 @@ fun MainHomeScreen(
                 }
 
                 items(chatDataList.size) { index ->
+
+                    val messageId =
+                        chatDataList[index].lastMessageIdFlow.collectAsState().value
+
                     Column(modifier = Modifier.padding(top = 5.dp)) {
                         SwipeToRevealCard(
                             modifier = Modifier.height(70.dp),
@@ -236,8 +239,7 @@ fun MainHomeScreen(
                                                 token = token,
                                                 chatId =
                                                 chatDataList[index].chatId ?: "",
-                                                messageId =
-                                                chatDataList[index].lastMessageId ?: ""
+                                                messageId = messageId
                                             )
                                             navigator.push(
                                                 UserChatScreen(

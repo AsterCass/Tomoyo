@@ -1,5 +1,6 @@
 package data
 
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.Serializable
 
 
@@ -17,7 +18,10 @@ data class UserChattingSimple(
     var userChattingData: MutableList<UserChatMsgDto> = mutableListOf(),
     var latestRead: Boolean? = null,
     var lastMessageText: String? = null,
-    var clientLoadAllHistoryMessage: Boolean = false,
+
+    var lastMessageIdFlow: MutableStateFlow<String> = MutableStateFlow(""),
+    var userChattingDataFlow: MutableStateFlow<List<UserChatMsgDto>> = MutableStateFlow(emptyList()),
+    var clientLoadAllHistoryMessage: MutableStateFlow<Boolean> = MutableStateFlow(false),
 )
 
 

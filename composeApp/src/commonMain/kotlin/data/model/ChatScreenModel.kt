@@ -7,6 +7,7 @@ import data.UserChatMsgDto
 import data.UserChattingSimple
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ui.components.messageTimeLabelBuilder
@@ -29,14 +30,12 @@ class ChatScreenModel : ScreenModel {
         _inputContent.value = newContentMap
     }
 
-    private val _updateStatus = MutableStateFlow(0L)
-    val updateStatus = _updateStatus.asStateFlow()
     private val _currentChatData = MutableStateFlow(UserChattingSimple())
     val currentChatData = _currentChatData.asStateFlow()
 
     //    private val _chatData = MutableStateFlow(mutableMapOf<String, UserChattingSimple>())
 //    val chatData = _chatData.asStateFlow()
-    private val _chatDataList = MutableStateFlow(mutableListOf<UserChattingSimple>())
+    private val _chatDataList = MutableStateFlow<List<UserChattingSimple>>(emptyList())
     val chatDataList = _chatDataList.asStateFlow()
     private fun pushChatData(chatId: String, input: UserChattingSimple) {
 //        _chatData.value[chatId] = input
@@ -44,16 +43,25 @@ class ChatScreenModel : ScreenModel {
         _chatDataList.value.forEach {
             if (chatId == it.chatId) {
                 alreadyChatting = true
-                it.userChattingData.clear()
-                it.userChattingData.addAll(input.userChattingData)
+                it.userChattingDataFlow.update { currentList ->
+                    currentList.toMutableList().apply {
+                        this.clear()
+                        this.addAll(input.userChattingDataFlow.value)
+                    }
+                }
                 it.lastMessageTime = input.lastMessageTime
                 it.lastMessageText = input.lastMessageText
                 it.lastMessageId = input.lastMessageId
                 it.latestRead = input.latestRead
+                it.lastMessageIdFlow.value = input.lastMessageId ?: ""
             }
         }
         if (!alreadyChatting) {
-            _chatDataList.value.add(0, input)
+            _chatDataList.update { currentList ->
+                currentList.toMutableList().apply {
+                    this.add(0, input)
+                }
+            }
         }
     }
 
@@ -87,26 +95,38 @@ class ChatScreenModel : ScreenModel {
 
         //update list
         var lastChatIdIndex = -1
-        _chatDataList.value.forEachIndexed { index, it ->
-            if (it.chatId == chatRow.fromChatId) {
 
-                val lastChatTime = it.userChattingData.getOrNull(0)?.sendDate
-                newMessage.webChatLabel = newMessageLabel(newMessage.sendDate, lastChatTime)
-                it.userChattingData.add(0, newMessage)
-                it.lastMessageTime = chatRow.sendDate
-                it.lastMessageId = chatRow.sendMessageId
-                it.lastMessageText = chatRow.sendMessage
-                it.latestRead = _chattingId.value == it.chatId
-                lastChatIdIndex = index
+        _chatDataList.update { currentList ->
+            currentList.toMutableList().apply {
+                this.forEachIndexed { index, it ->
+                    if (it.chatId == chatRow.fromChatId) {
+                        val lastChatTime = it.userChattingDataFlow.value.getOrNull(0)?.sendDate
+                        newMessage.webChatLabel = newMessageLabel(newMessage.sendDate, lastChatTime)
+                        it.userChattingDataFlow.update { currentList ->
+                            currentList.toMutableList().apply {
+                                this.add(0, newMessage)
+                            }
+                        }
+                        it.lastMessageTime = chatRow.sendDate
+                        it.lastMessageId = chatRow.sendMessageId
+                        it.lastMessageIdFlow.value = chatRow.sendMessageId
+                        it.lastMessageText = chatRow.sendMessage
+                        it.latestRead = _chattingId.value == it.chatId
+                        lastChatIdIndex = index
+                    }
+                }
             }
         }
+
         if (lastChatIdIndex >= 0) {
             if (0 != lastChatIdIndex) {
-                val element = _chatDataList.value.removeAt(lastChatIdIndex)
-                _chatDataList.value.add(0, element)
+                _chatDataList.update { currentList ->
+                    currentList.toMutableList().apply {
+                        val element = this.removeAt(lastChatIdIndex)
+                        this.add(0, element)
+                    }
+                }
             }
-            //update status
-            _updateStatus.value++
         } else {
             updateChatData(token)
         }
@@ -130,21 +150,27 @@ class ChatScreenModel : ScreenModel {
     suspend fun loadMoreMessage(token: String) {
         mutex.withLock {
             val chatId = _currentChatData.value.chatId
-            val lastMessageId = _currentChatData.value.userChattingData.lastOrNull()?.messageId
-            if (!_currentChatData.value.clientLoadAllHistoryMessage && null != chatId) {
+            val lastMessageId =
+                _currentChatData.value.userChattingDataFlow.value.lastOrNull()?.messageId
+            if (!_currentChatData.value.clientLoadAllHistoryMessage.value && null != chatId) {
                 val moreMessage = BaseApi().moreMessage(token, chatId, lastMessageId ?: "")
                 if (moreMessage.isEmpty()) {
-                    _currentChatData.value.clientLoadAllHistoryMessage = true
+                    _currentChatData.value.clientLoadAllHistoryMessage.value = true
                 } else {
 //                    _chatData.value[chatId]?.userChattingData?.addAll(moreMessage)
-                    _chatDataList.value.forEach {
-                        if (it.chatId == chatId) {
-                            it.userChattingData.addAll(moreMessage)
+                    _chatDataList.update { currentList ->
+                        currentList.toMutableList().onEach {
+                            if (it.chatId == chatId) {
+                                it.userChattingDataFlow.update { currentList ->
+                                    currentList.toMutableList().apply {
+                                        this.addAll(moreMessage)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
                 rebuildMessageTime()
-                _updateStatus.value++
             }
         }
 
@@ -168,8 +194,10 @@ class ChatScreenModel : ScreenModel {
         if (userId == _currentChatData.value.chatUserId) return
         val data = BaseApi().privateInitChat(token, userId)
         //fix
+        data.userChattingDataFlow.value = data.userChattingData.toMutableList()
         data.lastMessageText = data.userChattingData.getOrNull(0)?.message ?: ""
         data.lastMessageId = data.userChattingData.getOrNull(0)?.messageId ?: ""
+        data.lastMessageIdFlow.value = data.userChattingData.getOrNull(0)?.messageId ?: ""
         data.latestRead = true
         //assign
         if (!data.chatId.isNullOrBlank()) {
@@ -180,11 +208,14 @@ class ChatScreenModel : ScreenModel {
 
     suspend fun hideChat(token: String, chatId: String) {
 //        _chatData.value.remove(chatId)
-        _chatDataList.value.removeAll { it.chatId == chatId }
+        _chatDataList.update { currentList ->
+            currentList.toMutableList().apply {
+                this.removeAll { it.chatId == chatId }
+            }
+        }
         if (_currentChatData.value.chatId == chatId) {
             _currentChatData.value = UserChattingSimple()
         }
-        _updateStatus.value++
         BaseApi().hideChat(token, chatId)
         updateChatData(token)
     }
@@ -195,14 +226,13 @@ class ChatScreenModel : ScreenModel {
         _chatDataList.value.forEach { obj ->
             if (obj.chatId == chatId) obj.latestRead = "" != messageId
         }
-        _updateStatus.value++
 //        updateChatData(token)
     }
 
     fun rebuildMessageTime() {
-        if (_currentChatData.value.userChattingData.size > 0) {
+        if (_currentChatData.value.userChattingDataFlow.value.isNotEmpty()) {
             messageTimeLabelBuilder(
-                _currentChatData.value.userChattingData
+                _currentChatData.value.userChattingDataFlow.value
             )
         }
     }
