@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     //alias(libs.plugins.javaFx)
 
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("plugin.serialization") version "2.0.20"
 }
 
 val os: OperatingSystem = OperatingSystem.current()

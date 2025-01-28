@@ -84,6 +84,12 @@ Run command `./gradlew :composeApp:run`
 
 [Run your application on iOS](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-create-first-app.html#run-your-application-on-ios)
 
+#### TIPS 
+
+* If you encounter `nw_proxy_resolver_create_parsed_array [C5.1 proxy pac] Evaluation error: NSURLErrorDomain: -1004`, please disable the proxy on your iPhone or the computer where the simulator is running.
+
+* 如果遇到`nw_proxy_resolver_create_parsed_array [C5.1 proxy pac] Evaluation error: NSURLErrorDomain: -1004`请关闭苹果手机代理或者模拟器所在电脑的代理
+
 ## Tech Stack
 
 - [Kotlin Multiplatform](https://kotlinlang.org/lp/multiplatform/)
