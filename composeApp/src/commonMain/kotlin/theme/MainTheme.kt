@@ -126,6 +126,16 @@ fun MainTypography(): Typography {
     )
 
     return Typography(
+        labelSmall = MaterialTheme.typography.labelSmall.copy(
+            fontFamily = defaultFontFamily,
+        ),
+        labelMedium = MaterialTheme.typography.labelMedium.copy(
+            fontFamily = defaultFontFamily,
+        ),
+        labelLarge = MaterialTheme.typography.labelLarge.copy(
+            fontFamily = defaultFontFamily,
+            //fontWeight = FontWeight.Bold,
+        ),
         bodySmall = MaterialTheme.typography.bodySmall.copy(
             fontFamily = defaultFontFamily,
         ),

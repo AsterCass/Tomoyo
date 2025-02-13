@@ -1,13 +1,11 @@
 package ui.views
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -17,16 +15,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -96,9 +91,7 @@ class MusicsPlayerScreen : Screen {
         val musicScreenModel: MusicScreenModel = koinInject()
 
         //navigation
-        mainModel.updateShowNavBar(false)
         val navigator = LocalNavigator.currentOrThrow
-        val loadingScreen = mainModel.loadingScreen.collectAsState().value
         val token = mainModel.userState.value.token
 
         //data
@@ -120,261 +113,251 @@ class MusicsPlayerScreen : Screen {
             )
         )
 
-        AnimatedVisibility(
-            visible = !loadingScreen,
-            enter = slideInVertically(
-                initialOffsetY = { fullHeight -> fullHeight },
-                animationSpec = tween(durationMillis = 1500),
-            ),
+        Column(
+            Modifier.fillMaxSize()
+//                .windowInsetsPadding(WindowInsets.systemBars)
+                .padding(top = 4.dp),
         ) {
-            Column(
-                Modifier.fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.systemBars)
-                    .padding(top = 4.dp),
+            Box(
+                Modifier.weight(0.07f).padding(horizontal = 20.dp),
+                contentAlignment = Alignment.CenterStart
             ) {
-                Box(
-                    Modifier.weight(0.07f).padding(horizontal = 20.dp),
-                    contentAlignment = Alignment.CenterStart
+                Button(
+                    shape = RoundedCornerShape(15.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = { navigator.pop() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(0.93f)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Image(
+                    painter = painterResource(Res.drawable.logo_pro_round_512),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(vertical = 30.dp, horizontal = 20.dp)
+                        .size(300.dp)
+                        .rotate(rotationAngle)
+                        .clip(CircleShape)
+                        .border(
+                            border = BorderStroke(3.dp, MaterialTheme.colorScheme.onBackground),
+                            shape = CircleShape
+                        )
+                )
+
+                MainBaseCardBox(
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .height(50.dp)
+                        .width(150.dp)
+
                 ) {
-                    Button(
-                        shape = RoundedCornerShape(15.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        ),
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = { navigator.pop() }) {
+                    Row(
+                        modifier = Modifier.padding(vertical = 6.dp, horizontal = 10.dp)
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            imageVector = FontAwesomeIcons.Regular.ShareSquare,
                             contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5.dp))
+                                .clickable {
+                                    NotificationManager.createDialogAlert(
+                                        MainDialogAlert(
+                                            message = BaseResText.underDevelopment,
+                                            cancelOperationText = BaseResText.cancelBtn
+                                        )
+                                    )
+                                }
+                                .padding(5.dp)
+                                .fillMaxHeight(),
+                        )
+                        Icon(
+                            imageVector = FontAwesomeIcons.Regular.ThumbsUp,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5.dp))
+                                .clickable {
+                                    NotificationManager.createDialogAlert(
+                                        MainDialogAlert(
+                                            message = BaseResText.underDevelopment,
+                                            cancelOperationText = BaseResText.cancelBtn
+                                        )
+                                    )
+                                }
+                                .padding(5.dp)
+                                .fillMaxHeight(),
+                        )
+                        Icon(
+                            imageVector = FontAwesomeIcons.Regular.ArrowAltCircleDown,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5.dp))
+                                .clickable {
+                                    NotificationManager.createDialogAlert(
+                                        MainDialogAlert(
+                                            message = BaseResText.underDevelopment,
+                                            cancelOperationText = BaseResText.cancelBtn
+                                        )
+                                    )
+                                }
+                                .padding(5.dp)
+                                .fillMaxHeight(),
                         )
                     }
+
                 }
 
                 Column(
-                    modifier = Modifier
-                        .weight(0.93f)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxSize()
+                        .padding(top = 30.dp)
+                        .padding(15.dp)
                 ) {
 
-                    Image(
-                        painter = painterResource(Res.drawable.logo_pro_round_512),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(vertical = 30.dp, horizontal = 20.dp)
-                            .size(300.dp)
-                            .rotate(rotationAngle)
-                            .clip(CircleShape)
-                            .border(
-                                border = BorderStroke(3.dp, MaterialTheme.colorScheme.onBackground),
-                                shape = CircleShape
-                            )
+                    Text(
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        text = currentMusicData.audioAuthor,
+                        color = MaterialTheme.colorScheme.subTextColor,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
 
-                    MainBaseCardBox(
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp)
-                            .height(50.dp)
-                            .width(150.dp)
+                    Text(
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        text = currentMusicData.audioName,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.headlineSmall,
+                    )
 
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(vertical = 6.dp, horizontal = 10.dp)
-                                .fillMaxSize(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
+                    Slider(
+                        value = curPosition.toFloat(),
+                        onValueChange = {
+                            curPosition = it.toDouble()
+                            musicScreenModel.onSeek(curPosition)
+                            lastAngle = rotationAngle
+                        },
+                        valueRange = 0f..totalDuration.toFloat(),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        thumb =
+                        {
                             Icon(
-                                imageVector = FontAwesomeIcons.Regular.ShareSquare,
+                                imageVector = FontAwesomeIcons.Solid.CandyCane,
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .clickable {
-                                        NotificationManager.createDialogAlert(
-                                            MainDialogAlert(
-                                                message = BaseResText.underDevelopment,
-                                                cancelOperationText = BaseResText.cancelBtn
-                                            )
-                                        )
-                                    }
-                                    .padding(5.dp)
-                                    .fillMaxHeight(),
-                            )
-                            Icon(
-                                imageVector = FontAwesomeIcons.Regular.ThumbsUp,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .clickable {
-                                        NotificationManager.createDialogAlert(
-                                            MainDialogAlert(
-                                                message = BaseResText.underDevelopment,
-                                                cancelOperationText = BaseResText.cancelBtn
-                                            )
-                                        )
-                                    }
-                                    .padding(5.dp)
-                                    .fillMaxHeight(),
-                            )
-                            Icon(
-                                imageVector = FontAwesomeIcons.Regular.ArrowAltCircleDown,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .clickable {
-                                        NotificationManager.createDialogAlert(
-                                            MainDialogAlert(
-                                                message = BaseResText.underDevelopment,
-                                                cancelOperationText = BaseResText.cancelBtn
-                                            )
-                                        )
-                                    }
-                                    .padding(5.dp)
-                                    .fillMaxHeight(),
-                            )
-                        }
-
-                    }
-
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                            .padding(top = 30.dp)
-                            .padding(15.dp)
-                    ) {
-
-                        Text(
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            text = currentMusicData.audioAuthor,
-                            color = MaterialTheme.colorScheme.subTextColor,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-
-                        Text(
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            text = currentMusicData.audioName,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = MaterialTheme.typography.headlineSmall,
-                        )
-
-                        Slider(
-                            value = curPosition.toFloat(),
-                            onValueChange = {
-                                curPosition = it.toDouble()
-                                musicScreenModel.onSeek(curPosition)
-                                lastAngle = rotationAngle
-                            },
-                            valueRange = 0f..totalDuration.toFloat(),
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            thumb =
-                            {
-                                Icon(
-                                    imageVector = FontAwesomeIcons.Solid.CandyCane,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            },
-                            colors = SliderColors(
-                                thumbColor = Color.Transparent,
-                                activeTrackColor = MaterialTheme.colorScheme.primary,
-                                activeTickColor = Color.Transparent,
-                                inactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
-                                inactiveTickColor = Color.Transparent,
-                                disabledThumbColor = Color.Transparent,
-                                disabledActiveTrackColor = MaterialTheme.colorScheme.primary,
-                                disabledActiveTickColor = Color.Transparent,
-                                disabledInactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
-                                disabledInactiveTickColor = Color.Transparent,
-                            ),
-
-                            )
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(formatSeconds(curPosition.toInt()))
-                            Text(formatSeconds(totalDuration.toInt()))
-                        }
-
-                        Row(
-                            modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-
-                            Icon(
-                                imageVector = vectorResource(MusicPlayModel.entries[playModel].imageVector),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .clickable {
-                                        musicScreenModel.nextPlayModel()
-                                    }
-                                    .size(30.dp),
-                            )
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.media_previous),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .clickable {
-                                        musicScreenModel.onPrev()
-                                    }
-                                    .size(30.dp),
-                            )
-                            Icon(
-                                imageVector = if (isPlaying) vectorResource(Res.drawable.media_circle_pause)
-                                else vectorResource(Res.drawable.media_circle_play),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .clickable {
-                                        if (isPlaying) {
-                                            musicScreenModel.onPause()
-                                            lastAngle = rotationAngle
-                                        } else {
-                                            musicScreenModel.onPlay()
-                                        }
-                                    }
-                                    .size(60.dp),
+                                modifier = Modifier.size(18.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.media_next),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .clickable {
-                                        musicScreenModel.onNext()
+                        },
+                        colors = SliderColors(
+                            thumbColor = Color.Transparent,
+                            activeTrackColor = MaterialTheme.colorScheme.primary,
+                            activeTickColor = Color.Transparent,
+                            inactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
+                            inactiveTickColor = Color.Transparent,
+                            disabledThumbColor = Color.Transparent,
+                            disabledActiveTrackColor = MaterialTheme.colorScheme.primary,
+                            disabledActiveTickColor = Color.Transparent,
+                            disabledInactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
+                            disabledInactiveTickColor = Color.Transparent,
+                        ),
+
+                        )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(formatSeconds(curPosition.toInt()))
+                        Text(formatSeconds(totalDuration.toInt()))
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+
+                        Icon(
+                            imageVector = vectorResource(MusicPlayModel.entries[playModel].imageVector),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable {
+                                    musicScreenModel.nextPlayModel()
+                                }
+                                .size(30.dp),
+                        )
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.media_previous),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable {
+                                    musicScreenModel.onPrev()
+                                }
+                                .size(30.dp),
+                        )
+                        Icon(
+                            imageVector = if (isPlaying) vectorResource(Res.drawable.media_circle_pause)
+                            else vectorResource(Res.drawable.media_circle_play),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable {
+                                    if (isPlaying) {
+                                        musicScreenModel.onPause()
+                                        lastAngle = rotationAngle
+                                    } else {
+                                        musicScreenModel.onPlay()
                                     }
-                                    .size(30.dp),
-                            )
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.media_audio),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .clickable {
-                                        NotificationManager.createDialogAlert(
-                                            MainDialogAlert(
-                                                message = BaseResText.underDevelopment,
-                                                cancelOperationText = BaseResText.cancelBtn
-                                            )
+                                }
+                                .size(60.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.media_next),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable {
+                                    musicScreenModel.onNext()
+                                }
+                                .size(30.dp),
+                        )
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.media_audio),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable {
+                                    NotificationManager.createDialogAlert(
+                                        MainDialogAlert(
+                                            message = BaseResText.underDevelopment,
+                                            cancelOperationText = BaseResText.cancelBtn
                                         )
-                                    }
-                                    .size(30.dp),
-                            )
-
-                        }
-
+                                    )
+                                }
+                                .size(30.dp),
+                        )
 
                     }
+
 
                 }
 
             }
-
 
         }
 

@@ -39,22 +39,6 @@ class MainScreenModel : ScreenModel, KoinComponent {
     //coroutine
     private val _commonCoroutine = screenModelScope
 
-    //navigation
-    private val _loadingScreen = MutableStateFlow(false)
-    val loadingScreen = _loadingScreen.asStateFlow()
-    private val _showNavBar = MutableStateFlow(true)
-    val showNavBar = _showNavBar.asStateFlow()
-    fun updateShowNavBar(value: Boolean) {
-        if (value != _showNavBar.value && !_loadingScreen.value) {
-            _showNavBar.value = value
-            _loadingScreen.value = true
-            _commonCoroutine.launch {
-                delay(500)
-                _loadingScreen.value = false
-            }
-        }
-    }
-
     //screen
     private val _mainPageContainerConstraints = MutableStateFlow(Constraints())
     val mainPageContainerConstraints = _mainPageContainerConstraints.asStateFlow()

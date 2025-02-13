@@ -1,21 +1,15 @@
 package ui.views
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -78,9 +72,7 @@ class UserChatScreen(
         val isMobile: Boolean = koinInject(qualifier = named("isMobile"))
 
         //navigation
-        mainModel.updateShowNavBar(false)
         val navigator = LocalNavigator.currentOrThrow
-        val loadingScreen = mainModel.loadingScreen.collectAsState().value
 
         //coroutine
         val chatApiCoroutine = rememberCoroutineScope()
@@ -132,24 +124,49 @@ class UserChatScreen(
             }
         }
 
-        AnimatedVisibility(
-            visible = !loadingScreen,
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000)),
+        Column(
+            Modifier
+//                .windowInsetsPadding(WindowInsets.systemBars)
+                .fillMaxHeight()
+                .padding(top = 4.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Column(
-                Modifier
-                    .windowInsetsPadding(WindowInsets.systemBars)
-                    .fillMaxHeight()
-                    .padding(top = 4.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+            Row(
+                Modifier.height(50.dp).fillMaxWidth().padding(horizontal = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                Button(
+                    shape = RoundedCornerShape(15.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = { navigator.pop() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = null,
+                    )
+                }
 
-                Row(
-                    Modifier.height(50.dp).fillMaxWidth().padding(horizontal = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(horizontal = 15.dp),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    Text(
+                        text = chatData.chatName ?: "",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+
+                if (!chatData.chatUserId.isNullOrBlank()) {
                     Button(
                         shape = RoundedCornerShape(15.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -157,69 +174,38 @@ class UserChatScreen(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                         contentPadding = PaddingValues(0.dp),
-                        onClick = { navigator.pop() }) {
+                        onClick = {
+                            navigator.push(UserDetailScreen(chatData.chatUserId!!))
+                        }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            imageVector = Icons.Outlined.Person,
                             contentDescription = null,
                         )
                     }
-
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .padding(horizontal = 15.dp),
-                        verticalArrangement = Arrangement.SpaceEvenly,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text(
-                            text = chatData.chatName ?: "",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-
-                    if (!chatData.chatUserId.isNullOrBlank()) {
-                        Button(
-                            shape = RoundedCornerShape(15.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
-                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            ),
-                            contentPadding = PaddingValues(0.dp),
-                            onClick = {
-                                navigator.push(UserDetailScreen(chatData.chatUserId!!))
-                            }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Person,
-                                contentDescription = null,
-                            )
-                        }
-                    }
                 }
-
-                Box(
-                    modifier = Modifier.weight(1f).fillMaxSize()
-                ) {
-                    //todo 这里之后可以自定义背景
-                    BaseUserChatColumn(
-                        chatData,
-                        configBlock,
-                        localPlatformContext,
-                        thisUserId,
-                        isMobile,
-                        chatApiCoroutine,
-                        chatScreenModel,
-                        token
-                    )
-                }
-
-                Row {
-                    BaseUserInput(mainModel, socketSession, chatId)
-                }
-
-
             }
+
+            Box(
+                modifier = Modifier.weight(1f).fillMaxSize()
+            ) {
+                //todo 这里之后可以自定义背景
+                BaseUserChatColumn(
+                    chatData,
+                    configBlock,
+                    localPlatformContext,
+                    thisUserId,
+                    isMobile,
+                    chatApiCoroutine,
+                    chatScreenModel,
+                    token
+                )
+            }
+
+            Row {
+                BaseUserInput(mainModel, socketSession, chatId)
+            }
+
+
         }
     }
 

@@ -76,10 +76,7 @@ fun MainArticlesScreen(
     mainModel: MainScreenModel = koinInject(),
 ) {
     //navigation
-    mainModel.updateShowNavBar(true)
     val navigator = LocalNavigator.currentOrThrow
-    val loadingScreen = mainModel.loadingScreen.collectAsState().value
-    if (loadingScreen) return
 
     //soft keyboard
     val keyboardController = LocalSoftwareKeyboardController.current

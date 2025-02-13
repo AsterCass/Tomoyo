@@ -101,10 +101,7 @@ fun MainHomeScreen(
     val commonApiCoroutine = rememberCoroutineScope()
 
     //navigation
-    mainModel.updateShowNavBar(true)
     val navigator = LocalNavigator.currentOrThrow
-    val loadingScreen = mainModel.loadingScreen.collectAsState().value
-    if (loadingScreen) return
 
     //data
     val musicPlayerState = musicScreenModel.playerState.collectAsState().value

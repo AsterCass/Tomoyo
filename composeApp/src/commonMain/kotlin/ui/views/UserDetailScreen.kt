@@ -1,8 +1,6 @@
 package ui.views
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -122,9 +120,7 @@ class UserDetailScreen(
         val userDetailApiCoroutine = rememberCoroutineScope()
 
         //navigation
-        mainModel.updateShowNavBar(false)
         val navigator = LocalNavigator.currentOrThrow
-        val loadingScreen = mainModel.loadingScreen.collectAsState().value
         val secondLastItem = navigator.items.getOrNull(navigator.items.size - 2)
         val secondLastItemKey = secondLastItem?.key ?: ""
         val isFromChatScreen = secondLastItemKey.startsWith(ViewEnum.USER_CHAT.code)
@@ -162,488 +158,482 @@ class UserDetailScreen(
         }
 
 
-        AnimatedVisibility(
-            visible = !loadingScreen,
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000)),
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize()
+            Image(
+                painter = painterResource(Res.drawable.bg3),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentScale = ContentScale.FillWidth,
+            )
+
+
+
+            Column(
+                Modifier.padding(
+                    start = 15.dp,
+                    end = 15.dp,
+                    top = statusBarHigh + 4.dp,
+                    bottom = 4.dp
+                ).fillMaxSize()
+
             ) {
-                Image(
-                    painter = painterResource(Res.drawable.bg3),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentScale = ContentScale.FillWidth,
-                )
 
+                Row(
+                    Modifier.height(50.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(
+                        shape = RoundedCornerShape(15.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.baseBackground,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                        contentPadding = PaddingValues(0.dp),
+                        onClick = { navigator.popUntilRoot() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                }
 
-
-                Column(
-                    Modifier.padding(
-                        start = 15.dp,
-                        end = 15.dp,
-                        top = statusBarHigh + 4.dp,
-                        bottom = 4.dp
-                    ).fillMaxSize()
-
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(top = 20.dp),
+                    contentAlignment = Alignment.TopCenter
                 ) {
 
-                    Row(
-                        Modifier.height(50.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Button(
-                            shape = RoundedCornerShape(15.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.baseBackground,
-                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            ),
-                            contentPadding = PaddingValues(0.dp),
-                            onClick = { navigator.popUntilRoot() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                                contentDescription = null,
-                            )
-                        }
-                    }
-
                     Box(
-                        modifier = Modifier.fillMaxSize().padding(top = 20.dp),
-                        contentAlignment = Alignment.TopCenter
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 50.dp, bottom = 20.dp)
+                            .clip(
+                                RoundedCornerShape(16.dp)
+                            )
+                            .background(
+                                color = MaterialTheme.colorScheme.baseBackground
+                            )
+                            .padding(horizontal = 20.dp)
                     ) {
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(top = 50.dp, bottom = 20.dp)
-                                .clip(
-                                    RoundedCornerShape(16.dp)
-                                )
-                                .background(
-                                    color = MaterialTheme.colorScheme.baseBackground
-                                )
-                                .padding(horizontal = 20.dp)
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Column(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                modifier = Modifier.fillMaxWidth().height(70.dp),
+                                verticalArrangement = Arrangement.SpaceEvenly,
+                                horizontalAlignment = Alignment.End
                             ) {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth().height(70.dp),
-                                    verticalArrangement = Arrangement.SpaceEvenly,
-                                    horizontalAlignment = Alignment.End
-                                ) {
 
-                                    if (userState.userData.id != userId) {
-                                        Button(
-                                            onClick = {
-                                                if (token.isNotBlank()) {
-                                                    if (isFromChatScreen) {
-                                                        navigator.pop()
-                                                    } else {
-                                                        navigator.push(UserChatScreen(userId, ""))
-                                                    }
-
+                                if (userState.userData.id != userId) {
+                                    Button(
+                                        onClick = {
+                                            if (token.isNotBlank()) {
+                                                if (isFromChatScreen) {
+                                                    navigator.pop()
                                                 } else {
-                                                    NotificationManager.createDialogAlert(
-                                                        //todo jump to login
-                                                        MainDialogAlert(
-                                                            message = BaseResText.userNoLogin,
-                                                            cancelOperationText = BaseResText.cancelBtn
-                                                        )
-                                                    )
+                                                    navigator.push(UserChatScreen(userId, ""))
                                                 }
-                                            },
-                                            shape = RoundedCornerShape(5.dp),
-                                            contentPadding = PaddingValues(
-                                                vertical = 3.dp,
-                                                horizontal = 1.dp
-                                            ),
-                                            colors = ButtonDefaults.buttonColors().copy(
-                                                containerColor = MaterialTheme.colorScheme.secondary
-                                            ),
-                                            modifier = Modifier
-                                                .height(22.dp)
-                                        ) {
-                                            Text(
-                                                text = stringResource(Res.string.user_chat_btn),
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        }
 
-                                        Button(
-                                            onClick = {
+                                            } else {
                                                 NotificationManager.createDialogAlert(
+                                                    //todo jump to login
                                                     MainDialogAlert(
-                                                        message = BaseResText.underDevelopment,
+                                                        message = BaseResText.userNoLogin,
                                                         cancelOperationText = BaseResText.cancelBtn
                                                     )
                                                 )
-                                            },
-                                            shape = RoundedCornerShape(5.dp),
-                                            contentPadding = PaddingValues(
-                                                vertical = 3.dp,
-                                                horizontal = 1.dp
-                                            ),
-                                            colors = ButtonDefaults.buttonColors().copy(
-                                                containerColor = MaterialTheme.colorScheme.primary
-                                            ),
-                                            modifier = Modifier
-                                                .height(22.dp)
-                                        ) {
-                                            Text(
-                                                text = stringResource(Res.string.user_follow_btn),
-                                                style = MaterialTheme.typography.bodySmall,
-                                            )
-                                        }
-                                    }
-
-                                }
-
-                                Text(
-                                    text = userDetailData.nickName,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-
-                                Row(
-                                    modifier = Modifier
-                                        .padding(5.dp)
-                                        .clip(
-                                            RoundedCornerShape(3.dp)
-                                        )
-                                        .background(thisRoleType.color)
-                                        .padding(horizontal = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        imageVector = vectorResource(thisRoleType.logo),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(10.dp),
-                                        tint = Color.White
-                                    )
-                                    Text(
-                                        modifier = Modifier.padding(start = 2.dp),
-                                        text = stringResource(thisRoleType.label),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.background,
-                                    )
-                                }
-
-                                Row(
-                                    modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-
-                                    Icon(
-                                        imageVector = FontAwesomeIcons.Solid.BirthdayCake,
-                                        contentDescription = null,
-                                        modifier = Modifier.padding(end = 8.dp).size(15.dp),
-                                        tint = Color(255, 193, 7),
-                                    )
-
-
-                                    Text(
-                                        text = userDetailData.birth.toString(),
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-
-                                    VerticalDivider(
+                                            }
+                                        },
+                                        shape = RoundedCornerShape(5.dp),
+                                        contentPadding = PaddingValues(
+                                            vertical = 3.dp,
+                                            horizontal = 1.dp
+                                        ),
+                                        colors = ButtonDefaults.buttonColors().copy(
+                                            containerColor = MaterialTheme.colorScheme.secondary
+                                        ),
                                         modifier = Modifier
-                                            .padding(10.dp).height(8.dp)
-                                    )
-
-                                    Icon(
-                                        imageVector = FontAwesomeIcons.Solid.StarAndCrescent,
-                                        contentDescription = null,
-                                        modifier = Modifier.padding(end = 8.dp).size(15.dp),
-                                        tint = Color(63, 81, 181),
-                                    )
-
-                                    Text(
-                                        text = stringResource(thisZodiac.label)
-                                                + thisZodiac.logo,
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-
-                                    VerticalDivider(
-                                        modifier = Modifier
-                                            .padding(10.dp).height(8.dp)
-                                    )
-
-                                    Icon(
-                                        imageVector = FontAwesomeIcons.Solid.Paw,
-                                        contentDescription = null,
-                                        modifier = Modifier.padding(end = 8.dp).size(15.dp),
-                                        tint = Color(121, 85, 72),
-                                    )
-
-                                    Text(
-                                        text = stringResource(thisChineseZodiac.label)
-                                                + thisChineseZodiac.logo,
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-
-
-                                }
-
-                                FlowRow(
-                                    modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
-                                ) {
-
-                                    Row(
-                                        modifier = Modifier.height(28.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
+                                            .height(22.dp)
                                     ) {
-                                        Icon(
-                                            imageVector = FontAwesomeIcons.Solid.Envelope,
-                                            contentDescription = null,
-                                            modifier = Modifier.padding(end = 8.dp).size(15.dp),
-                                            tint = Color(255, 162, 55),
-                                        )
-
                                         Text(
-                                            text = userDetailData.mail,
+                                            text = stringResource(Res.string.user_chat_btn),
                                             style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        VerticalDivider(
-                                            modifier = Modifier
-                                                .padding(10.dp).height(8.dp)
-                                        )
-
-                                    }
-
-
-
-                                    Row(
-                                        modifier = Modifier.height(28.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        Icon(
-                                            imageVector = FontAwesomeIcons.Brands.Qq,
-                                            contentDescription = null,
-                                            modifier = Modifier.padding(end = 8.dp).size(15.dp),
-                                            tint = Color(55, 160, 244),
-                                        )
-
-                                        Text(
-                                            text = userDetailData.socialLink.qq ?: "None",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        VerticalDivider(
-                                            modifier = Modifier
-                                                .padding(10.dp).height(8.dp)
                                         )
                                     }
 
-                                    Row(
-                                        modifier = Modifier.height(28.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        Icon(
-                                            imageVector = FontAwesomeIcons.Brands.Weixin,
-                                            contentDescription = null,
-                                            modifier = Modifier.padding(end = 8.dp).size(15.dp),
-                                            tint = Color(94, 183, 97),
-                                        )
-
-                                        Text(
-                                            text = userDetailData.socialLink.wechat ?: "None",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        VerticalDivider(
-                                            modifier = Modifier
-                                                .padding(10.dp).height(8.dp)
-                                        )
-                                    }
-
-
-                                    Row(
-                                        modifier = Modifier.height(28.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        Icon(
-                                            imageVector = FontAwesomeIcons.Brands.Github,
-                                            contentDescription = null,
-                                            modifier = Modifier.padding(end = 8.dp).size(15.dp),
-                                            tint = Color(25, 25, 25),
-                                        )
-
-                                        Text(
-                                            text = userDetailData.socialLink.github ?: "None",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                    }
-
-
-                                }
-
-
-                                FlowRow(
-                                    modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
-                                ) {
-
-                                    Row(
-                                        modifier = Modifier.height(25.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-
-                                        Text(
-                                            text = stringResource(Res.string.user_following) + ": ",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        Text(
-                                            text = userDetailData.community.followNum.toString(),
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        VerticalDivider(
-                                            modifier = Modifier.padding(10.dp).height(8.dp)
-                                        )
-
-                                    }
-
-
-
-                                    Row(
-                                        modifier = Modifier.height(25.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-
-                                        Text(
-                                            text = stringResource(Res.string.user_followers) + ": ",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        Text(
-                                            text = userDetailData.community.fansNum.toString(),
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        VerticalDivider(
-                                            modifier = Modifier.padding(10.dp).height(8.dp)
-                                        )
-                                    }
-
-                                    Row(
-                                        modifier = Modifier.height(25.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-
-                                        Text(
-                                            text = stringResource(Res.string.user_friends) + ": ",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        Text(
-                                            text = userDetailData.community.friendNum.toString(),
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        VerticalDivider(
-                                            modifier = Modifier.padding(10.dp).height(8.dp)
-                                        )
-                                    }
-
-
-                                    Row(
-                                        modifier = Modifier.height(25.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-
-                                        Text(
-                                            text = stringResource(Res.string.articles) + ": ",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        Text(
-                                            text = userDetailData.articleNum?.toString() ?: "0",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        VerticalDivider(
-                                            modifier = Modifier.padding(10.dp).height(8.dp)
-                                        )
-
-                                    }
-
-                                    Row(
-                                        modifier = Modifier.height(25.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-
-                                        Text(
-                                            text = stringResource(Res.string.user_thoughts) + ": ",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                        Text(
-                                            text = userDetailData.thoughtNum?.toString() ?: "0",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-
-                                    }
-
-                                }
-
-
-                                UserDetailTabScreen(
-                                    tabPageState = tabPageState,
-                                    userDetailData = userDetailData,
-                                    changeTab = { tabEnum ->
-                                        contactScreenModel.updateUserDetailTab(tabEnum)
-                                        userDetailApiCoroutine.launch {
-                                            tabPageState.animateScrollToPage(
-                                                page = tabEnum.ordinal,
-                                                animationSpec = tween(durationMillis = 1000)
+                                    Button(
+                                        onClick = {
+                                            NotificationManager.createDialogAlert(
+                                                MainDialogAlert(
+                                                    message = BaseResText.underDevelopment,
+                                                    cancelOperationText = BaseResText.cancelBtn
+                                                )
                                             )
-                                        }
-                                    },
-                                    toOtherUserDetail = {
-                                        navigator.push(UserDetailScreen(it))
+                                        },
+                                        shape = RoundedCornerShape(5.dp),
+                                        contentPadding = PaddingValues(
+                                            vertical = 3.dp,
+                                            horizontal = 1.dp
+                                        ),
+                                        colors = ButtonDefaults.buttonColors().copy(
+                                            containerColor = MaterialTheme.colorScheme.primary
+                                        ),
+                                        modifier = Modifier
+                                            .height(22.dp)
+                                    ) {
+                                        Text(
+                                            text = stringResource(Res.string.user_follow_btn),
+                                            style = MaterialTheme.typography.bodySmall,
+                                        )
                                     }
-                                )
+                                }
 
                             }
 
-                        }
+                            Text(
+                                text = userDetailData.nickName,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
 
+                            Row(
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .clip(
+                                        RoundedCornerShape(3.dp)
+                                    )
+                                    .background(thisRoleType.color)
+                                    .padding(horizontal = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = vectorResource(thisRoleType.logo),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(10.dp),
+                                    tint = Color.White
+                                )
+                                Text(
+                                    modifier = Modifier.padding(start = 2.dp),
+                                    text = stringResource(thisRoleType.label),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.background,
+                                )
+                            }
 
-                        AsyncImage(
-                            request = ImageRequest(
-                                context = context,
-                                uri = userDetailData.avatar,
-                                configBlock = configBlock,
-                            ),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(100.dp)
-                                .clip(CircleShape)
-                                .border(
-                                    border = BorderStroke(
-                                        2.dp,
-                                        MaterialTheme.colorScheme.background
-                                    ),
-                                    shape = CircleShape
+                            Row(
+                                modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+
+                                Icon(
+                                    imageVector = FontAwesomeIcons.Solid.BirthdayCake,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 8.dp).size(15.dp),
+                                    tint = Color(255, 193, 7),
                                 )
 
-                        )
+
+                                Text(
+                                    text = userDetailData.birth.toString(),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+
+                                VerticalDivider(
+                                    modifier = Modifier
+                                        .padding(10.dp).height(8.dp)
+                                )
+
+                                Icon(
+                                    imageVector = FontAwesomeIcons.Solid.StarAndCrescent,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 8.dp).size(15.dp),
+                                    tint = Color(63, 81, 181),
+                                )
+
+                                Text(
+                                    text = stringResource(thisZodiac.label)
+                                            + thisZodiac.logo,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+
+                                VerticalDivider(
+                                    modifier = Modifier
+                                        .padding(10.dp).height(8.dp)
+                                )
+
+                                Icon(
+                                    imageVector = FontAwesomeIcons.Solid.Paw,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 8.dp).size(15.dp),
+                                    tint = Color(121, 85, 72),
+                                )
+
+                                Text(
+                                    text = stringResource(thisChineseZodiac.label)
+                                            + thisChineseZodiac.logo,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+
+
+                            }
+
+                            FlowRow(
+                                modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+
+                                Row(
+                                    modifier = Modifier.height(28.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Icon(
+                                        imageVector = FontAwesomeIcons.Solid.Envelope,
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(end = 8.dp).size(15.dp),
+                                        tint = Color(255, 162, 55),
+                                    )
+
+                                    Text(
+                                        text = userDetailData.mail,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    VerticalDivider(
+                                        modifier = Modifier
+                                            .padding(10.dp).height(8.dp)
+                                    )
+
+                                }
+
+
+
+                                Row(
+                                    modifier = Modifier.height(28.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Icon(
+                                        imageVector = FontAwesomeIcons.Brands.Qq,
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(end = 8.dp).size(15.dp),
+                                        tint = Color(55, 160, 244),
+                                    )
+
+                                    Text(
+                                        text = userDetailData.socialLink.qq ?: "None",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    VerticalDivider(
+                                        modifier = Modifier
+                                            .padding(10.dp).height(8.dp)
+                                    )
+                                }
+
+                                Row(
+                                    modifier = Modifier.height(28.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Icon(
+                                        imageVector = FontAwesomeIcons.Brands.Weixin,
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(end = 8.dp).size(15.dp),
+                                        tint = Color(94, 183, 97),
+                                    )
+
+                                    Text(
+                                        text = userDetailData.socialLink.wechat ?: "None",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    VerticalDivider(
+                                        modifier = Modifier
+                                            .padding(10.dp).height(8.dp)
+                                    )
+                                }
+
+
+                                Row(
+                                    modifier = Modifier.height(28.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Icon(
+                                        imageVector = FontAwesomeIcons.Brands.Github,
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(end = 8.dp).size(15.dp),
+                                        tint = Color(25, 25, 25),
+                                    )
+
+                                    Text(
+                                        text = userDetailData.socialLink.github ?: "None",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                }
+
+
+                            }
+
+
+                            FlowRow(
+                                modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+
+                                Row(
+                                    modifier = Modifier.height(25.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+
+                                    Text(
+                                        text = stringResource(Res.string.user_following) + ": ",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    Text(
+                                        text = userDetailData.community.followNum.toString(),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    VerticalDivider(
+                                        modifier = Modifier.padding(10.dp).height(8.dp)
+                                    )
+
+                                }
+
+
+
+                                Row(
+                                    modifier = Modifier.height(25.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+
+                                    Text(
+                                        text = stringResource(Res.string.user_followers) + ": ",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    Text(
+                                        text = userDetailData.community.fansNum.toString(),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    VerticalDivider(
+                                        modifier = Modifier.padding(10.dp).height(8.dp)
+                                    )
+                                }
+
+                                Row(
+                                    modifier = Modifier.height(25.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+
+                                    Text(
+                                        text = stringResource(Res.string.user_friends) + ": ",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    Text(
+                                        text = userDetailData.community.friendNum.toString(),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    VerticalDivider(
+                                        modifier = Modifier.padding(10.dp).height(8.dp)
+                                    )
+                                }
+
+
+                                Row(
+                                    modifier = Modifier.height(25.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+
+                                    Text(
+                                        text = stringResource(Res.string.articles) + ": ",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    Text(
+                                        text = userDetailData.articleNum?.toString() ?: "0",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    VerticalDivider(
+                                        modifier = Modifier.padding(10.dp).height(8.dp)
+                                    )
+
+                                }
+
+                                Row(
+                                    modifier = Modifier.height(25.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+
+                                    Text(
+                                        text = stringResource(Res.string.user_thoughts) + ": ",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                    Text(
+                                        text = userDetailData.thoughtNum?.toString() ?: "0",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+
+                                }
+
+                            }
+
+
+                            UserDetailTabScreen(
+                                tabPageState = tabPageState,
+                                userDetailData = userDetailData,
+                                changeTab = { tabEnum ->
+                                    contactScreenModel.updateUserDetailTab(tabEnum)
+                                    userDetailApiCoroutine.launch {
+                                        tabPageState.animateScrollToPage(
+                                            page = tabEnum.ordinal,
+                                            animationSpec = tween(durationMillis = 1000)
+                                        )
+                                    }
+                                },
+                                toOtherUserDetail = {
+                                    navigator.push(UserDetailScreen(it))
+                                }
+                            )
+
+                        }
 
                     }
 
+
+                    AsyncImage(
+                        request = ImageRequest(
+                            context = context,
+                            uri = userDetailData.avatar,
+                            configBlock = configBlock,
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .border(
+                                border = BorderStroke(
+                                    2.dp,
+                                    MaterialTheme.colorScheme.background
+                                ),
+                                shape = CircleShape
+                            )
+
+                    )
+
                 }
 
-
             }
+
 
         }
 

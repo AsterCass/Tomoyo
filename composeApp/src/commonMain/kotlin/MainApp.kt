@@ -1,28 +1,17 @@
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import api.baseJsonConf
 import biz.StatusBar
+import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabDisposable
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import data.PlatformInitData
@@ -52,7 +41,6 @@ fun MainApp(
     dataStorageManager: DataStorageManager = koinInject(),
 ) {
     //data
-    val showNavBar = mainModel.showNavBar.collectAsState().value
     val firstTryLinkSocket = mainModel.firstTryLinkSocket.value
     val userDataStringDb = dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
 
@@ -101,46 +89,16 @@ fun MainApp(
             ) { tabNavigator ->
 
                 Scaffold(
-                    contentWindowInsets = WindowInsets.navigationBars,
-                    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)
-                        .imePadding(),
+//                    contentWindowInsets = WindowInsets.navigationBars,
+//                    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)
+//                        .imePadding(),
                     topBar = {
-                        AnimatedVisibility(
-                            visible = showNavBar,
-                            enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
-                                    slideInVertically(
-                                        initialOffsetY = { -it },
-                                        animationSpec = tween(durationMillis = 500)
-                                    ),
-                            exit = fadeOut(animationSpec = tween(durationMillis = 500)) +
-                                    slideOutVertically(
-                                        targetOffsetY = { -it },
-                                        animationSpec = tween(durationMillis = 500)
-                                    ),
-                        ) {
-                            MainAppBar()
-                        }
-
+                        MainAppBar()
                     },
                     bottomBar = {
-                        AnimatedVisibility(
-                            visible = showNavBar,
-                            enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
-                                    slideInVertically(
-                                        initialOffsetY = { it },
-                                        animationSpec = tween(durationMillis = 500)
-                                    ),
-                            exit = fadeOut(animationSpec = tween(durationMillis = 500)) +
-                                    slideOutVertically(
-                                        targetOffsetY = { it },
-                                        animationSpec = tween(durationMillis = 500)
-                                    ),
-                        ) {
-                            MainAppNavigationBar(
-                                extraNavigationList = platformData.extraNavigationList,
-                            )
-                        }
-
+                        MainAppNavigationBar(
+                            extraNavigationList = platformData.extraNavigationList,
+                        )
                     },
                     content = { padding ->
 
@@ -153,7 +111,7 @@ fun MainApp(
                             mainModel.updateMainPageContainerConstraints(constraints)
 
                             //screen1
-//                            CurrentTab()
+                            CurrentTab()
 
                             //screen2
 //                            Crossfade(
@@ -164,31 +122,31 @@ fun MainApp(
 //                            }
 
                             //screen3
-                            tabs.forEach { tab ->
-                                val isToRight = tabNavigator.current.options.index > lastTabIndex
-                                AnimatedVisibility(
-                                    visible = tabNavigator.current == tab,
-                                    enter = if (tab == HomeTab) fadeIn(
-                                        animationSpec = tween(
-                                            durationMillis = 800
-                                        )
-                                    )
-                                    else
-                                        slideInHorizontally(
-                                            initialOffsetX = { fullHeight ->
-                                                if (isToRight)
-                                                    fullHeight else -fullHeight
-                                            },
-                                            animationSpec = tween(
-                                                durationMillis = 800,
-                                            ),
-                                        ),
-                                    exit = fadeOut(animationSpec = tween(durationMillis = 400)),
-                                ) {
-                                    lastTabIndex = tab.options.index
-                                    tab.Content()
-                                }
-                            }
+//                            tabs.forEach { tab ->
+//                                val isToRight = tabNavigator.current.options.index > lastTabIndex
+//                                AnimatedVisibility(
+//                                    visible = tabNavigator.current == tab,
+//                                    enter = if (tab == HomeTab) fadeIn(
+//                                        animationSpec = tween(
+//                                            durationMillis = 800
+//                                        )
+//                                    )
+//                                    else
+//                                        slideInHorizontally(
+//                                            initialOffsetX = { fullHeight ->
+//                                                if (isToRight)
+//                                                    fullHeight else -fullHeight
+//                                            },
+//                                            animationSpec = tween(
+//                                                durationMillis = 800,
+//                                            ),
+//                                        ),
+//                                    exit = fadeOut(animationSpec = tween(durationMillis = 400)),
+//                                ) {
+//                                    lastTabIndex = tab.options.index
+//                                    tab.Content()
+//                                }
+//                            }
 
                             //notification
                             Box(modifier = Modifier.align(Alignment.BottomCenter)) {
