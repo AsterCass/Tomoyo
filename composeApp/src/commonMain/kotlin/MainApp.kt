@@ -1,3 +1,4 @@
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,21 +9,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import api.baseJsonConf
 import biz.StatusBar
 import biz.TabTransition
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.SlideTransition
+import constant.enums.ViewEnum
 import data.PlatformInitData
 import data.UserDataModel
+import data.model.ArticleScreenModel
+import data.model.ContactScreenModel
 import data.model.MainScreenModel
+import data.model.MusicScreenModel
 import data.store.DataStorageManager
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import theme.LightColorScheme
 import theme.MainTypography
+import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.bg1
+import ui.components.FullScreen
 import ui.components.InitForNoComposableRes
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
@@ -35,28 +50,58 @@ fun MainApp(
     mainModel: MainScreenModel = koinInject(),
     dataStorageManager: DataStorageManager = koinInject(),
 ) {
-    //data
-    val firstTryLinkSocket = mainModel.firstTryLinkSocket.value
-    val userDataStringDb = dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
-
-    //coroutine
-    val commonApiCoroutine = rememberCoroutineScope()
-
     KoinContext {
         MaterialTheme(
             colorScheme = LightColorScheme,
             typography = MainTypography(),
         ) {
-            //init
-            StatusBar().updateColor(MaterialTheme.colorScheme.surface, true)
-            InitForNoComposableRes()
+            //navigation
+            Navigator(PreLoadScreen(dataStorageManager, platformData, mainModel)) { navigator ->
 
-            //user status
+                SlideTransition(navigator)
+            }
+
+        }
+    }
+
+}
+
+data class PreLoadScreen(
+    val dataStorageManager: DataStorageManager,
+    val platformData: PlatformInitData,
+    val mainModel: MainScreenModel
+) : Screen {
+
+    override val key: ScreenKey = "${ViewEnum.PRE_LOAD.code}$uniqueScreenKey"
+
+    @Composable
+    override fun Content() {
+        // Model Inject
+        val articleModel: ArticleScreenModel = koinInject()
+        val musicModel: MusicScreenModel = koinInject()
+        val contactModel: ContactScreenModel = koinInject()
+
+        // Custom data inject
+        StatusBar().updateColor(MaterialTheme.colorScheme.surface, true)
+        InitForNoComposableRes()
+
+        // Coroutine
+        val preloadCoroutine = rememberCoroutineScope()
+
+        // Navigation
+        val navigator = LocalNavigator.currentOrThrow
+
+        preloadCoroutine.launch {
+            // Data
+            val firstTryLinkSocket = mainModel.firstTryLinkSocket.value
+            val userDataStringDb = dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
+
+            // User Status
             if (userDataStringDb.isNotBlank() && firstTryLinkSocket) {
                 mainModel.triedLinkSocket()
                 val userDataDb: UserDataModel = baseJsonConf.decodeFromString(userDataStringDb)
                 if (!userDataDb.token.isNullOrBlank()) {
-                    commonApiCoroutine.launch {
+                    preloadCoroutine.launch {
                         mainModel.login(
                             dbData = userDataDb,
                             forceLogin = true
@@ -65,15 +110,32 @@ fun MainApp(
                 }
             }
 
+            // Data pre load
+            articleModel.updateArticleList()
+            musicModel.updateAllAudioList()
+            contactModel.loadPublicUser()
 
-            //navigation
-            Navigator(MainTabsScreen(platformData, mainModel)) { navigator ->
-                SlideTransition(navigator)
-            }
-
+            // Init finish
+            delay(500)
+            navigator.replace(MainTabsScreen(platformData, mainModel))
         }
-    }
 
+        FullScreen {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.bg1),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+        }
+
+
+    }
 }
 
 

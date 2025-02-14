@@ -72,6 +72,8 @@ enum class NotificationType(
 enum class ViewEnum(
     val code: String,
 ) {
+    PRE_LOAD("pre_load_"),
+
     TAB_MAIN_HOME("tab_main_home_"),
     TAB_MAIN_CONTACTS("tab_main_contacts_"),
     TAB_MAIN_ARTICLES("tab_main_articles_"),

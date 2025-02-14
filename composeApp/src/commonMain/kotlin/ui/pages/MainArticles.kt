@@ -37,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,7 +50,6 @@ import constant.enums.ViewEnum
 import data.ArticleSimpleModel
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -89,21 +87,14 @@ fun MainArticlesScreen(
 
     //data
     val articleDataList = screenModel.articleDataList.collectAsState().value
-    val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
     val articleIsLoadAll = screenModel.articleIsLoadAll.collectAsState().value
     val articleDataKey = screenModel.articleDataKey.collectAsState().value
 
-    val density = LocalDensity.current
-    val minHeightDp = with(density) { constraints.minHeight.toDp() }
-
     var searchArticleKey by remember { mutableStateOf(articleDataKey) }
-
 
     //data
     LazyColumn(
-        modifier = Modifier.height(minHeightDp),
         horizontalAlignment = Alignment.CenterHorizontally,
-
     ) {
 
         item {
@@ -184,7 +175,6 @@ fun MainArticlesScreen(
             }
 
             articleApiCoroutine.launch {
-                delay(1000)
                 screenModel.updateArticleList()
             }
         }

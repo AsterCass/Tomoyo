@@ -116,7 +116,6 @@ fun MainContactsScreen(
                 }
 
                 contactApiCoroutine.launch {
-                    delay(1000)
                     screenModel.loadPublicUser()
                 }
             }

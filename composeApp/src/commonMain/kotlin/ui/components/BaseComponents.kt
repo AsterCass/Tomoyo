@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import api.ApiResText
 import api.BaseApi
-import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
@@ -82,7 +81,7 @@ import tomoyo.composeapp.generated.resources.web_tue
 import tomoyo.composeapp.generated.resources.web_wed
 
 
-@OptIn(ExperimentalMaterial3Api::class, InternalVoyagerApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainAppBar(
 
@@ -137,7 +136,8 @@ fun MainAppNavigationBar(
     extraNavigationList: List<MainNavigationEnum> = emptyList(),
 ) {
     BottomNavigation(
-        modifier = Modifier.navigationBarsPadding()
+        modifier = Modifier
+            .navigationBarsPadding()
             .height(60.dp)
     ) {
         MainNavigationEnum.entries.toTypedArray().forEach { nav ->

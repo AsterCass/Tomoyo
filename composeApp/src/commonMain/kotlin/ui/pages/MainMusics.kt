@@ -302,7 +302,6 @@ fun MainMusicsScreen(
                                         }
                                     }
                                     musicApiCoroutine.launch {
-                                        delay(1000)
                                         musicApiCoroutine.launch { screenModel.updateAllAudioList() }
                                     }
                                 }
