@@ -15,8 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import api.baseJsonConf
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import constant.enums.ViewEnum
 import data.model.MainScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.launch
@@ -31,7 +34,7 @@ import ui.views.UserLoginScreen
 
 object MainSettingsScreen : Screen {
 
-    private fun readResolve(): Any = MainSettingsScreen
+    override val key: ScreenKey = "${ViewEnum.TAB_MAIN_SETTINGS.code}$uniqueScreenKey"
 
     @Composable
     override fun Content() {

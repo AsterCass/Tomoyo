@@ -70,9 +70,9 @@ import compose.icons.fontawesomeicons.solid.Paw
 import compose.icons.fontawesomeicons.solid.StarAndCrescent
 import constant.BaseResText
 import constant.enums.GenderTypeEnum
+import constant.enums.MainNavigationEnum
 import constant.enums.RoleTypeEnum
 import constant.enums.UserDetailTabScreenTabModel
-import constant.enums.ViewEnum
 import data.UserDetailModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
@@ -100,10 +100,10 @@ import ui.components.NotificationManager
 
 
 class UserDetailScreen(
-    private val userId: String,
+    private val userId: String = "",
 ) : Screen {
 
-    override val key: ScreenKey = "${ViewEnum.USER_DETAIL.code}$uniqueScreenKey"
+    override val key: ScreenKey = "${MainNavigationEnum.USER_DETAIL.code}$uniqueScreenKey"
 
 
     @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -123,7 +123,7 @@ class UserDetailScreen(
         val navigator = LocalNavigator.currentOrThrow
         val secondLastItem = navigator.items.getOrNull(navigator.items.size - 2)
         val secondLastItemKey = secondLastItem?.key ?: ""
-        val isFromChatScreen = secondLastItemKey.startsWith(ViewEnum.USER_CHAT.code)
+        val isFromChatScreen = secondLastItemKey.startsWith(MainNavigationEnum.USER_CHAT.code)
 
         //data
         val userDetailData = contactScreenModel.userDetail.collectAsState().value

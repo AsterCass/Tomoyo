@@ -15,13 +15,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -60,8 +63,8 @@ import compose.icons.fontawesomeicons.regular.ShareSquare
 import compose.icons.fontawesomeicons.regular.ThumbsUp
 import compose.icons.fontawesomeicons.solid.CandyCane
 import constant.BaseResText
+import constant.enums.MainNavigationEnum
 import constant.enums.MusicPlayModel
-import constant.enums.ViewEnum
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
 import org.jetbrains.compose.resources.painterResource
@@ -82,7 +85,7 @@ import ui.components.NotificationManager
 
 class MusicsPlayerScreen : Screen {
 
-    override val key: ScreenKey = "${ViewEnum.MUSIC_PLAYER.code}$uniqueScreenKey"
+    override val key: ScreenKey = "${MainNavigationEnum.MUSIC_PLAYER.code}$uniqueScreenKey"
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -114,8 +117,9 @@ class MusicsPlayerScreen : Screen {
         )
 
         Column(
-            Modifier.fillMaxSize()
-//                .windowInsetsPadding(WindowInsets.systemBars)
+            Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBars)
                 .padding(top = 4.dp),
         ) {
             Box(

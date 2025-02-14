@@ -54,6 +54,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
@@ -64,6 +66,7 @@ import compose.icons.fontawesomeicons.regular.Heart
 import compose.icons.fontawesomeicons.solid.Heart
 import constant.BaseResText
 import constant.enums.MusicPlayScreenTabModel
+import constant.enums.ViewEnum
 import data.AudioSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
@@ -92,7 +95,7 @@ import ui.views.MusicsPlayerScreen
 
 object MainMusicsScreen : Screen {
 
-    private fun readResolve(): Any = MainMusicsScreen
+    override val key: ScreenKey = "${ViewEnum.TAB_MAIN_MUSICS.code}$uniqueScreenKey"
 
     @Composable
     override fun Content() {

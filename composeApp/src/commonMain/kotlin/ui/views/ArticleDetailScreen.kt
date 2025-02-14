@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,7 +44,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.request.ImageRequest
-import constant.enums.ViewEnum
+import constant.enums.MainNavigationEnum
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
@@ -52,7 +55,7 @@ import theme.subTextColor
 
 class ArticleDetailScreen : Screen {
 
-    override val key: ScreenKey = "${ViewEnum.ARTICLE_DETAIL.code}$uniqueScreenKey"
+    override val key: ScreenKey = "${MainNavigationEnum.ARTICLE_DETAIL.code}$uniqueScreenKey"
 
     @Composable
     override fun Content() {
@@ -86,8 +89,9 @@ class ArticleDetailScreen : Screen {
         }
 
         Column(
-            Modifier.fillMaxSize()
-//                .windowInsetsPadding(WindowInsets.systemBars)
+            Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBars)
                 .padding(vertical = 4.dp, horizontal = 20.dp),
         ) {
             Box(

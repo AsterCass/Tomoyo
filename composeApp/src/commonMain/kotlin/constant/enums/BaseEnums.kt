@@ -1,12 +1,12 @@
 package constant.enums
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Place
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.navigator.tab.Tab
+import cafe.adriel.voyager.core.screen.Screen
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.AddressBook
@@ -34,12 +34,13 @@ import tomoyo.composeapp.generated.resources.play_model_order
 import tomoyo.composeapp.generated.resources.play_model_random
 import tomoyo.composeapp.generated.resources.settings
 import tomoyo.composeapp.generated.resources.videos
-import ui.components.ArticlesTab
-import ui.components.ContactsTab
-import ui.components.HomeTab
-import ui.components.MusicsTab
-import ui.components.SettingTab
-import ui.components.VideosTab
+import ui.components.NoneScreen
+import ui.pages.MainArticlesScreen
+import ui.pages.MainContactsScreen
+import ui.pages.MainHomeScreen
+import ui.pages.MainMusicsScreen
+import ui.pages.MainSettingsScreen
+import ui.pages.MainVideosScreen
 
 
 enum class MusicPlayScreenTabModel(
@@ -75,18 +76,60 @@ enum class MainNavigationEnum(
     val code: String,
     val title: StringResource,
     val icon: ImageVector,
-    val tab: Tab,
+    val screen: Screen,
 ) {
-    ARTICLES("articles", Res.string.articles, FontAwesomeIcons.Solid.Book, ArticlesTab),
-    MUSICS("musics", Res.string.musics, FontAwesomeIcons.Solid.Music, MusicsTab),
-    HOME("home", Res.string.home, FontAwesomeIcons.Solid.CandyCane, HomeTab),
-    VIDEOS("videos", Res.string.videos, FontAwesomeIcons.Solid.Film, VideosTab),
-    Contacts("contacts", Res.string.contacts, FontAwesomeIcons.Solid.AddressBook, ContactsTab),
-    SETTING("settings", Res.string.settings, FontAwesomeIcons.Solid.ListUl, SettingTab),
 
+    //tab
 
-    MUSIC_PLAYER("music_player", Res.string.none, Icons.Rounded.Done, HomeTab);
+    ARTICLES(
+        "tab_main_articles_", Res.string.articles,
+        FontAwesomeIcons.Solid.Book, MainArticlesScreen
+    ),
+    MUSICS(
+        "tab_main_musics_", Res.string.musics,
+        FontAwesomeIcons.Solid.Music, MainMusicsScreen
+    ),
+    HOME(
+        "tab_main_home_", Res.string.home,
+        FontAwesomeIcons.Solid.CandyCane, MainHomeScreen
+    ),
+    VIDEOS(
+        "tab_main_videos_", Res.string.videos,
+        FontAwesomeIcons.Solid.Film, MainVideosScreen
+    ),
+    Contacts(
+        "tab_main_contacts_", Res.string.contacts,
+        FontAwesomeIcons.Solid.AddressBook, MainContactsScreen
+    ),
+    SETTING(
+        "tab_main_settings_", Res.string.settings,
+        FontAwesomeIcons.Solid.ListUl, MainSettingsScreen
+    ),
 
+    //view
+
+    ARTICLE_DETAIL(
+        "article_detail_", Res.string.none,
+        Icons.Rounded.Place, NoneScreen
+    ),
+    MUSIC_PLAYER(
+        "music_player_", Res.string.none,
+        Icons.Rounded.Place, NoneScreen
+    ),
+    USER_CHAT(
+        "user_chat_", Res.string.none,
+        Icons.Rounded.Place, NoneScreen
+    ),
+    USER_DETAIL(
+        "user_detail_", Res.string.none,
+        Icons.Rounded.Place, NoneScreen
+    ),
+    USER_LOGIN(
+        "user_login_", Res.string.none,
+        Icons.Rounded.Place, NoneScreen
+    ),
+
+    ;
 
     companion object {
         fun getEnumByCode(code: String): MainNavigationEnum {
@@ -119,9 +162,14 @@ enum class WindowsSizeEnum(
 enum class ViewEnum(
     val code: String,
 ) {
-    ARTICLE_DETAIL("article_detail_"),
-    MUSIC_PLAYER("music_player_"),
-    USER_CHAT("user_chat_"),
-    USER_DETAIL("user_detail_"),
-    USER_LOGIN("user_login_"),
+    TAB_MAIN_HOME("tab_main_home_"),
+    TAB_MAIN_CONTACTS("tab_main_contacts_"),
+    TAB_MAIN_ARTICLES("tab_main_articles_"),
+    TAB_MAIN_MUSICS("tab_main_musics_"),
+    TAB_MAIN_SETTINGS("tab_main_settings_"),
+    TAB_MAIN_VIDEOS("tab_main_videos_"),
+
+
+
+
 }

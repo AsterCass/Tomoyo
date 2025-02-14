@@ -33,12 +33,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.request.ImageRequest
 import constant.enums.RoleTypeEnum
+import constant.enums.ViewEnum
 import data.PublicUserSimpleModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
@@ -55,7 +58,7 @@ import ui.views.UserDetailScreen
 
 object MainContactsScreen : Screen {
 
-    private fun readResolve(): Any = MainContactsScreen
+    override val key: ScreenKey = "${ViewEnum.TAB_MAIN_CONTACTS.code}$uniqueScreenKey"
 
     @Composable
     override fun Content() {

@@ -5,11 +5,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,7 +42,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
-import constant.enums.ViewEnum
+import constant.enums.MainNavigationEnum
 import data.UserChattingSimple
 import data.model.ChatScreenModel
 import data.model.MainScreenModel
@@ -55,11 +59,11 @@ import ui.components.MessageCard
 import ui.components.UserInput
 
 class UserChatScreen(
-    private val inputUserId: String,
-    private val inputChatId: String,
+    private val inputUserId: String = "",
+    private val inputChatId: String = "",
 ) : Screen {
 
-    override val key: ScreenKey = "${ViewEnum.USER_CHAT.code}$uniqueScreenKey"
+    override val key: ScreenKey = "${MainNavigationEnum.USER_CHAT.code}$uniqueScreenKey"
 
 
     @Composable
@@ -126,8 +130,9 @@ class UserChatScreen(
 
         Column(
             Modifier
-//                .windowInsetsPadding(WindowInsets.systemBars)
-                .fillMaxHeight()
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBars)
+                .imePadding()
                 .padding(top = 4.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {

@@ -10,7 +10,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
+import constant.enums.ViewEnum
 import ui.components.MediaPlayer
+
+
+object MainVideosScreen : Screen {
+
+    override val key: ScreenKey = "${ViewEnum.TAB_MAIN_VIDEOS.code}$uniqueScreenKey"
+
+    @Composable
+    override fun Content() {
+        MainVideosScreen()
+    }
+
+}
+
 
 @Composable
 fun MainVideosScreen() {

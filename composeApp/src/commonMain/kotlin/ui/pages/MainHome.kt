@@ -28,6 +28,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import biz.getLastTime
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
@@ -39,6 +41,7 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Circle
 import compose.icons.fontawesomeicons.solid.InfoCircle
 import constant.BaseResText
+import constant.enums.ViewEnum
 import data.UserChattingSimple
 import data.model.ChatScreenModel
 import data.model.GlobalDataModel
@@ -74,7 +77,7 @@ import ui.views.UserChatScreen
 
 object MainHomeScreen : Screen {
 
-    private fun readResolve(): Any = MainHomeScreen
+    override val key: ScreenKey = "${ViewEnum.TAB_MAIN_HOME.code}$uniqueScreenKey"
 
     @Composable
     override fun Content() {

@@ -52,7 +52,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import api.ApiResText
 import api.BaseApi
-import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.Bell
@@ -79,13 +82,22 @@ import tomoyo.composeapp.generated.resources.web_thu
 import tomoyo.composeapp.generated.resources.web_tue
 import tomoyo.composeapp.generated.resources.web_wed
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+object NoneScreen : Screen {
+
+    @Composable
+    override fun Content() {
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class, InternalVoyagerApi::class)
 @Composable
 fun MainAppBar(
 
 ) {
 
-    val title = LocalTabNavigator.current.current.options.title
+    val title = MainNavigationEnum.getEnumByCode(LocalNavigator.currentOrThrow.key).title
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -109,7 +121,8 @@ fun MainAppBar(
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onBackground,
                 )
-                Text(title)
+
+                Text(stringResource(title))
 
                 Icon(
                     modifier = Modifier
@@ -132,17 +145,16 @@ fun MainAppBar(
 fun MainAppNavigationBar(
     extraNavigationList: List<MainNavigationEnum> = emptyList(),
 ) {
-
     BottomNavigation(
         modifier = Modifier.navigationBarsPadding()
-            .height(50.dp)
+            .height(60.dp)
     ) {
         MainNavigationEnum.entries.toTypedArray().forEach { nav ->
-            val tabNavigator = LocalTabNavigator.current
-            val isSelected = tabNavigator.current == nav.tab
+            val tabNavigator = LocalNavigator.currentOrThrow
+            val isSelected = tabNavigator.lastItem == nav.screen
             if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
                 NavigationBarItem(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface).height(50.dp),
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface).height(60.dp),
                     colors = NavigationBarItemDefaults.colors().copy(
                         unselectedIconColor = MaterialTheme.colorScheme.unselectedColor,
                     ),
@@ -163,7 +175,7 @@ fun MainAppNavigationBar(
                         }
                     },
                     selected = isSelected,
-                    onClick = { tabNavigator.current = nav.tab },
+                    onClick = { tabNavigator.replaceAll(nav.screen) },
                 )
             }
         }
