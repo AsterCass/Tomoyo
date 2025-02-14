@@ -1,7 +1,5 @@
 package constant.enums
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Place
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
@@ -25,7 +23,6 @@ import tomoyo.composeapp.generated.resources.media_repeat_all
 import tomoyo.composeapp.generated.resources.media_repeat_one
 import tomoyo.composeapp.generated.resources.media_shuffle
 import tomoyo.composeapp.generated.resources.musics
-import tomoyo.composeapp.generated.resources.none
 import tomoyo.composeapp.generated.resources.play_audio_tab_favorite
 import tomoyo.composeapp.generated.resources.play_audio_tab_private
 import tomoyo.composeapp.generated.resources.play_audio_tab_public
@@ -34,7 +31,6 @@ import tomoyo.composeapp.generated.resources.play_model_order
 import tomoyo.composeapp.generated.resources.play_model_random
 import tomoyo.composeapp.generated.resources.settings
 import tomoyo.composeapp.generated.resources.videos
-import ui.components.NoneScreen
 import ui.pages.MainArticlesScreen
 import ui.pages.MainContactsScreen
 import ui.pages.MainHomeScreen
@@ -72,6 +68,25 @@ enum class NotificationType(
     TIP("tip", Color.Transparent, Color.Transparent),
 }
 
+
+enum class ViewEnum(
+    val code: String,
+) {
+    TAB_MAIN_HOME("tab_main_home_"),
+    TAB_MAIN_CONTACTS("tab_main_contacts_"),
+    TAB_MAIN_ARTICLES("tab_main_articles_"),
+    TAB_MAIN_MUSICS("tab_main_musics_"),
+    TAB_MAIN_SETTINGS("tab_main_settings_"),
+    TAB_MAIN_VIDEOS("tab_main_videos_"),
+
+    ARTICLE_DETAIL("article_detail_"),
+    MUSIC_PLAYER("music_player_"),
+    USER_CHAT("user_chat_"),
+    USER_DETAIL("user_detail_"),
+    USER_LOGIN("user_login_"),
+    ;
+}
+
 enum class MainNavigationEnum(
     val code: String,
     val title: StringResource,
@@ -82,51 +97,28 @@ enum class MainNavigationEnum(
     //tab
 
     ARTICLES(
-        "tab_main_articles_", Res.string.articles,
+        ViewEnum.TAB_MAIN_ARTICLES.code, Res.string.articles,
         FontAwesomeIcons.Solid.Book, MainArticlesScreen
     ),
     MUSICS(
-        "tab_main_musics_", Res.string.musics,
+        ViewEnum.TAB_MAIN_MUSICS.code, Res.string.musics,
         FontAwesomeIcons.Solid.Music, MainMusicsScreen
     ),
     HOME(
-        "tab_main_home_", Res.string.home,
+        ViewEnum.TAB_MAIN_HOME.code, Res.string.home,
         FontAwesomeIcons.Solid.CandyCane, MainHomeScreen
     ),
     VIDEOS(
-        "tab_main_videos_", Res.string.videos,
+        ViewEnum.TAB_MAIN_VIDEOS.code, Res.string.videos,
         FontAwesomeIcons.Solid.Film, MainVideosScreen
     ),
     Contacts(
-        "tab_main_contacts_", Res.string.contacts,
+        ViewEnum.TAB_MAIN_CONTACTS.code, Res.string.contacts,
         FontAwesomeIcons.Solid.AddressBook, MainContactsScreen
     ),
     SETTING(
-        "tab_main_settings_", Res.string.settings,
+        ViewEnum.TAB_MAIN_SETTINGS.code, Res.string.settings,
         FontAwesomeIcons.Solid.ListUl, MainSettingsScreen
-    ),
-
-    //view
-
-    ARTICLE_DETAIL(
-        "article_detail_", Res.string.none,
-        Icons.Rounded.Place, NoneScreen
-    ),
-    MUSIC_PLAYER(
-        "music_player_", Res.string.none,
-        Icons.Rounded.Place, NoneScreen
-    ),
-    USER_CHAT(
-        "user_chat_", Res.string.none,
-        Icons.Rounded.Place, NoneScreen
-    ),
-    USER_DETAIL(
-        "user_detail_", Res.string.none,
-        Icons.Rounded.Place, NoneScreen
-    ),
-    USER_LOGIN(
-        "user_login_", Res.string.none,
-        Icons.Rounded.Place, NoneScreen
     ),
 
     ;
@@ -135,7 +127,7 @@ enum class MainNavigationEnum(
         fun getEnumByCode(code: String): MainNavigationEnum {
             var ret = HOME
             for (thisEnum in entries) {
-                if (thisEnum.code == code) {
+                if (code.startsWith(thisEnum.code)) {
                     ret = thisEnum
                     break
                 }
@@ -156,20 +148,5 @@ enum class WindowsSizeEnum(
     STD("720", "1280x720", DpSize(width = 1280.dp, height = 720.dp)),
     HIGH("1080", "1920x1080", DpSize(width = 1920.dp, height = 1080.dp)),
     VH("2k", "2k", DpSize(width = 2560.dp, height = 1440.dp)),
-
-}
-
-enum class ViewEnum(
-    val code: String,
-) {
-    TAB_MAIN_HOME("tab_main_home_"),
-    TAB_MAIN_CONTACTS("tab_main_contacts_"),
-    TAB_MAIN_ARTICLES("tab_main_articles_"),
-    TAB_MAIN_MUSICS("tab_main_musics_"),
-    TAB_MAIN_SETTINGS("tab_main_settings_"),
-    TAB_MAIN_VIDEOS("tab_main_videos_"),
-
-
-
 
 }

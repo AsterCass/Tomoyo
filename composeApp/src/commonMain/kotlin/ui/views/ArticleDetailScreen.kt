@@ -44,7 +44,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.request.ImageRequest
-import constant.enums.MainNavigationEnum
+import constant.enums.ViewEnum
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
@@ -55,7 +55,7 @@ import theme.subTextColor
 
 class ArticleDetailScreen : Screen {
 
-    override val key: ScreenKey = "${MainNavigationEnum.ARTICLE_DETAIL.code}$uniqueScreenKey"
+    override val key: ScreenKey = "${ViewEnum.ARTICLE_DETAIL.code}$uniqueScreenKey"
 
     @Composable
     override fun Content() {

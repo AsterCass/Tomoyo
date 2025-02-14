@@ -167,7 +167,7 @@ fun MainArticlesScreen(
             ArticleListItem(item = articleDataList[index],
                 toDetail = {
                     screenModel.updateReadingMeta(it)
-                    navigator.push(ArticleDetailScreen())
+                    navigator.parent?.push(ArticleDetailScreen())
                 })
         }
 

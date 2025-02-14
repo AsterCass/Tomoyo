@@ -97,7 +97,7 @@ fun MainContactsScreen(
                 PublicUserListItem(
                     item = publicUserDataList[index],
                     onClick = {
-                        navigator.push(UserDetailScreen(it))
+                        navigator.parent?.push(UserDetailScreen(it))
                     }
                 )
             }

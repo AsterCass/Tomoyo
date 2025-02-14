@@ -36,6 +36,16 @@ class MainScreenModel : ScreenModel, KoinComponent {
     private val _userState = globalDataModel.userState
     val userState = _userState
 
+    // Navigation
+    private var _secLastKey = ""
+    fun getSecondLastNavKey(): String {
+        return _secLastKey;
+    }
+
+    fun updateSecondLastNavKey(key: String) {
+        _secLastKey = key
+    }
+
     //coroutine
     private val _commonCoroutine = screenModelScope
 

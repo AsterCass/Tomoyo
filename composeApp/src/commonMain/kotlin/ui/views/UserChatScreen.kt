@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -42,7 +41,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
-import constant.enums.MainNavigationEnum
+import constant.enums.ViewEnum
 import data.UserChattingSimple
 import data.model.ChatScreenModel
 import data.model.MainScreenModel
@@ -63,7 +62,7 @@ class UserChatScreen(
     private val inputChatId: String = "",
 ) : Screen {
 
-    override val key: ScreenKey = "${MainNavigationEnum.USER_CHAT.code}$uniqueScreenKey"
+    override val key: ScreenKey = "${ViewEnum.USER_CHAT.code}$uniqueScreenKey"
 
 
     @Composable
@@ -132,7 +131,6 @@ class UserChatScreen(
             Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.systemBars)
-                .imePadding()
                 .padding(top = 4.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {

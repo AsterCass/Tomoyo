@@ -10,10 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import api.baseJsonConf
 import biz.StatusBar
-import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
-import cafe.adriel.voyager.navigator.CurrentScreen
+import biz.TabTransition
+import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
-import constant.enums.MainNavigationEnum
+import cafe.adriel.voyager.transitions.SlideTransition
 import data.PlatformInitData
 import data.UserDataModel
 import data.model.MainScreenModel
@@ -65,162 +65,11 @@ fun MainApp(
                 }
             }
 
-            //navigator
-
-            Navigator(MainHomeScreen) { navigator ->
-
-                val tabList = listOf(
-                    MainNavigationEnum.ARTICLES,
-                    MainNavigationEnum.MUSICS,
-                    MainNavigationEnum.HOME,
-                    MainNavigationEnum.VIDEOS,
-                    MainNavigationEnum.Contacts,
-                    MainNavigationEnum.SETTING,
-                )
-
-                if (tabList.any { navigator.lastItem.key.startsWith(it.code) }) {
-                    Scaffold(
-                        topBar = {
-                            MainAppBar()
-                        },
-                        bottomBar = {
-                            MainAppNavigationBar(
-                                extraNavigationList = platformData.extraNavigationList,
-                            )
-                        },
-                        content = { padding ->
-
-                            BoxWithConstraints(
-                                modifier = Modifier.padding(padding).fillMaxSize()
-                            ) {
-
-                                //size
-                                val constraints = this.constraints
-                                mainModel.updateMainPageContainerConstraints(constraints)
-
-                                //screen1
-                                CurrentScreen()
-
-                                //notification
-                                Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                                    NotificationComponent()
-                                }
-
-                            }
-
-                        }
-                    )
-                } else {
-                    BoxWithConstraints(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-
-                        //size
-                        val constraints = this.constraints
-                        mainModel.updateMainPageContainerConstraints(constraints)
-
-                        //screen1
-                        CurrentScreen()
-
-                        //notification
-                        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                            NotificationComponent()
-                        }
-
-                    }
-                }
-
-            }
-
 
             //navigation
-//            val tabs = remember {
-//                listOf(
-//                    HomeTab, ArticlesTab, MusicsTab,
-//                    VideosTab, ContactsTab, SettingTab
-//                )
-//            }
-//            var lastTabIndex = HomeTab.options.index
-//            TabNavigator(
-//                tab = HomeTab,
-//                tabDisposable = {
-//                    TabDisposable(
-//                        navigator = it,
-//                        tabs = tabs
-//                    )
-//                },
-//            ) { tabNavigator ->
-//
-//                Scaffold(
-////                    contentWindowInsets = WindowInsets.navigationBars,
-////                    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)
-////                        .imePadding(),
-//                    topBar = {
-//                        MainAppBar()
-//                    },
-//                    bottomBar = {
-//                        MainAppNavigationBar(
-//                            extraNavigationList = platformData.extraNavigationList,
-//                        )
-//                    },
-//                    content = { padding ->
-//
-//                        BoxWithConstraints(
-//                            modifier = Modifier.padding(padding).fillMaxSize()
-//                        ) {
-//
-//                            //size
-//                            val constraints = this.constraints
-//                            mainModel.updateMainPageContainerConstraints(constraints)
-//
-//                            //screen1
-//                            CurrentTab()
-//
-//                            //screen2
-////                            Crossfade(
-////                                targetState = tabNavigator.current,
-////                                animationSpec = tween(durationMillis = 1000)
-////                            ) { selectedTab ->
-////                                selectedTab.Content()
-////                            }
-//
-//                            //screen3
-////                            tabs.forEach { tab ->
-////                                val isToRight = tabNavigator.current.options.index > lastTabIndex
-////                                AnimatedVisibility(
-////                                    visible = tabNavigator.current == tab,
-////                                    enter = if (tab == HomeTab) fadeIn(
-////                                        animationSpec = tween(
-////                                            durationMillis = 800
-////                                        )
-////                                    )
-////                                    else
-////                                        slideInHorizontally(
-////                                            initialOffsetX = { fullHeight ->
-////                                                if (isToRight)
-////                                                    fullHeight else -fullHeight
-////                                            },
-////                                            animationSpec = tween(
-////                                                durationMillis = 800,
-////                                            ),
-////                                        ),
-////                                    exit = fadeOut(animationSpec = tween(durationMillis = 400)),
-////                                ) {
-////                                    lastTabIndex = tab.options.index
-////                                    tab.Content()
-////                                }
-////                            }
-//
-//                            //notification
-//                            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-//                                NotificationComponent()
-//                            }
-//
-//                        }
-//
-//                    }
-//                )
-//            }
+            Navigator(MainTabsScreen(platformData, mainModel)) { navigator ->
+                SlideTransition(navigator)
+            }
 
         }
     }
@@ -228,63 +77,44 @@ fun MainApp(
 }
 
 
-//data class MainTabsScreen(
-//    val platformData: PlatformInitData,
-//    val mainModel: MainScreenModel
-//) : Screen {
-//    @Composable
-//    override fun Content() {
-//
-//        //navigation
-//        val tabs = remember {
-//            listOf(
-//                HomeTab, ArticlesTab, MusicsTab,
-//                VideosTab, ContactsTab, SettingTab
-//            )
-//        }
-//        TabNavigator(
-//            tab = HomeTab,
-//            tabDisposable = {
-//                TabDisposable(
-//                    navigator = it,
-//                    tabs = tabs
-//                )
-//            },
-//        ) { nav ->
-//
-//
-//            Scaffold(
-//                topBar = {
-//                    MainAppBar()
-//                },
-//                bottomBar = {
-//                    MainAppNavigationBar(
-//                        extraNavigationList = platformData.extraNavigationList,
-//                    )
-//                },
-//                content = { padding ->
-//
-//                    BoxWithConstraints(
-//                        modifier = Modifier.padding(padding).fillMaxSize()
-//                    ) {
-//
-//                        //size
-//                        val constraints = this.constraints
-//                        mainModel.updateMainPageContainerConstraints(constraints)
-//
-//                        //screen1
-////                        CurrentTab()
-//                        SlideTransition(nav)
-//
-//                        //notification
-//                        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-//                            NotificationComponent()
-//                        }
-//
-//                    }
-//
-//                }
-//            )
-//        }
-//    }
-//}
+data class MainTabsScreen(
+    val platformData: PlatformInitData,
+    val mainModel: MainScreenModel
+) : Screen {
+    @Composable
+    override fun Content() {
+        //navigator
+        Navigator(MainHomeScreen) { navigator ->
+            Scaffold(
+                topBar = {
+                    MainAppBar()
+                },
+                bottomBar = {
+                    MainAppNavigationBar(
+                        extraNavigationList = platformData.extraNavigationList,
+                    )
+                },
+                content = { padding ->
+
+                    BoxWithConstraints(
+                        modifier = Modifier.padding(padding).fillMaxSize()
+                    ) {
+                        //size
+                        val constraints = this.constraints
+                        mainModel.updateMainPageContainerConstraints(constraints)
+
+                        //screen1
+                        TabTransition(mainModel.getSecondLastNavKey(), navigator)
+                        mainModel.updateSecondLastNavKey(navigator.lastItem.key)
+
+                        //notification
+                        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                            NotificationComponent()
+                        }
+                    }
+
+                }
+            )
+        }
+    }
+}

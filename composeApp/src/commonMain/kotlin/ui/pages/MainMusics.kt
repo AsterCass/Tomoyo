@@ -277,7 +277,7 @@ fun MainMusicsScreen(
                                                 playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
                                             )
                                             if (it) {
-                                                navigator.push(MusicsPlayerScreen())
+                                                navigator.parent?.push(MusicsPlayerScreen())
                                             }
                                         },
                                         onFav = { isFav, id ->
@@ -362,7 +362,7 @@ fun MainMusicsScreen(
                                                 musicPlayMap = playFavMap,
                                             )
                                             if (it) {
-                                                navigator.push(MusicsPlayerScreen())
+                                                navigator.parent?.push(MusicsPlayerScreen())
                                             }
                                         },
                                         onFav = { isFav, id ->
@@ -421,7 +421,7 @@ fun MainMusicsScreen(
 
                     Column(
                         modifier = Modifier.clickable {
-                            navigator.push(MusicsPlayerScreen())
+                            navigator.parent?.push(MusicsPlayerScreen())
                         }
                     ) {
 

@@ -102,7 +102,7 @@ fun MainSettingsScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 onClick = {
-                    navigator.push(UserLoginScreen())
+                    navigator.parent?.push(UserLoginScreen())
                 },
                 colors = ButtonDefaults.buttonColors().copy(
 

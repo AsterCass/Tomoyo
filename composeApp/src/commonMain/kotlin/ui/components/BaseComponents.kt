@@ -53,7 +53,6 @@ import androidx.compose.ui.window.Dialog
 import api.ApiResText
 import api.BaseApi
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
@@ -83,21 +82,13 @@ import tomoyo.composeapp.generated.resources.web_tue
 import tomoyo.composeapp.generated.resources.web_wed
 
 
-object NoneScreen : Screen {
-
-    @Composable
-    override fun Content() {
-    }
-
-}
-
 @OptIn(ExperimentalMaterial3Api::class, InternalVoyagerApi::class)
 @Composable
 fun MainAppBar(
 
 ) {
 
-    val title = MainNavigationEnum.getEnumByCode(LocalNavigator.currentOrThrow.key).title
+    val title = MainNavigationEnum.getEnumByCode(LocalNavigator.currentOrThrow.lastItem.key).title
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(

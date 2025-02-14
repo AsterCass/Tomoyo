@@ -63,8 +63,8 @@ import compose.icons.fontawesomeicons.regular.ShareSquare
 import compose.icons.fontawesomeicons.regular.ThumbsUp
 import compose.icons.fontawesomeicons.solid.CandyCane
 import constant.BaseResText
-import constant.enums.MainNavigationEnum
 import constant.enums.MusicPlayModel
+import constant.enums.ViewEnum
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
 import org.jetbrains.compose.resources.painterResource
@@ -85,7 +85,7 @@ import ui.components.NotificationManager
 
 class MusicsPlayerScreen : Screen {
 
-    override val key: ScreenKey = "${MainNavigationEnum.MUSIC_PLAYER.code}$uniqueScreenKey"
+    override val key: ScreenKey = "${ViewEnum.MUSIC_PLAYER.code}$uniqueScreenKey"
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable

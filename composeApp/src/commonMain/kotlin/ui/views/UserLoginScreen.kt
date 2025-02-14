@@ -64,8 +64,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import constant.BaseResText
-import constant.enums.MainNavigationEnum
 import constant.enums.NotificationType
+import constant.enums.ViewEnum
 import data.model.MainScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.launch
@@ -99,7 +99,7 @@ import ui.components.NotificationManager
 
 class UserLoginScreen : Screen {
 
-    override val key: ScreenKey = "${MainNavigationEnum.USER_LOGIN.code}$uniqueScreenKey"
+    override val key: ScreenKey = "${ViewEnum.USER_LOGIN.code}$uniqueScreenKey"
 
     @OptIn(ExperimentalMaterial3Api::class, InternalVoyagerApi::class)
     @Composable

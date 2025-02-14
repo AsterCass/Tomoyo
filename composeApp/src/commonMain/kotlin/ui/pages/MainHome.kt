@@ -168,7 +168,7 @@ fun MainHomeScreen(
                                     + currentMusic.audioName +
                                     stringResource(Res.string.play_audio_playing_pause)
                         ) {
-                            navigator.push(MusicsPlayerScreen())
+                            navigator.parent?.push(MusicsPlayerScreen())
                         }
                     }
 
@@ -241,7 +241,7 @@ fun MainHomeScreen(
                                                 chatDataList[index].chatId ?: "",
                                                 messageId = messageId
                                             )
-                                            navigator.push(
+                                            navigator.parent?.push(
                                                 UserChatScreen(
                                                     "",
                                                     chatDataList[index].chatId ?: ""
