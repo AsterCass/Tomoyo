@@ -47,17 +47,16 @@ import ui.pages.MainHomeScreen
 @Composable
 fun MainApp(
     platformData: PlatformInitData = PlatformInitData(),
-    mainModel: MainScreenModel = koinInject(),
-    dataStorageManager: DataStorageManager = koinInject(),
 ) {
     KoinContext {
         MaterialTheme(
             colorScheme = LightColorScheme,
             typography = MainTypography(),
         ) {
+            val mainModel: MainScreenModel = koinInject()
+            mainModel.initPlatformInitData(platformData)
             //navigation
-            Navigator(PreLoadScreen(dataStorageManager, platformData, mainModel)) { navigator ->
-
+            Navigator(PreLoadScreen()) { navigator ->
                 SlideTransition(navigator)
             }
 
@@ -66,17 +65,15 @@ fun MainApp(
 
 }
 
-data class PreLoadScreen(
-    val dataStorageManager: DataStorageManager,
-    val platformData: PlatformInitData,
-    val mainModel: MainScreenModel
-) : Screen {
+class PreLoadScreen : Screen {
 
     override val key: ScreenKey = "${ViewEnum.PRE_LOAD.code}$uniqueScreenKey"
 
     @Composable
     override fun Content() {
         // Model Inject
+        val dataStorageManager: DataStorageManager = koinInject()
+        val mainModel: MainScreenModel = koinInject()
         val articleModel: ArticleScreenModel = koinInject()
         val musicModel: MusicScreenModel = koinInject()
         val contactModel: ContactScreenModel = koinInject()
@@ -117,7 +114,7 @@ data class PreLoadScreen(
 
             // Init finish
             delay(500)
-            navigator.replace(MainTabsScreen(platformData, mainModel))
+            navigator.replace(MainTabsScreen())
         }
 
         FullScreen {
@@ -138,13 +135,13 @@ data class PreLoadScreen(
     }
 }
 
-
-data class MainTabsScreen(
-    val platformData: PlatformInitData,
-    val mainModel: MainScreenModel
-) : Screen {
+class MainTabsScreen : Screen {
     @Composable
     override fun Content() {
+
+        // Model Inject
+        val mainModel: MainScreenModel = koinInject()
+
         //navigator
         Navigator(MainHomeScreen) { navigator ->
             Scaffold(
@@ -153,7 +150,7 @@ data class MainTabsScreen(
                 },
                 bottomBar = {
                     MainAppNavigationBar(
-                        extraNavigationList = platformData.extraNavigationList,
+                        extraNavigationList = mainModel.getPlatformInitData().extraNavigationList,
                     )
                 },
                 content = { padding ->

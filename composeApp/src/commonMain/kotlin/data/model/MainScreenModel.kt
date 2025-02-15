@@ -6,6 +6,7 @@ import api.baseJsonConf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
+import data.PlatformInitData
 import data.UserDataModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.WebSockets
@@ -36,6 +37,16 @@ class MainScreenModel : ScreenModel, KoinComponent {
     private val _userState = globalDataModel.userState
     val userState = _userState
 
+    // PlatformInitData
+    private lateinit var _platformInitData: PlatformInitData
+    fun initPlatformInitData(data: PlatformInitData) {
+        _platformInitData = data
+    }
+
+    fun getPlatformInitData(): PlatformInitData {
+        return _platformInitData
+    }
+
     // Navigation
     private var _secLastKey = ""
     fun getSecondLastNavKey(): String {
@@ -65,8 +76,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
             delay(3000)
             if (globalDataModel.userState.value.token.isNotBlank()) {
                 login(
-                    dbData = globalDataModel.userState.value.userData,
-                    forceLogin = true
+                    dbData = globalDataModel.userState.value.userData, forceLogin = true
                 )
             }
         }
@@ -79,11 +89,9 @@ class MainScreenModel : ScreenModel, KoinComponent {
     }
 
     private val _collectorJob = MutableStateFlow<Job?>(null)
-    private val _socketClient = MutableStateFlow(StompClient(KtorWebSocketClient(
-        HttpClient {
-            install(WebSockets)
-        }
-    )) {
+    private val _socketClient = MutableStateFlow(StompClient(KtorWebSocketClient(HttpClient {
+        install(WebSockets)
+    })) {
         instrumentation = object : KrossbowInstrumentation {
             override suspend fun onWebSocketClosed(cause: Throwable?) {
                 println(cause)
@@ -153,8 +161,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
 
             println("[op:login] Socket connecting")
             _socketSession.value = _socketClient.value.connect(
-                "wss://api.astercasc.com/yui/chat-websocket/no-js/socketAuthNoError?" +
-                        "User-Token=${_userState.value.token}"
+                "wss://api.astercasc.com/yui/chat-websocket/no-js/socketAuthNoError?" + "User-Token=${_userState.value.token}"
             )
             println("[op:login] Socket connect successful")
             val subscription: Flow<String> = _socketSession.value!!.subscribeText(
