@@ -3,12 +3,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import api.baseJsonConf
 import biz.StatusBar
@@ -37,7 +39,6 @@ import theme.LightColorScheme
 import theme.MainTypography
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bg1
-import ui.components.FullScreen
 import ui.components.InitForNoComposableRes
 import ui.components.MainAppBar
 import ui.components.MainAppNavigationBar
@@ -69,6 +70,7 @@ class PreLoadScreen : Screen {
 
     override val key: ScreenKey = "${ViewEnum.PRE_LOAD.code}$uniqueScreenKey"
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         // Model Inject
@@ -79,7 +81,7 @@ class PreLoadScreen : Screen {
         val contactModel: ContactScreenModel = koinInject()
 
         // Custom data inject
-        StatusBar().updateColor(MaterialTheme.colorScheme.surface, true)
+        StatusBar().UpdateColor(Color.Transparent, Color.Transparent, false)
         InitForNoComposableRes()
 
         // Coroutine
@@ -117,20 +119,17 @@ class PreLoadScreen : Screen {
             navigator.replace(MainTabsScreen())
         }
 
-        FullScreen {
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(Res.drawable.bg1),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentScale = ContentScale.Crop,
-                )
-            }
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                painter = painterResource(Res.drawable.bg1),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop,
+            )
         }
-
 
     }
 }
@@ -141,6 +140,13 @@ class MainTabsScreen : Screen {
 
         // Model Inject
         val mainModel: MainScreenModel = koinInject()
+
+        // Reset color
+        StatusBar().UpdateColor(
+            Color.Transparent,
+            MaterialTheme.colorScheme.surface,
+            true,
+        )
 
         //navigator
         Navigator(MainHomeScreen) { navigator ->

@@ -5,9 +5,10 @@ import androidx.compose.ui.graphics.Color
 
 actual class StatusBar actual constructor() {
     @Composable
-    actual fun updateColor(
-        bgColor: Color,
-        textColorIsDark: Boolean,
+    actual fun UpdateColor(
+        statusBarColor: Color,
+        navigationBarColor: Color,
+        isLight: Boolean,
     ) {
     }
 }
