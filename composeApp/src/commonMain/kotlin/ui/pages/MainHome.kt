@@ -34,7 +34,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.LocalPlatformContext
-import com.github.panpf.sketch.PlatformContext
 import com.github.panpf.sketch.request.ImageRequest
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -47,7 +46,6 @@ import data.model.ChatScreenModel
 import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
-import data.store.DataStorageManager
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -91,14 +89,9 @@ fun MainHomeScreen(
 ) {
     //inject
     val globalDataModel: GlobalDataModel = koinInject()
-    val dataStorageManager: DataStorageManager = koinInject()
     val mainModel: MainScreenModel = koinInject()
     val musicScreenModel: MusicScreenModel = koinInject()
     val chatDataModel: ChatScreenModel = koinInject()
-    val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
-
-    //context for image
-    val localPlatformContext = LocalPlatformContext.current
 
     //coroutine
     val commonApiCoroutine = rememberCoroutineScope()
@@ -230,8 +223,6 @@ fun MainHomeScreen(
                             ),
                             content = {
                                 UserChatListItem(
-                                    configBlock = configBlock,
-                                    localPlatformContext = localPlatformContext,
                                     item = chatDataList[index],
                                     onClick = {
                                         commonApiCoroutine.launch {
@@ -270,9 +261,14 @@ fun MainHomeScreen(
 fun UserChatListItem(
     item: UserChattingSimple,
     onClick: (String) -> Unit,
-    configBlock: (ImageRequest.Builder.() -> Unit),
-    localPlatformContext: PlatformContext,
 ) {
+
+    // Inject
+    val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
+
+    // Context for image
+    val localPlatformContext = LocalPlatformContext.current
+
 
     val chatId = item.chatId
     if (chatId.isNullOrBlank()) {

@@ -182,7 +182,10 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
+
+        release {
+            version = "1.3.4"
+            setProguardFiles(listOf(File("proguard-rules.pro")))
             isMinifyEnabled = false
         }
     }

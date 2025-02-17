@@ -74,6 +74,7 @@ enum class ViewEnum(
 ) {
     PRE_LOAD("pre_load_"),
 
+    TAB_PARENT("tab_parent_"),
     TAB_MAIN_HOME("tab_main_home_"),
     TAB_MAIN_CONTACTS("tab_main_contacts_"),
     TAB_MAIN_ARTICLES("tab_main_articles_"),

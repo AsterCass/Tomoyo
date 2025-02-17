@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import api.baseJsonConf
+import biz.BaseViewTransition
 import biz.StatusBar
 import biz.TabTransition
 import cafe.adriel.voyager.core.screen.Screen
@@ -20,7 +21,6 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.transitions.SlideTransition
 import constant.enums.ViewEnum
 import data.PlatformInitData
 import data.UserDataModel
@@ -61,7 +61,8 @@ fun MainApp(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     //screen1
-                    SlideTransition(navigator)
+                    BaseViewTransition(mainModel.getViewSecondLastNavKey(), navigator)
+                    mainModel.updateViewSecondLastNavKey(navigator.lastItem.key)
 
                     //notification
                     Box(modifier = Modifier.align(Alignment.BottomCenter)) {
@@ -123,7 +124,7 @@ class PreLoadScreen : Screen {
             contactModel.loadPublicUser()
 
             // Init finish
-            delay(500)
+            delay(200)
             navigator.replace(MainTabsScreen())
         }
 
@@ -143,6 +144,9 @@ class PreLoadScreen : Screen {
 }
 
 class MainTabsScreen : Screen {
+
+    override val key: ScreenKey = "${ViewEnum.TAB_PARENT.code}$uniqueScreenKey"
+
     @Composable
     override fun Content() {
 

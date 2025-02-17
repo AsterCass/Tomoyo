@@ -57,6 +57,16 @@ class MainScreenModel : ScreenModel, KoinComponent {
         _secLastKey = key
     }
 
+    private var _viewSecLastKey = ""
+    fun getViewSecondLastNavKey(): String {
+        return _viewSecLastKey;
+    }
+
+    fun updateViewSecondLastNavKey(key: String) {
+        _viewSecLastKey = key
+    }
+
+
     //coroutine
     private val _commonCoroutine = screenModelScope
 
