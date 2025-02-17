@@ -3,7 +3,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -58,7 +57,17 @@ fun MainApp(
             mainModel.initPlatformInitData(platformData)
             //navigation
             Navigator(PreLoadScreen()) { navigator ->
-                SlideTransition(navigator)
+                BoxWithConstraints(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    //screen1
+                    SlideTransition(navigator)
+
+                    //notification
+                    Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                        NotificationComponent()
+                    }
+                }
             }
 
         }
@@ -70,7 +79,6 @@ class PreLoadScreen : Screen {
 
     override val key: ScreenKey = "${ViewEnum.PRE_LOAD.code}$uniqueScreenKey"
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         // Model Inject
