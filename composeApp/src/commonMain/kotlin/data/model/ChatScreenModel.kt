@@ -237,5 +237,13 @@ class ChatScreenModel : ScreenModel {
         }
     }
 
+    // User emoji pro size cache
+    private var _emojiProSizeCache = MutableStateFlow<Map<String, Pair<Float, Int>>>(emptyMap())
+    val emojiProSizeCache = _emojiProSizeCache.asStateFlow()
+    fun updateEmojiProSizeCache(key: String, value: Pair<Float, Int>) {
+        val newCache = _emojiProSizeCache.value.toMutableMap()
+        newCache[key] = value
+        _emojiProSizeCache.value = newCache.toMap()
+    }
 
 }

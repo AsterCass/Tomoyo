@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,6 +53,7 @@ import constant.BaseResText
 import constant.MAX_TIME_SPE_SEC
 import constant.enums.NotificationType
 import data.UserChatMsgDto
+import data.model.ChatScreenModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -59,6 +61,7 @@ import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import theme.baseBackgroundBlack
 import theme.pureColor
 import theme.subTextColor
@@ -295,16 +298,16 @@ private fun MessageCardBody(
 
 @Composable
 private fun MessageCardBodyImage(url: String?) {
-
+    val chatScreenModel: ChatScreenModel = koinInject()
+    val emojiProSizeCache = chatScreenModel.emojiProSizeCache.collectAsState().value
     val bodyImageLoadCoroutine = rememberCoroutineScope()
-    var metaData by remember { mutableStateOf(Pair(0.0f, 0)) }
 
     val request = ComposableImageRequest(uri = url) {
         size(5000, 5000)
         precision(Precision.LESS_PIXELS)
         scale(Scale.CENTER_CROP)
     }
-    if (metaData.second == 0) {
+    if (null == emojiProSizeCache[url]) {
         val localPlatformContext = LocalPlatformContext.current
         localPlatformContext.sketch.enqueue(request)
         bodyImageLoadCoroutine.launch {
@@ -313,14 +316,15 @@ private fun MessageCardBodyImage(url: String?) {
             val height = imageResult.image?.height
             if (null != width && null != height) {
                 val radio = width.toFloat().div(height.toFloat())
-                metaData = Pair(radio, width)
+                chatScreenModel.updateEmojiProSizeCache(url!!, Pair(radio, width))
             }
         }
     } else {
         AsyncImage(
             request = request,
             contentDescription = null,
-            modifier = Modifier.width((metaData.second).dp).aspectRatio(metaData.first)
+            modifier = Modifier.width((emojiProSizeCache[url]?.second)!!.dp)
+                .aspectRatio(emojiProSizeCache[url]?.first!!)
         )
     }
 
