@@ -120,5 +120,8 @@
     <string name="chat_relay"> 转发 </string>
     <string name="chat_copy"> 复制 </string>
     <string name="chat_copy_success"> 复制成功 </string>
+    <string name="chat_emoji_emoji"> Emoji </string>
+    <string name="chat_emoji_Kaomoji"> 颜文字 </string>
+    <string name="chat_emoji_emoji_pro"> 表情包 </string>
 
 </resources>

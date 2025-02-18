@@ -17,6 +17,9 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
+import tomoyo.composeapp.generated.resources.chat_emoji_emoji
+import tomoyo.composeapp.generated.resources.chat_emoji_emoji_pro
+import tomoyo.composeapp.generated.resources.chat_emoji_kaomoji
 import tomoyo.composeapp.generated.resources.contacts
 import tomoyo.composeapp.generated.resources.home
 import tomoyo.composeapp.generated.resources.media_repeat_all
@@ -38,6 +41,13 @@ import ui.pages.MainMusicsScreen
 import ui.pages.MainSettingsScreen
 import ui.pages.MainVideosScreen
 
+enum class InputEmojiTabModel(
+    val text: StringResource,
+) {
+    EMOJI(Res.string.chat_emoji_emoji),
+    KAOMOJI(Res.string.chat_emoji_kaomoji),
+    EMOJI_PRO(Res.string.chat_emoji_emoji_pro),
+}
 
 enum class MusicPlayScreenTabModel(
     val text: StringResource,

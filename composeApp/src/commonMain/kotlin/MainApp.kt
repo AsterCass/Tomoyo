@@ -25,6 +25,7 @@ import constant.enums.ViewEnum
 import data.PlatformInitData
 import data.UserDataModel
 import data.model.ArticleScreenModel
+import data.model.ChatScreenModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
@@ -87,6 +88,7 @@ class PreLoadScreen : Screen {
         val mainModel: MainScreenModel = koinInject()
         val articleModel: ArticleScreenModel = koinInject()
         val musicModel: MusicScreenModel = koinInject()
+        val chatModel: ChatScreenModel = koinInject()
         val contactModel: ContactScreenModel = koinInject()
 
         // Custom data inject
@@ -109,12 +111,10 @@ class PreLoadScreen : Screen {
                 mainModel.triedLinkSocket()
                 val userDataDb: UserDataModel = baseJsonConf.decodeFromString(userDataStringDb)
                 if (!userDataDb.token.isNullOrBlank()) {
-                    preloadCoroutine.launch {
-                        mainModel.login(
-                            dbData = userDataDb,
-                            forceLogin = true
-                        )
-                    }
+                    mainModel.login(
+                        dbData = userDataDb,
+                        forceLogin = true
+                    )
                 }
             }
 

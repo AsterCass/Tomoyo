@@ -170,7 +170,7 @@ fun MainMusicsScreen(
                             musicApiCoroutine.launch {
                                 tabPageState.animateScrollToPage(
                                     page = tabEnum.ordinal,
-                                    animationSpec = tween(durationMillis = 1000)
+                                    animationSpec = tween(durationMillis = 500)
                                 )
                             }
                         },

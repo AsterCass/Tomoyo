@@ -5,6 +5,20 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
+data class UserChatStarEmojiSimple(
+    var addressType: Int = 0,
+    var id: String = "",
+    var readAddress: String = "",
+)
+
+
+@Serializable
+data class UserChatStarEmojis(
+    var fileEmojis: MutableList<UserChatStarEmojiSimple> = mutableListOf(),
+    var total: Int? = 0,
+)
+
+@Serializable
 data class UserChattingSimple(
     var chatId: String? = null,
     var chatType: Int? = null,

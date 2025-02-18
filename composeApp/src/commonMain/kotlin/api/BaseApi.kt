@@ -10,6 +10,8 @@ import data.PublicUserSimpleModel
 import data.ResultObj
 import data.UserChatMsgDto
 import data.UserChatParam
+import data.UserChatStarEmojiSimple
+import data.UserChatStarEmojis
 import data.UserChattingSimple
 import data.UserDataModel
 import data.UserDetailModel
@@ -330,6 +332,20 @@ class BaseApi : KoinComponent {
         }
         return if (body is ApiResponse.Success) {
             return body.body.data ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
+
+    suspend fun getStarEmojis(token: String): List<UserChatStarEmojiSimple> {
+        val body = client.safeRequest<ResultObj<UserChatStarEmojis>>(
+            getUrl("/yui/user/file/emoji/star/list/auth?pageNo=1&pageSize=100")
+        ) {
+            method = HttpMethod.Get
+            header("User-Token", token)
+        }
+        return if (body is ApiResponse.Success) {
+            return body.body.data?.fileEmojis ?: emptyList()
         } else {
             emptyList()
         }

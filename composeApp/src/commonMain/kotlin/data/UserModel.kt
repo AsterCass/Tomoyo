@@ -66,6 +66,11 @@ class UserState {
 }
 
 @Serializable
+class UserExData {
+    val emojiProList = mutableListOf<UserChatStarEmojiSimple>()
+}
+
+@Serializable
 data class LoginParam(
     val accountMail: String,
     val passwd: String,

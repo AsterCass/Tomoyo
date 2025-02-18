@@ -122,5 +122,8 @@
     <string name="chat_relay"> Relay </string>
     <string name="chat_copy"> Copy </string>
     <string name="chat_copy_success"> Copy success </string>
+    <string name="chat_emoji_emoji"> Emoji </string>
+    <string name="chat_emoji_kaomoji"> Kaomoji </string>
+    <string name="chat_emoji_emoji_pro"> Emoji Pro </string>
 
 </resources>

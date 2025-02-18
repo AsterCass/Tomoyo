@@ -2,6 +2,7 @@ package ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -16,25 +17,35 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFrom
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,14 +60,25 @@ import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.semantics.SemanticsPropertyKey
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.github.panpf.sketch.AsyncImage
+import com.github.panpf.sketch.request.ComposableImageRequest
+import com.github.panpf.sketch.resize.Precision
+import com.github.panpf.sketch.resize.Scale
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.CloudUploadAlt
 import constant.BaseResText
 import constant.emojiList
+import constant.enums.InputEmojiTabModel
+import constant.kaomojiList
+import data.model.MainScreenModel
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.input_microphone
 import tomoyo.composeapp.generated.resources.input_package
@@ -112,6 +134,10 @@ fun UserInput(
             sendMessageEnabled = inputText.isNotBlank(),
         )
         SelectorExpanded(
+            sendNow = { message ->
+                onMessageSent(message)
+                resetScroll()
+            },
             onCloseRequested = dismissKeyboard,
             onTextAdded = { updateInput(inputText.plus(it)) },
             currentSelector = currentInputSelector
@@ -120,25 +146,12 @@ fun UserInput(
 
 }
 
-private fun TextFieldValue.addText(newString: String): TextFieldValue {
-    val newText = this.text.replaceRange(
-        this.selection.start,
-        this.selection.end,
-        newString
-    )
-    val newSelection = TextRange(
-        start = newText.length,
-        end = newText.length
-    )
-
-    return this.copy(text = newText, selection = newSelection)
-}
-
 @Composable
 private fun SelectorExpanded(
     currentSelector: InputSelector,
     onCloseRequested: () -> Unit,
-    onTextAdded: (String) -> Unit
+    onTextAdded: (String) -> Unit,
+    sendNow: (String) -> Unit,
 ) {
     if (currentSelector == InputSelector.NONE) return
 
@@ -151,8 +164,11 @@ private fun SelectorExpanded(
 
     Surface {
         when (currentSelector) {
-            InputSelector.EMOJI -> EmojiSelector(onTextAdded, focusRequester)
-//            InputSelector.EMOJI -> ExtraSelector(onCloseRequested, focusRequester)
+            InputSelector.EMOJI -> EmojiSelector(
+                onTextAdded = onTextAdded,
+                focusRequester = focusRequester,
+                sendNow = sendNow,
+            )
             InputSelector.EXTRA -> ExtraSelector(onCloseRequested, focusRequester)
             else -> {
                 FunctionalityNotAvailablePanel()
@@ -434,97 +450,156 @@ private fun BoxScope.UserInputTextField(
 @Composable
 fun EmojiSelector(
     onTextAdded: (String) -> Unit,
-    focusRequester: FocusRequester
+    focusRequester: FocusRequester,
+    sendNow: (String) -> Unit,
 ) {
+    val mainModel: MainScreenModel = koinInject()
+    val emojiProList = mainModel.getUserExData().emojiProList
+    val selectorExpandedCoroutine = rememberCoroutineScope()
+    val tabPageState = rememberPagerState { InputEmojiTabModel.entries.size }
+    val tabOrdinal = remember { derivedStateOf { tabPageState.currentPage } }
 
     Column(
         modifier = Modifier
+            .height(300.dp)
             .focusRequester(focusRequester)
             .focusTarget()
     ) {
-        FlowRow(
-            modifier = Modifier.padding(3.dp).fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
+
+        TabRow(
+            modifier = Modifier.fillMaxWidth(),
+            selectedTabIndex = tabOrdinal.value,
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onBackground,
+            divider = {},
         ) {
-            for (emoji in emojiList) {
-                Text(
-                    modifier = Modifier.padding(5.dp).clickable {
-                        onTextAdded(emoji)
+            for (tabEnum in InputEmojiTabModel.entries) {
+                Tab(
+                    selected = tabOrdinal.value == tabEnum.ordinal,
+                    onClick = {
+                        selectorExpandedCoroutine.launch {
+                            println(tabEnum.ordinal)
+                            tabPageState.animateScrollToPage(
+                                page = tabEnum.ordinal,
+                                animationSpec = tween(durationMillis = 500)
+                            )
+                        }
                     },
-                    style = MaterialTheme.typography.headlineSmall,
-                    text = emoji,
+                    text = {
+                        Text(
+                            text = stringResource(tabEnum.text),
+                            color = if (tabOrdinal.value == tabEnum.ordinal)
+                                MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    },
+                    modifier = Modifier.clip(
+                        RoundedCornerShape(10.dp)
+                    ),
                 )
             }
         }
+
+        HorizontalPager(
+            state = tabPageState,
+            verticalAlignment = Alignment.Top
+        ) { page ->
+
+            val scrollState = rememberScrollState()
+
+            Column(Modifier.fillMaxSize().verticalScroll(scrollState).padding(bottom = 10.dp)) {
+                when (page) {
+                    InputEmojiTabModel.EMOJI.ordinal -> {
+                        FlowRow(
+                            modifier = Modifier.padding(5.dp).fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            for (emoji in emojiList) {
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp)
+                                        .clickable {
+                                            onTextAdded(emoji)
+                                        },
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    text = emoji,
+                                )
+                            }
+                        }
+                    }
+
+                    InputEmojiTabModel.KAOMOJI.ordinal -> {
+                        FlowRow(
+                            modifier = Modifier.padding(5.dp).fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            for (emoji in kaomojiList) {
+                                Text(
+                                    modifier = Modifier.padding(
+                                        start = 15.dp,
+                                        end = 5.dp,
+                                        top = 5.dp,
+                                        bottom = 5.dp
+                                    )
+                                        .clickable {
+                                            onTextAdded(emoji)
+                                        },
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = emoji,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                )
+                            }
+                        }
+                    }
+
+
+                    InputEmojiTabModel.EMOJI_PRO.ordinal -> {
+                        FlowRow(
+                            modifier = Modifier.padding(5.dp).fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            for (emoji in emojiProList) {
+                                AsyncImage(
+                                    request = ComposableImageRequest(uri = emoji.readAddress) {
+                                        size(5000, 5000)
+                                        precision(Precision.LESS_PIXELS)
+                                        scale(Scale.CENTER_CROP)
+                                    },
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(4.dp).width(70.dp).height(70.dp)
+                                        .clickable {
+                                            sendNow(emoji.readAddress)
+                                        }
+                                )
+                            }
+
+                            Icon(
+                                imageVector = FontAwesomeIcons.Solid.CloudUploadAlt,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .clickable {
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
+                                            )
+                                        )
+                                    }
+                                    .height(70.dp)
+                                    .width(70.dp)
+                                    .padding(15.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+
     }
-
-
-    //coroutine
-//    val thisComposableCoroutine = rememberCoroutineScope()
-//
-//    val tabPageState = rememberPagerState {
-//        ceil(biliEmojiMap.size.toDouble() / maxNumEmojiPage).toInt()
-//    }
-//    Column(
-//        modifier = Modifier
-//            .focusRequester(focusRequester)
-//            .focusTarget()
-//    ) {
-//        HorizontalPager(
-//            state = tabPageState,
-//        ) { page ->
-//
-//            val subEmojiMap = biliEmojiMap.entries.toList()
-//                .subList(
-//                    page * maxNumEmojiPage,
-//                    (page * maxNumEmojiPage + maxNumEmojiPage)
-//                        .coerceAtMost(biliEmojiMap.size)
-//                )
-//                .associate { it.key to it.value }
-//
-//            FlowRow(
-//                modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
-//                horizontalArrangement = Arrangement.Start,
-//            ) {
-//                for (emoji in subEmojiMap) {
-//                    Image(
-//                        painter = painterResource(emoji.value),
-//                        modifier = Modifier
-//                            .padding(8.dp)
-//                            .clip(RoundedCornerShape(5.dp))
-//                            .clickable { onTextAdded(emoji.key) }
-//                            .size(28.dp),
-//                        contentDescription = null,
-//                    )
-//                }
-//            }
-//        }
-//
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.Center
-//        ) {
-//            for (page in 0..<tabPageState.pageCount)
-//                Icon(
-//                    modifier = Modifier
-//                        .padding(horizontal = 16.dp, vertical = 12.dp)
-//                        .clip(CircleShape)
-//                        .clickable {
-//                            thisComposableCoroutine.launch {
-//                                tabPageState.animateScrollToPage(
-//                                    page = page,
-//                                    animationSpec = tween(durationMillis = 1000)
-//                                )
-//                            }
-//                        }
-//                        .size(if (page == tabPageState.currentPage) 8.dp else 6.dp),
-//                    imageVector = FontAwesomeIcons.Solid.Circle,
-//                    contentDescription = null,
-//                    tint = if (page == tabPageState.currentPage)
-//                        MaterialTheme.colorScheme.primary
-//                    else MaterialTheme.colorScheme.inversePrimary
-//                )
-//        }
-//
-//    }
 }

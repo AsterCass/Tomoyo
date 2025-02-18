@@ -8,6 +8,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
 import data.PlatformInitData
 import data.UserDataModel
+import data.UserExData
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.WebSockets
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -114,6 +115,11 @@ class MainScreenModel : ScreenModel, KoinComponent {
 
 
     //user data
+    fun getUserExData(): UserExData {
+        return globalDataModel.getUserExData()
+    }
+
+
     private val _firstTryLinkSocket = MutableStateFlow(true)
     val firstTryLinkSocket = _firstTryLinkSocket.asStateFlow()
     fun triedLinkSocket() {
@@ -158,6 +164,10 @@ class MainScreenModel : ScreenModel, KoinComponent {
                 chatScreenModel.updateChatData(_userState.value.token)
             }
         }
+
+        println("[op:login] Init user extra data")
+        val userEmojis = BaseApi().getStarEmojis(_userState.value.token)
+        globalDataModel.resetUserEmoji(userEmojis)
 
         println("[op:login] Socket connect start")
         CoroutineScope(Dispatchers.IO).launch(socketExceptionHandlerWithReconnect) {
