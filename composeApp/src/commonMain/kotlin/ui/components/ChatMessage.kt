@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -22,10 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
@@ -36,13 +40,19 @@ import androidx.compose.ui.window.Popup
 import biz.copyToClipboard
 import biz.getLastTimeInChatting
 import com.github.panpf.sketch.AsyncImage
-import com.github.panpf.sketch.PlatformContext
+import com.github.panpf.sketch.LocalPlatformContext
+import com.github.panpf.sketch.request.ComposableImageRequest
 import com.github.panpf.sketch.request.ImageRequest
+import com.github.panpf.sketch.request.ImageResult
+import com.github.panpf.sketch.resize.Precision
+import com.github.panpf.sketch.resize.Scale
+import com.github.panpf.sketch.sketch
 import constant.BASE_SERVER_ADDRESS_STATIC
 import constant.BaseResText
 import constant.MAX_TIME_SPE_SEC
 import constant.enums.NotificationType
 import data.UserChatMsgDto
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
@@ -152,14 +162,10 @@ fun MessageCard(
     isLatest: Boolean,
     item: UserChatMsgDto,
     thisUserId: String,
-    isMobile: Boolean,
-    configBlock: (ImageRequest.Builder.() -> Unit),
-    localPlatformContext: PlatformContext,
 ) {
 
+
     val isSelf = thisUserId == item.sendUserId
-    val baseHeight = 35.dp
-    var showPopup by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp).fillMaxWidth()) {
 
@@ -180,130 +186,168 @@ fun MessageCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = if (isLatest) 10.dp else 0.dp),
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
         ) {
-            if (!isSelf) {
-                Row {
-                    AsyncImage(
-                        request = ImageRequest(
-                            context = localPlatformContext,
-                            uri = item.sendUserAvatar,
-                            configBlock = configBlock,
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(top = 10.dp, end = 5.dp)
-                            .size(45.dp)
-                            .align(Alignment.CenterVertically)
-                            .clip(CircleShape)
+            if (isSelf) {
+                Column(
+                    modifier = Modifier.weight(1f).padding(
+                        start = 20.dp,
+                        end = 5.dp,
+                    ),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    MessageCardBody(
+                        item = item,
+                        bgColor = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
-            }
-
-
-
-            Column(
-                modifier = Modifier.weight(1f).padding(
-                    start = if (isSelf) 20.dp else 0.dp,
-                    end = if (isSelf) 0.dp else 20.dp
-                ),
-                horizontalAlignment = if (isSelf) Alignment.End else Alignment.Start,
-            ) {
-
-                Text(
-                    text = item.sendUserNickname ?: "",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleSmall
-                )
-
-
-                //if(isMobile) MessageCardMobile(item, isSelf) else
-                Spacer(modifier = Modifier.height(5.dp))
-
-                Surface(
-                    shape = MaterialTheme.shapes.small,
-                    shadowElevation = 1.dp,
-                    color = if (isSelf) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.pureColor,
-                    modifier = Modifier.padding(1.dp)
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onDoubleTap = { _ ->
-                                    showPopup = true
-                                },
-                                onLongPress = { _ ->
-                                    showPopup = true
-                                }
-                            )
-                        }
+                MessageCardAvtar(item.sendUserAvatar)
+            } else {
+                MessageCardAvtar(item.sendUserAvatar)
+                Column(
+                    modifier = Modifier.weight(1f).padding(
+                        start = 0.dp,
+                        end = 20.dp,
+                    ),
+                    horizontalAlignment = Alignment.Start,
                 ) {
-
-                    if (true == item.message?.startsWith(BASE_SERVER_ADDRESS_STATIC)) {
-                        AsyncImage(
-                            request = ImageRequest(
-                                context = localPlatformContext,
-                                uri = item.message,
-                                configBlock = configBlock,
-                            ),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(5.dp))
-                        )
-                    } else {
-                        val annotatedString = parseTextWithEmojis(item.message ?: "")
-                        if (showPopup) {
-                            val baseHeightPx =
-                                with(LocalDensity.current) { (baseHeight + 5.dp).toPx() }
-                            Popup(
-                                alignment = Alignment.TopCenter,
-                                offset = IntOffset(0, -baseHeightPx.toInt()),
-                                onDismissRequest = {
-                                    showPopup = false
-                                }
-                            ) {
-                                MessageCardOperation(item, baseHeight) {
-                                    showPopup = false
-                                }
-                            }
-                        }
-                        Text(
-                            text = annotatedString,
-                            modifier = Modifier.padding(
-                                horizontal = 8.dp,
-                                vertical = 4.dp
-                            ),
-                            style = MaterialTheme.typography.bodyLarge,
-//                        inlineContent = ANN_TEXT_MAP,
-                            color = if (isSelf) MaterialTheme.colorScheme.onPrimary
-                            else MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-            }
-
-            if (isSelf) {
-                Row {
-                    AsyncImage(
-                        request = ImageRequest(
-                            context = localPlatformContext,
-                            uri = item.sendUserAvatar,
-                            configBlock = configBlock,
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(top = 10.dp, start = 5.dp)
-                            .size(45.dp)
-                            .align(Alignment.CenterVertically)
-                            .clip(CircleShape)
+                    MessageCardBody(
+                        item = item,
+                        bgColor = MaterialTheme.colorScheme.pureColor,
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
             }
         }
 
     }
+}
 
+@Composable
+private fun MessageCardBody(
+    item: UserChatMsgDto,
+    bgColor: Color,
+    color: Color,
+) {
+    val baseHeight = 35.dp
+    var showPopup by remember { mutableStateOf(false) }
+
+    Text(
+        text = item.sendUserNickname ?: "",
+        color = MaterialTheme.colorScheme.onBackground,
+        style = MaterialTheme.typography.titleSmall
+    )
+
+    //if(isMobile) MessageCardMobile(item, isSelf) else
+    Spacer(modifier = Modifier.height(5.dp))
+
+    val isImageMessage = item.message?.startsWith(BASE_SERVER_ADDRESS_STATIC) ?: false
+    val actualBgColor = if (isImageMessage) Color.Transparent else bgColor
+
+    Surface(
+        shape = MaterialTheme.shapes.small,
+        shadowElevation = 1.dp,
+        color = actualBgColor,
+        modifier = Modifier.padding(1.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onDoubleTap = { _ ->
+                        showPopup = true
+                    },
+                    onLongPress = { _ ->
+                        showPopup = true
+                    }
+                )
+            }
+    ) {
+
+        if (isImageMessage) {
+            MessageCardBodyImage(item.message)
+        } else {
+            if (showPopup) {
+                val baseHeightPx =
+                    with(LocalDensity.current) { (baseHeight + 5.dp).toPx() }
+                Popup(
+                    alignment = Alignment.TopCenter,
+                    offset = IntOffset(0, -baseHeightPx.toInt()),
+                    onDismissRequest = {
+                        showPopup = false
+                    }
+                ) {
+                    MessageCardOperation(item, baseHeight) {
+                        showPopup = false
+                    }
+                }
+            }
+            Text(
+                text = item.message ?: "",
+                modifier = Modifier.padding(
+                    horizontal = 8.dp,
+                    vertical = 4.dp
+                ),
+                style = MaterialTheme.typography.bodyLarge,
+                color = color
+            )
+        }
+    }
+}
+
+@Composable
+private fun MessageCardBodyImage(url: String?) {
+
+    val bodyImageLoadCoroutine = rememberCoroutineScope()
+    var metaData by remember { mutableStateOf(Pair(0.0f, 0)) }
+
+    val request = ComposableImageRequest(uri = url) {
+        size(5000, 5000)
+        precision(Precision.LESS_PIXELS)
+        scale(Scale.CENTER_CROP)
+    }
+    if (metaData.second == 0) {
+        val localPlatformContext = LocalPlatformContext.current
+        localPlatformContext.sketch.enqueue(request)
+        bodyImageLoadCoroutine.launch {
+            val imageResult: ImageResult = localPlatformContext.sketch.execute(request)
+            val width = imageResult.image?.width
+            val height = imageResult.image?.height
+            if (null != width && null != height) {
+                val radio = width.toFloat().div(height.toFloat())
+                metaData = Pair(radio, width)
+            }
+        }
+    } else {
+        AsyncImage(
+            request = request,
+            contentDescription = null,
+            modifier = Modifier.width((metaData.second).dp).aspectRatio(metaData.first)
+        )
+    }
 
 }
+
+
+@Composable
+private fun MessageCardAvtar(avtarUrl: String?) {
+    // Context for image
+    val localPlatformContext = LocalPlatformContext.current
+
+    Row {
+        AsyncImage(
+            request = ImageRequest(
+                context = localPlatformContext,
+                uri = avtarUrl,
+            ),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(top = 10.dp, end = 5.dp)
+                .size(45.dp)
+                .align(Alignment.CenterVertically)
+                .clip(CircleShape)
+        )
+    }
+}
+
 //
 //@OptIn(ExperimentalMaterial3Api::class)
 //@Composable

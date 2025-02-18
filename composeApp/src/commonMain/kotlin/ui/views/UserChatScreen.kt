@@ -38,9 +38,6 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.panpf.sketch.LocalPlatformContext
-import com.github.panpf.sketch.PlatformContext
-import com.github.panpf.sketch.request.ImageRequest
 import constant.enums.ViewEnum
 import data.UserChattingSimple
 import data.model.ChatScreenModel
@@ -49,10 +46,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
-import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.sendText
 import org.koin.compose.koinInject
-import org.koin.core.qualifier.named
 import theme.halfTransSurfaceVariant
 import ui.components.MessageCard
 import ui.components.UserInput
@@ -71,17 +66,12 @@ class UserChatScreen(
         val chatScreenModel: ChatScreenModel = koinInject()
 //        val globalDataModel: GlobalDataModel = koinInject()
 //        val dataStorageManager: DataStorageManager = koinInject()
-        val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
-        val isMobile: Boolean = koinInject(qualifier = named("isMobile"))
 
         //navigation
         val navigator = LocalNavigator.currentOrThrow
 
         //coroutine
         val chatApiCoroutine = rememberCoroutineScope()
-
-        //context for image
-        val localPlatformContext = LocalPlatformContext.current
 
 //        //soft keyboard
 //        val keyboardController = LocalSoftwareKeyboardController.current
@@ -97,7 +87,6 @@ class UserChatScreen(
         val userState = mainModel.userState.collectAsState().value
         val token = userState.token
         val thisUserId = userState.userData.id
-        val socketSession = mainModel.socketSession.collectAsState().value
 
         //finish login
         if (token.isBlank() || thisUserId.isNullOrBlank()) {
@@ -130,13 +119,13 @@ class UserChatScreen(
         Column(
             Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars)
-                .padding(top = 4.dp),
+                .windowInsetsPadding(WindowInsets.systemBars),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             Row(
-                Modifier.height(50.dp).fillMaxWidth().padding(horizontal = 15.dp),
+                Modifier.padding(top = 5.dp).height(50.dp).fillMaxWidth()
+                    .padding(horizontal = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -194,18 +183,14 @@ class UserChatScreen(
                 //todo 这里之后可以自定义背景
                 BaseUserChatColumn(
                     chatData,
-                    configBlock,
-                    localPlatformContext,
                     thisUserId,
-                    isMobile,
                     chatApiCoroutine,
-                    chatScreenModel,
                     token
                 )
             }
 
             Row {
-                BaseUserInput(mainModel, socketSession, chatId)
+                BaseUserInput(chatId)
             }
 
 
@@ -215,15 +200,11 @@ class UserChatScreen(
     @Composable
     private fun BaseUserChatColumn(
         chatData: UserChattingSimple,
-        configBlock: ImageRequest.Builder.() -> Unit,
-        localPlatformContext: PlatformContext,
         thisUserId: String,
-        isMobile: Boolean,
         chatApiCoroutine: CoroutineScope,
-        chatScreenModel: ChatScreenModel,
         token: String
     ) {
-
+        val chatScreenModel: ChatScreenModel = koinInject()
         val chatRowList = chatData.userChattingDataFlow.collectAsState().value
         val loadAllHistoryMessage = chatData.clientLoadAllHistoryMessage.collectAsState().value
 
@@ -238,10 +219,7 @@ class UserChatScreen(
                 key = { index -> index }
             ) { index ->
                 MessageCard(
-                    configBlock = configBlock,
-                    localPlatformContext = localPlatformContext,
                     item = chatRowList[index], thisUserId = thisUserId,
-                    isMobile = isMobile,
                     isLatest = index == 0,
                 )
             }
@@ -252,7 +230,7 @@ class UserChatScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(15.dp)
                         )
                     }
 
@@ -265,11 +243,10 @@ class UserChatScreen(
     }
 
     @Composable
-    private fun BaseUserInput(
-        mainModel: MainScreenModel,
-        socketSession: StompSession?,
-        chatId: String,
-    ) {
+    private fun BaseUserInput(chatId: String) {
+
+        val mainModel: MainScreenModel = koinInject()
+        val socketSession = mainModel.socketSession.collectAsState().value
         val chatScreenModel: ChatScreenModel = koinInject()
         val inputContent = chatScreenModel.inputContent.collectAsState().value
         val thisInputContent = inputContent[chatId] ?: ""
