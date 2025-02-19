@@ -1,6 +1,7 @@
 package data.model
 
 import api.BaseApi
+import biz.logInfo
 import data.UserChatStarEmojiSimple
 import data.UserDataModel
 import data.UserExData
@@ -15,6 +16,7 @@ class GlobalDataModel {
     val userState = _userState.asStateFlow()
 
     fun clearLocalUserState() {
+        logInfo("[op:clearLocalUserState] User data clear")
         _userState.value.userData = UserDataModel()
         _userState.value.token = ""
         clearLocalUserExData()

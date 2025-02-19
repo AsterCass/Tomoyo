@@ -478,7 +478,6 @@ fun EmojiSelector(
                     selected = tabOrdinal.value == tabEnum.ordinal,
                     onClick = {
                         selectorExpandedCoroutine.launch {
-                            println(tabEnum.ordinal)
                             tabPageState.animateScrollToPage(
                                 page = tabEnum.ordinal,
                                 animationSpec = tween(durationMillis = 500)

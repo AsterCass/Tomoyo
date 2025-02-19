@@ -185,7 +185,7 @@ android {
 
         release {
             setProguardFiles(listOf(File("proguard-rules.pro")))
-            isMinifyEnabled = false
+            isMinifyEnabled = true
         }
     }
     compileOptions {

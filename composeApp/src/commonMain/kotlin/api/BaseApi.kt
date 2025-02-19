@@ -1,5 +1,6 @@
 package api
 
+import biz.logInfo
 import constant.BASE_SERVER_ADDRESS
 import constant.NETWORK_CHECK_HOST
 import constant.enums.NotificationType
@@ -81,9 +82,15 @@ class BaseApi : KoinComponent {
 
         HttpResponseValidator {
             validateResponse { response ->
+                logInfo("[error:HttpResponseValidator:validateResponse] $response")
                 //...
             }
             handleResponseExceptionWithRequest { exception, request ->
+                logInfo(
+                    "[error:HttpResponseValidator:handleResponseExceptionWithRequest]" +
+                            " $exception $request"
+                )
+
                 when (exception) {
                     is ServerResponseException -> {
                         //...
@@ -108,20 +115,29 @@ class BaseApi : KoinComponent {
         block: HttpRequestBuilder.() -> Unit,
     ): ApiResponse<T> =
         try {
+            logInfo("[op:safeRequest] Start request $url")
             val response = request(url) { block() }
             val body: T = response.body()
             globalDataModel.resetNetStatus(true)
             ApiResponse.Success(body)
         } catch (e: ClientRequestException) {
+            logInfo("[op:safeRequest:error:ClientRequestException] Request error $e")
             globalDataModel.checkNetwork()
             ApiResponse.Error.HttpError(e.response.status.value, e.message)
         } catch (e: ServerResponseException) {
+            logInfo("[op:safeRequest:error:ServerResponseException] Request error $e")
             globalDataModel.checkNetwork()
             ApiResponse.Error.HttpError(e.response.status.value, e.message)
         } catch (e: IOException) {
+            logInfo("[op:safeRequest:error:IOException] Request error $e")
             globalDataModel.resetNetStatus(false)
             ApiResponse.Error.NetworkError
         } catch (e: SerializationException) {
+            logInfo("[op:safeRequest:error:SerializationException] Request error $e")
+            globalDataModel.checkNetwork()
+            ApiResponse.Error.SerializationError
+        } catch (e: Exception) {
+            logInfo("[op:safeRequest:error:Exception] Request error $e")
             globalDataModel.checkNetwork()
             ApiResponse.Error.SerializationError
         }

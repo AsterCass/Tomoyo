@@ -3,6 +3,7 @@ package data.model
 import androidx.compose.ui.unit.Constraints
 import api.BaseApi
 import api.baseJsonConf
+import biz.logInfo
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
@@ -81,7 +82,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
     //socket
 
     private val socketExceptionHandlerWithReconnect = CoroutineExceptionHandler { _, exception ->
-        println("Reconnect CoroutineException Caught $exception")
+        logInfo("Reconnect CoroutineException Caught $exception")
         globalDataModel.resetSocketConnected(false)
         CoroutineScope(Dispatchers.IO).launch {
             delay(3000)
@@ -94,7 +95,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
         //  logout()
     }
     val socketExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        println("CoroutineException Caught $exception")
+        logInfo("CoroutineException Caught $exception")
         globalDataModel.resetSocketConnected(false)
         //  logout()
     }
@@ -105,7 +106,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
     })) {
         instrumentation = object : KrossbowInstrumentation {
             override suspend fun onWebSocketClosed(cause: Throwable?) {
-                println(cause)
+                logInfo(cause.toString())
                 globalDataModel.resetSocketConnected(false)
             }
         }
@@ -165,12 +166,13 @@ class MainScreenModel : ScreenModel, KoinComponent {
             }
         }
 
-        println("[op:login] Init user extra data")
-        val userEmojis = BaseApi().getStarEmojis(_userState.value.token)
-        globalDataModel.resetUserEmoji(userEmojis)
-
-        println("[op:login] Socket connect start")
         CoroutineScope(Dispatchers.IO).launch(socketExceptionHandlerWithReconnect) {
+
+            logInfo("[op:login] Init user extra data ${_userState.value.token}")
+            val userEmojis = BaseApi().getStarEmojis(_userState.value.token)
+            globalDataModel.resetUserEmoji(userEmojis)
+
+            logInfo("[op:login] Socket connect start")
             try {
                 _collectorJob.value?.cancel()
                 _socketSession.value?.disconnect()
@@ -179,11 +181,11 @@ class MainScreenModel : ScreenModel, KoinComponent {
             } catch (ignore: Exception) {
             }
 
-            println("[op:login] Socket connecting")
+            logInfo("[op:login] Socket connecting")
             _socketSession.value = _socketClient.value.connect(
                 "wss://api.astercasc.com/yui/chat-websocket/no-js/socketAuthNoError?" + "User-Token=${_userState.value.token}"
             )
-            println("[op:login] Socket connect successful")
+            logInfo("[op:login] Socket connect successful")
             val subscription: Flow<String> = _socketSession.value!!.subscribeText(
                 "/user/${_userState.value.token}/message/receive"
             )
@@ -191,7 +193,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
             _collectorJob.value = _commonCoroutine.launch(socketExceptionHandlerWithReconnect) {
                 subscription.collect { msg ->
                     val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
-                    println("[op:login] Socket get message from ${chatRow.fromChatId}")
+                    logInfo("[op:login] Socket get message from ${chatRow.fromChatId}")
                     chatScreenModel.pushChatMessage(_userState.value.token, chatRow)
                 }
             }
