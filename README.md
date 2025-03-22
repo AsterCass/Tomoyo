@@ -98,6 +98,7 @@ Run command `./gradlew :composeApp:run`
 - [Koin](https://insert-koin.io/)
 - [Sketch](https://github.com/panpf/sketch/)
 - [zoomimage](https://github.com/panpf/zoomimage)
+- [FileKit](https://github.com/vinceglb/FileKit)
 - [Ktor](https://ktor.io/)
 - [Krossbow](https://github.com/joffrey-bion/krossbow)
 - [Exoplayer](https://github.com/google/ExoPlayer)

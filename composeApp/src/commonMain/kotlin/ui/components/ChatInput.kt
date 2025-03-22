@@ -70,7 +70,11 @@ import com.github.panpf.sketch.request.ComposableImageRequest
 import com.github.panpf.sketch.resize.Precision
 import com.github.panpf.sketch.resize.Scale
 import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.regular.FolderOpen
+import compose.icons.fontawesomeicons.regular.HandPointRight
+import compose.icons.fontawesomeicons.regular.Images
 import compose.icons.fontawesomeicons.solid.CloudUploadAlt
 import constant.BaseResText
 import constant.emojiList
@@ -177,7 +181,7 @@ private fun SelectorExpanded(
                 focusRequester = focusRequester,
                 sendNow = sendNow,
             )
-            InputSelector.EXTRA -> ExtraSelector(onCloseRequested, focusRequester)
+            InputSelector.EXTRA -> ExtraSelector(onCloseRequested, focusRequester, sendNow)
             else -> {
                 FunctionalityNotAvailablePanel()
             }
@@ -188,96 +192,82 @@ private fun SelectorExpanded(
 @Composable
 fun ExtraSelector(
     onCloseRequested: () -> Unit,
-    focusRequester: FocusRequester
+    focusRequester: FocusRequester,
+    sendNow: (String) -> Unit,
 ) {
+    val mainModel: MainScreenModel = koinInject()
+    val loadFileCoroutine = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .focusRequester(focusRequester)
             .focusTarget()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 20.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth().padding(15.dp),
+            horizontalArrangement = Arrangement.Start,
         ) {
-            Icon(
-                imageVector = vectorResource(Res.drawable.input_package),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .size(50.dp),
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Icon(
-                imageVector = vectorResource(Res.drawable.input_package),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .size(50.dp),
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Icon(
-                imageVector = vectorResource(Res.drawable.input_package),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .size(50.dp),
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Icon(
-                imageVector = vectorResource(Res.drawable.input_package),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .size(50.dp),
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-        }
 
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            Icon(
-                imageVector = vectorResource(Res.drawable.input_package),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .size(50.dp),
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Icon(
-                imageVector = vectorResource(Res.drawable.input_package),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .size(50.dp),
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Icon(
-                imageVector = vectorResource(Res.drawable.input_package),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .size(50.dp),
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Icon(
-                imageVector = vectorResource(Res.drawable.input_package),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .size(50.dp),
-                tint = MaterialTheme.colorScheme.onBackground
-            )
+            val launcher = rememberFilePickerLauncher(
+                type = FileKitType.File(
+                    extensions = listOf("webp", "png", "jpg", "jpeg", "gif")
+                ),
+            ) { file ->
 
+                if (file != null) {
+                    if (file.size() > 5000 * 1024) {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.errorTooLargeUpload5000,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    } else {
+                        loadFileCoroutine.launch {
+                            val ret = BaseApi().uploadUserFile(
+                                token = mainModel.userState.value.token,
+                                2,
+                                file.readBytes(),
+                                file.name
+                            )
+                            if (ret.isNotEmpty()) {
+                                sendNow(ret)
+                            }
+                        }
+                    }
+                }
+            }
+
+            Icon(
+                imageVector = FontAwesomeIcons.Regular.Images,
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        launcher.launch()
+                    }
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(30.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = FontAwesomeIcons.Regular.FolderOpen,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(30.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = FontAwesomeIcons.Regular.HandPointRight,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(30.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
         }
 
     }
@@ -613,8 +603,6 @@ fun EmojiSelector(
                                             }
                                         }
                                     }
-
-
                                 }
                             }
 
