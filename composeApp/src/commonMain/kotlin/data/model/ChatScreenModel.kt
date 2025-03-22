@@ -53,7 +53,6 @@ class ChatScreenModel : ScreenModel {
                 it.lastMessageText = input.lastMessageText
                 it.lastMessageId = input.lastMessageId
                 it.latestRead = input.latestRead
-                it.lastMessageIdFlow.value = input.lastMessageId ?: ""
             }
         }
         if (!alreadyChatting) {
@@ -94,31 +93,43 @@ class ChatScreenModel : ScreenModel {
 
 
         //update list
-        var lastChatIdIndex = -1
+        var lastChatIdIndex = -1;
+        var alreadyChatting = false
 
         _chatDataList.update { currentList ->
-            currentList.toMutableList().apply {
-                this.forEachIndexed { index, it ->
-                    if (it.chatId == chatRow.fromChatId) {
-                        val lastChatTime = it.userChattingDataFlow.value.getOrNull(0)?.sendDate
-                        newMessage.webChatLabel = newMessageLabel(newMessage.sendDate, lastChatTime)
-                        it.userChattingDataFlow.update { currentList ->
-                            currentList.toMutableList().apply {
-                                this.add(0, newMessage)
-                            }
+            currentList.map { item ->
+                if (!alreadyChatting) {
+                    ++lastChatIdIndex;
+                }
+                if (item.chatId == chatRow.fromChatId) {
+                    alreadyChatting = true
+                    val lastChatTime = item.userChattingDataFlow.value.getOrNull(0)?.sendDate
+                    item.userChattingDataFlow.update { chattingList ->
+                        chattingList.toMutableList().apply {
+                            add(
+                                0,
+                                newMessage.copy(
+                                    webChatLabel = newMessageLabel(
+                                        newMessage.sendDate,
+                                        lastChatTime
+                                    )
+                                )
+                            )
                         }
-                        it.lastMessageTime = chatRow.sendDate
-                        it.lastMessageId = chatRow.sendMessageId
-                        it.lastMessageIdFlow.value = chatRow.sendMessageId
-                        it.lastMessageText = chatRow.sendMessage
-                        it.latestRead = _chattingId.value == it.chatId
-                        lastChatIdIndex = index
                     }
+                    item.copy(
+                        lastMessageTime = chatRow.sendDate,
+                        lastMessageId = chatRow.sendMessageId,
+                        lastMessageText = chatRow.sendMessage,
+                        latestRead = _chattingId.value == item.chatId
+                    )
+                } else {
+                    item
                 }
             }
         }
 
-        if (lastChatIdIndex >= 0) {
+        if (alreadyChatting) {
             if (0 != lastChatIdIndex) {
                 _chatDataList.update { currentList ->
                     currentList.toMutableList().apply {
@@ -197,7 +208,6 @@ class ChatScreenModel : ScreenModel {
         data.userChattingDataFlow.value = data.userChattingData.toMutableList()
         data.lastMessageText = data.userChattingData.getOrNull(0)?.message ?: ""
         data.lastMessageId = data.userChattingData.getOrNull(0)?.messageId ?: ""
-        data.lastMessageIdFlow.value = data.userChattingData.getOrNull(0)?.messageId ?: ""
         data.latestRead = true
         //assign
         if (!data.chatId.isNullOrBlank()) {

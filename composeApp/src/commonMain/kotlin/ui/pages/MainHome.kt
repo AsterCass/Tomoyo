@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -100,7 +101,7 @@ fun MainHomeScreen(
     //data
     val musicPlayerState = musicScreenModel.playerState.collectAsState().value
     val socketConnected = globalDataModel.socketConnected.collectAsState().value
-    val chatDataList = chatDataModel.chatDataList.collectAsState().value
+    val chatDataList by chatDataModel.chatDataList.collectAsState()
     val netStatus = globalDataModel.netStatus.collectAsState().value
     val userState = mainModel.userState.collectAsState().value
     val token = userState.token
@@ -167,9 +168,6 @@ fun MainHomeScreen(
 
                 items(chatDataList.size) { index ->
 
-                    val messageId =
-                        chatDataList[index].lastMessageIdFlow.collectAsState().value
-
                     Column(modifier = Modifier.padding(top = 5.dp)) {
                         SwipeToRevealCard(
                             modifier = Modifier.height(70.dp),
@@ -224,12 +222,6 @@ fun MainHomeScreen(
                                     item = chatDataList[index],
                                     onClick = {
                                         commonApiCoroutine.launch {
-                                            chatDataModel.readMessage(
-                                                token = token,
-                                                chatId =
-                                                chatDataList[index].chatId ?: "",
-                                                messageId = messageId
-                                            )
                                             navigator.parent?.push(
                                                 UserChatScreen(
                                                     "",

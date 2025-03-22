@@ -87,7 +87,7 @@ class BaseApi : KoinComponent {
 
         HttpResponseValidator {
             validateResponse { response ->
-                logInfo("[error:HttpResponseValidator:validateResponse] $response")
+                logInfo("[info:HttpResponseValidator:validateResponse] $response")
                 //...
             }
             handleResponseExceptionWithRequest { exception, request ->

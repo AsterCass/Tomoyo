@@ -33,7 +33,6 @@ data class UserChattingSimple(
     var latestRead: Boolean? = null,
     var lastMessageText: String? = null,
 
-    var lastMessageIdFlow: MutableStateFlow<String> = MutableStateFlow(""),
     var userChattingDataFlow: MutableStateFlow<List<UserChatMsgDto>> = MutableStateFlow(emptyList()),
     var clientLoadAllHistoryMessage: MutableStateFlow<Boolean> = MutableStateFlow(false),
 )

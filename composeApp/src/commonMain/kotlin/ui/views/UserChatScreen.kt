@@ -107,6 +107,14 @@ class UserChatScreen(
         val chatData = chatScreenModel.currentChatData.collectAsState().value
         val chatId = chatData.chatId ?: return
 
+        chatApiCoroutine.launch {
+            chatScreenModel.readMessage(
+                token = token,
+                chatId = chatId,
+                messageId = chatData.lastMessageId ?: ""
+            )
+        }
+
         //chat status
         DisposableEffect(Unit) {
             chatScreenModel.rebuildMessageTime()
