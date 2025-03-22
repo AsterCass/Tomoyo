@@ -125,9 +125,9 @@ kotlin {
 
             //https://github.com/panpf/sketch
             //https://github.com/panpf/sketch/blob/main/docs/wiki/animated_image.md
-            implementation("io.github.panpf.sketch4:sketch-http:4.0.4")
-            implementation("io.github.panpf.sketch4:sketch-compose:4.0.4")
-            implementation("io.github.panpf.sketch4:sketch-animated-gif:4.0.4")
+            implementation("io.github.panpf.sketch4:sketch-http:4.0.2")
+            implementation("io.github.panpf.sketch4:sketch-compose:4.0.2")
+            implementation("io.github.panpf.sketch4:sketch-animated-gif:4.0.2")
 
             //https://github.com/DevSrSouza/compose-icons
             implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")

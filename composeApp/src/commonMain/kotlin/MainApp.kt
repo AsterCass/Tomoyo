@@ -124,7 +124,8 @@ class PreLoadScreen : Screen {
             contactModel.loadPublicUser()
 
             // Init finish
-            delay(200)
+            // todo too fast will occur error
+            delay(1000)
             navigator.replace(MainTabsScreen())
         }
 
