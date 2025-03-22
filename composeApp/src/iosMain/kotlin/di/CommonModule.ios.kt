@@ -1,7 +1,6 @@
 package di
 
 
-import com.github.panpf.sketch.request.ImageRequest
 import com.russhwolf.settings.ExperimentalSettingsApi
 import data.store.SettingsWrapper
 import org.koin.core.module.Module
@@ -16,12 +15,6 @@ actual fun platformModule(): Module = module {
 
     single<Boolean>(qualifier = named("isMobile")) {
         true
-    }
-
-    single<(ImageRequest.Builder.() -> Unit)> {
-        {
-            components {}
-        }
     }
 
 }

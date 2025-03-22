@@ -1,13 +1,17 @@
 package ui.components
 
+
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,17 +45,19 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Popup
 import biz.copyToClipboard
 import biz.getLastTimeInChatting
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.LocalPlatformContext
 import com.github.panpf.sketch.request.ComposableImageRequest
-import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.sketch.request.ImageResult
 import com.github.panpf.sketch.resize.Precision
 import com.github.panpf.sketch.resize.Scale
 import com.github.panpf.sketch.sketch
+import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import constant.BASE_SERVER_ADDRESS_STATIC
 import constant.BaseResText
 import constant.MAX_TIME_SPE_SEC
@@ -62,6 +72,7 @@ import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import theme.baseBackground
 import theme.baseBackgroundBlack
 import theme.pureColor
 import theme.subTextColor
@@ -301,6 +312,7 @@ private fun MessageCardBodyImage(url: String?) {
     val chatScreenModel: ChatScreenModel = koinInject()
     val emojiProSizeCache = chatScreenModel.emojiProSizeCache.collectAsState().value
     val bodyImageLoadCoroutine = rememberCoroutineScope()
+    var showFullScreen by remember { mutableStateOf(false) }
 
     val request = ComposableImageRequest(uri = url) {
         size(5000, 5000)
@@ -325,23 +337,61 @@ private fun MessageCardBodyImage(url: String?) {
             contentDescription = null,
             modifier = Modifier.width((emojiProSizeCache[url]?.second)!!.dp)
                 .aspectRatio(emojiProSizeCache[url]?.first!!)
+                .clickable { showFullScreen = true }
         )
     }
 
+    if (showFullScreen) {
+        FullScreenZoomableImage(
+            imageUri = url ?: "",
+            onDismiss = { showFullScreen = false }
+        )
+    }
+}
+
+
+@Composable
+private fun FullScreenZoomableImage(
+    imageUri: String,
+    onDismiss: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            SketchZoomAsyncImage(
+                uri = imageUri,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+            )
+
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    Icons.Rounded.Close, null,
+                    tint = MaterialTheme.colorScheme.baseBackground
+                )
+            }
+        }
+    }
 }
 
 
 @Composable
 private fun MessageCardAvtar(avtarUrl: String?) {
-    // Context for image
-    val localPlatformContext = LocalPlatformContext.current
 
     Row {
         AsyncImage(
-            request = ImageRequest(
-                context = localPlatformContext,
-                uri = avtarUrl,
-            ),
+            uri = avtarUrl,
             contentDescription = null,
             modifier = Modifier
                 .padding(top = 10.dp, end = 5.dp)

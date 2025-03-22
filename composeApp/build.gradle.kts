@@ -112,14 +112,22 @@ kotlin {
             api(libs.koin.core)
             api(libs.koin.compose)
 
+            // https://github.com/vinceglb/FileKit
+            implementation("io.github.vinceglb:filekit-dialogs:0.10.0-beta01")
+            implementation("io.github.vinceglb:filekit-dialogs-compose:0.10.0-beta01")
+
+            //https://github.com/panpf/zoomimage
+            implementation("io.github.panpf.zoomimage:zoomimage-compose-sketch4:1.1.2")
+
             //https://github.com/joffrey-bion/krossbow
             implementation("org.hildan.krossbow:krossbow-stomp-core:8.0.0")
             implementation("org.hildan.krossbow:krossbow-websocket-ktor:8.0.0")
 
             //https://github.com/panpf/sketch
             //https://github.com/panpf/sketch/blob/main/docs/wiki/animated_image.md
-            implementation("io.github.panpf.sketch4:sketch-compose:4.0.0-alpha05")
-            implementation("io.github.panpf.sketch4:sketch-animated:4.0.0-alpha05")
+            implementation("io.github.panpf.sketch4:sketch-http:4.0.4")
+            implementation("io.github.panpf.sketch4:sketch-compose:4.0.4")
+            implementation("io.github.panpf.sketch4:sketch-animated-gif:4.0.4")
 
             //https://github.com/DevSrSouza/compose-icons
             implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")

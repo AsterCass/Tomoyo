@@ -38,14 +38,11 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
-import com.github.panpf.sketch.LocalPlatformContext
-import com.github.panpf.sketch.request.ImageRequest
 import constant.enums.RoleTypeEnum
 import constant.enums.ViewEnum
 import data.PublicUserSimpleModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -132,11 +129,7 @@ fun MainContactsScreen(
 fun PublicUserListItem(
     item: PublicUserSimpleModel,
     onClick: (String) -> Unit,
-    configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
 ) {
-    //context for image
-    val context = LocalPlatformContext.current
-
     val thisRoleType = RoleTypeEnum.getEnumByCode(item.roleType)
     //val thisGender = GenderTypeEnum.getEnumByCode(item.gender)
 
@@ -154,11 +147,7 @@ fun PublicUserListItem(
     ) {
 
         AsyncImage(
-            request = ImageRequest(
-                context = context,
-                uri = item.avatar,
-                configBlock = configBlock,
-            ),
+            uri = item.avatar,
             contentDescription = null,
             modifier = Modifier
                 .size(50.dp)

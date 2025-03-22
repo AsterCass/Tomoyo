@@ -33,8 +33,6 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
-import com.github.panpf.sketch.LocalPlatformContext
-import com.github.panpf.sketch.request.ImageRequest
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Circle
@@ -263,13 +261,6 @@ fun UserChatListItem(
     onClick: (String) -> Unit,
 ) {
 
-    // Inject
-    val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
-
-    // Context for image
-    val localPlatformContext = LocalPlatformContext.current
-
-
     val chatId = item.chatId
     if (chatId.isNullOrBlank()) {
         return
@@ -286,11 +277,7 @@ fun UserChatListItem(
     ) {
 
         AsyncImage(
-            request = ImageRequest(
-                context = localPlatformContext,
-                uri = item.chatAvatar,
-                configBlock = configBlock,
-            ),
+            uri = item.chatAvatar,
             contentDescription = null,
             modifier = Modifier
                 .padding(start = 15.dp)

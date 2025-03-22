@@ -42,8 +42,6 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
-import com.github.panpf.sketch.LocalPlatformContext
-import com.github.panpf.sketch.request.ImageRequest
 import constant.enums.ViewEnum
 import data.model.ArticleScreenModel
 import data.model.MainScreenModel
@@ -62,10 +60,6 @@ class ArticleDetailScreen : Screen {
         //inject
         val mainModel: MainScreenModel = koinInject()
         val articleScreenModel: ArticleScreenModel = koinInject()
-        val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
-
-        //context for image
-        val localPlatformContext = LocalPlatformContext.current
 
         //navigation
         val navigator = LocalNavigator.currentOrThrow
@@ -136,11 +130,7 @@ class ArticleDetailScreen : Screen {
                         ) {
 
                             AsyncImage(
-                                request = ImageRequest(
-                                    context = localPlatformContext,
-                                    uri = articleData.authorAvatar,
-                                    configBlock = configBlock,
-                                ),
+                                uri = articleData.authorAvatar,
                                 contentDescription = null,
                                 modifier = Modifier
                                     .padding(end = 5.dp)

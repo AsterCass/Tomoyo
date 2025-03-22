@@ -56,8 +56,6 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.panpf.sketch.AsyncImage
-import com.github.panpf.sketch.LocalPlatformContext
-import com.github.panpf.sketch.request.ImageRequest
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Brands
 import compose.icons.fontawesomeicons.Solid
@@ -112,8 +110,6 @@ class UserDetailScreen(
         //inject
         val mainModel: MainScreenModel = koinInject()
         val contactScreenModel: ContactScreenModel = koinInject()
-        val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
-        val context = LocalPlatformContext.current
         val isMobile: Boolean = koinInject(qualifier = named("isMobile"))
 
         //coroutine
@@ -611,11 +607,7 @@ class UserDetailScreen(
 
 
                     AsyncImage(
-                        request = ImageRequest(
-                            context = context,
-                            uri = userDetailData.avatar,
-                            configBlock = configBlock,
-                        ),
+                        uri = userDetailData.avatar,
                         contentDescription = null,
                         modifier = Modifier
                             .size(100.dp)
@@ -650,8 +642,6 @@ class UserDetailScreen(
     ) {
 
         val tabOrdinal = remember { derivedStateOf { tabPageState.currentPage } }
-        val configBlock: (ImageRequest.Builder.() -> Unit) = koinInject()
-        val context = LocalPlatformContext.current
 
         TabRow(
             modifier = Modifier.fillMaxWidth(),
@@ -726,11 +716,7 @@ class UserDetailScreen(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         AsyncImage(
-                                            request = ImageRequest(
-                                                context = context,
-                                                uri = friend.avatar,
-                                                configBlock = configBlock,
-                                            ),
+                                            uri = friend.avatar,
                                             contentDescription = null,
                                             modifier = Modifier
                                                 .size(40.dp)
