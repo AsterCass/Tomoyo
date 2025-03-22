@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 
 object BaseResText {
+    var errorTooLargeUpload5000: String = ""
+    var errorTooLargeUpload20: String = ""
     var userNoLogin: String = ""
     var underDevelopment: String = ""
     var cancelBtn: String = ""

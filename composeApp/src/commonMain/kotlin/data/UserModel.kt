@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -67,7 +68,8 @@ class UserState {
 
 @Serializable
 class UserExData {
-    val emojiProList = mutableListOf<UserChatStarEmojiSimple>()
+    val emojiProListFlow: MutableStateFlow<List<UserChatStarEmojiSimple>> =
+        MutableStateFlow(emptyList())
 }
 
 @Serializable

@@ -8,6 +8,7 @@ import data.UserExData
 import data.UserState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class GlobalDataModel {
 
@@ -28,11 +29,19 @@ class GlobalDataModel {
     }
 
     fun resetUserEmoji(data: List<UserChatStarEmojiSimple>) {
-        _userExData.emojiProList.addAll(data)
+        _userExData.emojiProListFlow.update { currentList ->
+            currentList.toMutableList().apply {
+                this.addAll(data)
+            }
+        }
     }
 
-    private fun clearLocalUserExData() {
-        _userExData.emojiProList.clear()
+    fun clearLocalUserExData() {
+        _userExData.emojiProListFlow.update { currentList ->
+            currentList.toMutableList().apply {
+                this.clear()
+            }
+        }
     }
 
     //network

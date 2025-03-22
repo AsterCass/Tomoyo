@@ -97,6 +97,7 @@ Run command `./gradlew :composeApp:run`
 - [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 - [Koin](https://insert-koin.io/)
 - [Sketch](https://github.com/panpf/sketch/)
+- [zoomimage](https://github.com/panpf/zoomimage)
 - [Ktor](https://ktor.io/)
 - [Krossbow](https://github.com/joffrey-bion/krossbow)
 - [Exoplayer](https://github.com/google/ExoPlayer)

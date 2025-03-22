@@ -59,6 +59,13 @@ data class UserChatParam(
 )
 
 
+@Serializable
+data class UserUploadRetDto(
+    val id: String?,
+    val readAddress: String?
+)
+
+
 
 
 

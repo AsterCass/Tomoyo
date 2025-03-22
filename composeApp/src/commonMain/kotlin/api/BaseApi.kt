@@ -16,6 +16,7 @@ import data.UserChatStarEmojis
 import data.UserChattingSimple
 import data.UserDataModel
 import data.UserDetailModel
+import data.UserUploadRetDto
 import data.model.GlobalDataModel
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -25,12 +26,16 @@ import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -382,6 +387,42 @@ class BaseApi : KoinComponent {
         ) {
             method = HttpMethod.Post
             header("User-Token", token)
+        }
+    }
+
+    suspend fun uploadUserFile(
+        token: String,
+        fileType: Int,
+        fileData: ByteArray,
+        fileName: String
+    ): String {
+        val body = client.safeRequest<ResultObj<UserUploadRetDto>>(
+            getUrl("/yui/user/file/upload/auth?fileType=$fileType")
+        ) {
+            method = HttpMethod.Post
+            header("User-Token", token)
+            setBody(MultiPartFormDataContent(formData {
+                append(
+                    key = "file",
+                    value = fileData,
+                    headers = Headers.build {
+                        append(
+                            HttpHeaders.ContentType,
+                            ContentType.MultiPart.FormData.contentType
+                        )
+                        append(
+                            HttpHeaders.ContentDisposition,
+                            "name=\"file\"; filename=\"$fileName\""
+                        )
+                    }
+                )
+            }))
+        }
+
+        return if (body is ApiResponse.Success) {
+            return body.body.data?.readAddress ?: ""
+        } else {
+            ""
         }
     }
 

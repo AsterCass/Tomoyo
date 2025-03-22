@@ -41,6 +41,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import api.BaseApi
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ComposableImageRequest
 import com.github.panpf.sketch.resize.Precision
@@ -74,7 +76,13 @@ import constant.BaseResText
 import constant.emojiList
 import constant.enums.InputEmojiTabModel
 import constant.kaomojiList
+import data.model.GlobalDataModel
 import data.model.MainScreenModel
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.readBytes
+import io.github.vinceglb.filekit.size
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -446,7 +454,8 @@ private fun BoxScope.UserInputTextField(
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EmojiSelector(
     onTextAdded: (String) -> Unit,
@@ -454,7 +463,8 @@ fun EmojiSelector(
     sendNow: (String) -> Unit,
 ) {
     val mainModel: MainScreenModel = koinInject()
-    val emojiProList = mainModel.getUserExData().emojiProList
+    val globalDataModel: GlobalDataModel = koinInject()
+    val emojiProList = mainModel.getUserExData().emojiProListFlow.collectAsState().value
     val selectorExpandedCoroutine = rememberCoroutineScope()
     val tabPageState = rememberPagerState { InputEmojiTabModel.entries.size }
     val tabOrdinal = remember { derivedStateOf { tabPageState.currentPage } }
@@ -572,6 +582,42 @@ fun EmojiSelector(
                                 )
                             }
 
+                            val launcher = rememberFilePickerLauncher(
+                                type = FileKitType.File(
+                                    extensions = listOf("webp", "png", "jpg", "jpeg", "gif")
+                                ),
+                            ) { file ->
+
+                                if (file != null) {
+                                    if (file.size() > 20 * 1024) {
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.errorTooLargeUpload20,
+                                                cancelOperationText = BaseResText.cancelBtn
+                                            )
+                                        )
+                                    } else {
+                                        selectorExpandedCoroutine.launch {
+                                            val ret = BaseApi().uploadUserFile(
+                                                token = mainModel.userState.value.token,
+                                                1,
+                                                file.readBytes(),
+                                                file.name
+                                            )
+                                            if (ret.isNotEmpty()) {
+                                                globalDataModel.clearLocalUserExData();
+                                                val userEmojis = BaseApi().getStarEmojis(
+                                                    mainModel.userState.value.token,
+                                                )
+                                                globalDataModel.resetUserEmoji(userEmojis)
+                                            }
+                                        }
+                                    }
+
+
+                                }
+                            }
+
                             Icon(
                                 imageVector = FontAwesomeIcons.Solid.CloudUploadAlt,
                                 contentDescription = null,
@@ -579,12 +625,7 @@ fun EmojiSelector(
                                     .padding(4.dp)
                                     .clip(RoundedCornerShape(5.dp))
                                     .clickable {
-                                        NotificationManager.createDialogAlert(
-                                            MainDialogAlert(
-                                                message = BaseResText.underDevelopment,
-                                                cancelOperationText = BaseResText.cancelBtn
-                                            )
-                                        )
+                                        launcher.launch()
                                     }
                                     .height(70.dp)
                                     .width(70.dp)
