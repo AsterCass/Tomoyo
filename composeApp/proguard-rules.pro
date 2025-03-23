@@ -1,2 +1,3 @@
 -dontwarn java.net.**
 -dontwarn org.slf4j.**
+-dontwarn androidx.test.platform.app.InstrumentationRegistry
