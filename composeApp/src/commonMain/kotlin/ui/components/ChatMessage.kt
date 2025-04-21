@@ -19,10 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -72,7 +68,6 @@ import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import theme.baseBackground
 import theme.baseBackgroundBlack
 import theme.pureColor
 import theme.subTextColor
@@ -361,27 +356,12 @@ private fun FullScreenZoomableImage(
             usePlatformDefaultWidth = false
         )
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            SketchZoomAsyncImage(
-                uri = imageUri,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-            )
-
-            IconButton(
-                onClick = onDismiss,
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    Icons.Rounded.Close, null,
-                    tint = MaterialTheme.colorScheme.baseBackground
-                )
-            }
-        }
+        SketchZoomAsyncImage(
+            uri = imageUri,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            onTap = { onDismiss() }
+        )
     }
 }
 
