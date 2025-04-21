@@ -25,7 +25,6 @@ import constant.enums.ViewEnum
 import data.PlatformInitData
 import data.UserDataModel
 import data.model.ArticleScreenModel
-import data.model.ChatScreenModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
@@ -56,8 +55,11 @@ fun MainApp(
         ) {
             val mainModel: MainScreenModel = koinInject()
             mainModel.initPlatformInitData(platformData)
+            val mainTabsScreen = MainTabsScreen();
+            val preLoadScreen = PreLoadScreen(mainTabsScreen);
+
             //navigation
-            Navigator(PreLoadScreen()) { navigator ->
+            Navigator(preLoadScreen) { navigator ->
                 BoxWithConstraints(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -77,7 +79,9 @@ fun MainApp(
 
 }
 
-class PreLoadScreen : Screen {
+class PreLoadScreen(
+    private val tabs: Screen,
+) : Screen {
 
     override val key: ScreenKey = "${ViewEnum.PRE_LOAD.code}$uniqueScreenKey"
 
@@ -88,7 +92,6 @@ class PreLoadScreen : Screen {
         val mainModel: MainScreenModel = koinInject()
         val articleModel: ArticleScreenModel = koinInject()
         val musicModel: MusicScreenModel = koinInject()
-        val chatModel: ChatScreenModel = koinInject()
         val contactModel: ContactScreenModel = koinInject()
 
         // Custom data inject
@@ -107,26 +110,29 @@ class PreLoadScreen : Screen {
             val userDataStringDb = dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
 
             // User Status
-            if (userDataStringDb.isNotBlank() && firstTryLinkSocket) {
+            if (firstTryLinkSocket) {
                 mainModel.triedLinkSocket()
-                val userDataDb: UserDataModel = baseJsonConf.decodeFromString(userDataStringDb)
-                if (!userDataDb.token.isNullOrBlank()) {
-                    mainModel.login(
-                        dbData = userDataDb,
-                        forceLogin = true
-                    )
+
+                if (userDataStringDb.isNotBlank()) {
+                    val userDataDb: UserDataModel = baseJsonConf.decodeFromString(userDataStringDb)
+                    if (!userDataDb.token.isNullOrBlank()) {
+                        mainModel.login(
+                            dbData = userDataDb,
+                            forceLogin = true
+                        )
+                    }
                 }
+
+                // Data pre load
+                articleModel.updateArticleList()
+                musicModel.updateAllAudioList()
+                contactModel.loadPublicUser()
+
+                // Init finish
+                // todo too fast will occur error
+                delay(1000)
+                navigator.replace(tabs)
             }
-
-            // Data pre load
-            articleModel.updateArticleList()
-            musicModel.updateAllAudioList()
-            contactModel.loadPublicUser()
-
-            // Init finish
-            // todo too fast will occur error
-            delay(1000)
-            navigator.replace(MainTabsScreen())
         }
 
         Box(
