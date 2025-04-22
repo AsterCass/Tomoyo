@@ -69,13 +69,6 @@ import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ComposableImageRequest
 import com.github.panpf.sketch.resize.Precision
 import com.github.panpf.sketch.resize.Scale
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Regular
-import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.regular.FolderOpen
-import compose.icons.fontawesomeicons.regular.HandPointRight
-import compose.icons.fontawesomeicons.regular.Images
-import compose.icons.fontawesomeicons.solid.CloudUploadAlt
 import constant.BaseResText
 import constant.emojiList
 import constant.enums.InputEmojiTabModel
@@ -92,10 +85,21 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
+import tomoyo.composeapp.generated.resources.input_calendar
+import tomoyo.composeapp.generated.resources.input_film
+import tomoyo.composeapp.generated.resources.input_folder
+import tomoyo.composeapp.generated.resources.input_globe
+import tomoyo.composeapp.generated.resources.input_image
+import tomoyo.composeapp.generated.resources.input_map
+import tomoyo.composeapp.generated.resources.input_map_pin
 import tomoyo.composeapp.generated.resources.input_microphone
-import tomoyo.composeapp.generated.resources.input_package
+import tomoyo.composeapp.generated.resources.input_phone
 import tomoyo.composeapp.generated.resources.input_plus_square
 import tomoyo.composeapp.generated.resources.input_send
+import tomoyo.composeapp.generated.resources.input_settings
+import tomoyo.composeapp.generated.resources.input_store
+import tomoyo.composeapp.generated.resources.input_upload
+import tomoyo.composeapp.generated.resources.input_users_three
 
 enum class InputSelector {
     NONE,
@@ -189,6 +193,7 @@ private fun SelectorExpanded(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ExtraSelector(
     onCloseRequested: () -> Unit,
@@ -203,9 +208,10 @@ fun ExtraSelector(
             .focusRequester(focusRequester)
             .focusTarget()
     ) {
-        Row(
+
+        FlowRow(
             modifier = Modifier.fillMaxWidth().padding(15.dp),
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.Center
         ) {
 
             val launcher = rememberFilePickerLauncher(
@@ -239,7 +245,7 @@ fun ExtraSelector(
             }
 
             Icon(
-                imageVector = FontAwesomeIcons.Regular.Images,
+                imageVector = vectorResource(Res.drawable.input_image),
                 contentDescription = null,
                 modifier = Modifier
                     .clickable {
@@ -247,25 +253,160 @@ fun ExtraSelector(
                     }
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .size(30.dp),
+                    .size(32.dp),
                 tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
-                imageVector = FontAwesomeIcons.Regular.FolderOpen,
+                imageVector = vectorResource(Res.drawable.input_folder),
                 contentDescription = null,
                 modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .size(30.dp),
+                    .size(32.dp),
                 tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
-                imageVector = FontAwesomeIcons.Regular.HandPointRight,
+                imageVector = vectorResource(Res.drawable.input_calendar),
                 contentDescription = null,
                 modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .size(30.dp),
+                    .size(32.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = vectorResource(Res.drawable.input_map),
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(32.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = vectorResource(Res.drawable.input_film),
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(32.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = vectorResource(Res.drawable.input_globe),
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(32.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = vectorResource(Res.drawable.input_phone),
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(32.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = vectorResource(Res.drawable.input_settings),
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(32.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = vectorResource(Res.drawable.input_store),
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(32.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Icon(
+                imageVector = vectorResource(Res.drawable.input_users_three),
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        NotificationManager.createDialogAlert(
+                            MainDialogAlert(
+                                message = BaseResText.underDevelopment,
+                                cancelOperationText = BaseResText.cancelBtn
+                            )
+                        )
+                    }
+                    .padding(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .size(32.dp),
                 tint = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -306,6 +447,7 @@ val KeyboardShownKey = SemanticsPropertyKey<Boolean>("KeyboardShownKey")
 var SemanticsPropertyReceiver.keyboardShownProperty by KeyboardShownKey
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @ExperimentalFoundationApi
 @Composable
 private fun UserInputText(
@@ -359,7 +501,7 @@ private fun UserInputText(
         }
 
         Icon(
-            imageVector = vectorResource(Res.drawable.input_package),
+            imageVector = vectorResource(Res.drawable.input_map_pin),
             contentDescription = null,
             modifier = Modifier
                 .padding(horizontal = 8.dp)
@@ -607,7 +749,7 @@ fun EmojiSelector(
                             }
 
                             Icon(
-                                imageVector = FontAwesomeIcons.Solid.CloudUploadAlt,
+                                imageVector = vectorResource(Res.drawable.input_upload),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .padding(4.dp)
