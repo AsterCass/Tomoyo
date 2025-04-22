@@ -143,6 +143,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
             val thisToken = _userState.value.userData.token
             if (!thisToken.isNullOrBlank()) {
                 _syncUserData.value = true
+                logInfo("[op:login] UpdateChatData when account pass")
                 chatScreenModel.updateChatData(thisToken)
             }
         } else {
@@ -162,6 +163,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
                 }
                 if (!forceLogin) return
             } else {
+                logInfo("[op:login] UpdateChatData when db data")
                 chatScreenModel.updateChatData(_userState.value.token)
             }
         }

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import biz.logInfo
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
@@ -41,6 +42,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import constant.enums.ViewEnum
 import data.UserChattingSimple
 import data.model.ChatScreenModel
+import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -64,7 +66,7 @@ class UserChatScreen(
     override fun Content() {
         val mainModel: MainScreenModel = koinInject()
         val chatScreenModel: ChatScreenModel = koinInject()
-//        val globalDataModel: GlobalDataModel = koinInject()
+        val globalDataModel: GlobalDataModel = koinInject()
 //        val dataStorageManager: DataStorageManager = koinInject()
 
         //navigation
@@ -85,8 +87,11 @@ class UserChatScreen(
 
         //user data
         val userState = mainModel.userState.collectAsState().value
+        val socketConnected = globalDataModel.socketConnected.collectAsState().value
         val token = userState.token
         val thisUserId = userState.userData.id
+
+        logInfo("[op:UserChatScreen] Load userState ${userState.token} socket $socketConnected")
 
         //finish login
         if (token.isBlank() || thisUserId.isNullOrBlank()) {

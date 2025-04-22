@@ -46,6 +46,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ui.components.MainNotification
 import ui.components.NotificationManager
+import kotlin.coroutines.cancellation.CancellationException
 
 val baseJsonConf = Json {
     prettyPrint = true
@@ -93,7 +94,7 @@ class BaseApi : KoinComponent {
             handleResponseExceptionWithRequest { exception, request ->
                 logInfo(
                     "[error:HttpResponseValidator:handleResponseExceptionWithRequest]" +
-                            " $exception $request"
+                            " $exception ${request.url}"
                 )
 
                 when (exception) {
@@ -140,6 +141,9 @@ class BaseApi : KoinComponent {
         } catch (e: SerializationException) {
             logInfo("[op:safeRequest:error:SerializationException] Request error $e")
             globalDataModel.checkNetwork()
+            ApiResponse.Error.SerializationError
+        } catch (e: CancellationException) {
+            logInfo("[op:safeRequest:error:CancellationException] Request error $e")
             ApiResponse.Error.SerializationError
         } catch (e: Exception) {
             logInfo("[op:safeRequest:error:Exception] Request error $e")

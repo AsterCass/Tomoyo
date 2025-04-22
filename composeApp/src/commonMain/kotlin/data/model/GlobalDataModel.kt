@@ -60,6 +60,7 @@ class GlobalDataModel {
     private val _socketConnected = MutableStateFlow(true)
     val socketConnected = _socketConnected.asStateFlow()
     fun resetSocketConnected(status: Boolean) {
+        logInfo("[op:resetSocketConnected] reset")
         _socketConnected.value = status
     }
 
