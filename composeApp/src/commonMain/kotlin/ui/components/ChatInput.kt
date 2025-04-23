@@ -75,6 +75,8 @@ import constant.BaseResText
 import constant.emojiList
 import constant.enums.InputEmojiTabModel
 import constant.kaomojiList
+import data.UserState
+import data.model.ChatScreenModel
 import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -82,6 +84,7 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.size
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -102,6 +105,8 @@ import tomoyo.composeapp.generated.resources.input_settings
 import tomoyo.composeapp.generated.resources.input_store
 import tomoyo.composeapp.generated.resources.input_upload
 import tomoyo.composeapp.generated.resources.input_users_three
+import tomoyo.composeapp.generated.resources.main_chat_emoji_all
+import tomoyo.composeapp.generated.resources.main_chat_emoji_recently
 
 enum class InputSelector {
     NONE,
@@ -597,6 +602,7 @@ fun EmojiSelector(
     sendNow: (String) -> Unit,
 ) {
     val mainModel: MainScreenModel = koinInject()
+    val chatModel: ChatScreenModel = koinInject()
     val globalDataModel: GlobalDataModel = koinInject()
     val emojiProList = mainModel.getUserExData().emojiProListFlow.collectAsState().value
     val selectorExpandedCoroutine = rememberCoroutineScope()
@@ -655,6 +661,46 @@ fun EmojiSelector(
             Column(Modifier.fillMaxSize().verticalScroll(scrollState).padding(bottom = 10.dp)) {
                 when (page) {
                     InputEmojiTabModel.EMOJI.ordinal -> {
+                        val recentEmojiList = chatModel.recentEmojiList.collectAsState().value
+                        if (recentEmojiList.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    top = 10.dp,
+                                    bottom = 0.dp
+                                ),
+                                text = stringResource(Res.string.main_chat_emoji_recently)
+                            )
+                            FlowRow(
+                                modifier = Modifier.padding(5.dp).fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                for (emoji in recentEmojiList) {
+                                    Text(
+                                        modifier = Modifier.padding(
+                                            horizontal = 7.dp,
+                                            vertical = 5.dp
+                                        )
+                                            .clickable {
+                                                onTextAdded(emoji)
+                                                chatModel.addRecentEmojiList(emoji)
+                                            },
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        text = emoji,
+                                    )
+                                }
+                            }
+                            Text(
+                                modifier = Modifier.padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    top = 0.dp,
+                                    bottom = 0.dp
+                                ),
+                                text = stringResource(Res.string.main_chat_emoji_all)
+                            )
+                        }
                         FlowRow(
                             modifier = Modifier.padding(5.dp).fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
@@ -664,6 +710,7 @@ fun EmojiSelector(
                                     modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp)
                                         .clickable {
                                             onTextAdded(emoji)
+                                            chatModel.addRecentEmojiList(emoji)
                                         },
                                     style = MaterialTheme.typography.headlineSmall,
                                     text = emoji,
@@ -673,6 +720,49 @@ fun EmojiSelector(
                     }
 
                     InputEmojiTabModel.KAOMOJI.ordinal -> {
+                        val recentEmojiList = chatModel.recentKaomojiList.collectAsState().value
+                        if (recentEmojiList.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    top = 10.dp,
+                                    bottom = 0.dp
+                                ),
+                                text = stringResource(Res.string.main_chat_emoji_recently)
+                            )
+                            FlowRow(
+                                modifier = Modifier.padding(5.dp).fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                for (emoji in recentEmojiList) {
+                                    Text(
+                                        modifier = Modifier.padding(
+                                            start = 15.dp,
+                                            end = 5.dp,
+                                            top = 5.dp,
+                                            bottom = 5.dp
+                                        )
+                                            .clickable {
+                                                onTextAdded(emoji)
+                                                chatModel.addRecentKaomojiList(emoji)
+                                            },
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        text = emoji,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                    )
+                                }
+                            }
+                            Text(
+                                modifier = Modifier.padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    top = 0.dp,
+                                    bottom = 0.dp
+                                ),
+                                text = stringResource(Res.string.main_chat_emoji_all)
+                            )
+                        }
                         FlowRow(
                             modifier = Modifier.padding(5.dp).fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
@@ -687,6 +777,7 @@ fun EmojiSelector(
                                     )
                                         .clickable {
                                             onTextAdded(emoji)
+                                            chatModel.addRecentKaomojiList(emoji)
                                         },
                                     style = MaterialTheme.typography.bodyLarge,
                                     text = emoji,
@@ -698,62 +789,56 @@ fun EmojiSelector(
 
 
                     InputEmojiTabModel.EMOJI_PRO.ordinal -> {
+                        val recentEmojiList = chatModel.recentEmojiProList.collectAsState().value
+                        if (recentEmojiList.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    top = 10.dp,
+                                    bottom = 0.dp
+                                ),
+                                text = stringResource(Res.string.main_chat_emoji_recently)
+                            )
+                            FlowRow(
+                                modifier = Modifier.padding(5.dp).fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                for (emoji in recentEmojiList) {
+                                    emojiProImage(
+                                        emoji,
+                                        "",
+                                        sendNow,
+                                        chatModel,
+                                        userState,
+                                        selectorExpandedCoroutine,
+                                        globalDataModel
+                                    )
+                                }
+                            }
+                            Text(
+                                modifier = Modifier.padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    top = 0.dp,
+                                    bottom = 0.dp
+                                ),
+                                text = stringResource(Res.string.main_chat_emoji_all)
+                            )
+                        }
                         FlowRow(
                             modifier = Modifier.padding(5.dp).fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
                         ) {
                             for (emoji in emojiProList) {
-                                AsyncImage(
-                                    request = ComposableImageRequest(uri = emoji.readAddress) {
-                                        size(5000, 5000)
-                                        precision(Precision.LESS_PIXELS)
-                                        scale(Scale.CENTER_CROP)
-                                    },
-                                    contentDescription = null,
-                                    modifier = Modifier.padding(4.dp).width(70.dp).height(70.dp)
-                                        .pointerInput(Unit) {
-                                            detectTapGestures(
-                                                onTap = { _ ->
-                                                    sendNow(emoji.readAddress)
-                                                },
-                                                onLongPress = { _ ->
-                                                    if (userState.token.isBlank()) {
-                                                        MainDialogAlert(
-                                                            message = BaseResText.userNoLogin,
-                                                            cancelOperationText = BaseResText.cancelBtn
-                                                        )
-                                                    } else {
-                                                        NotificationManager.createDialogAlert(
-                                                            MainDialogAlert(
-                                                                message = BaseResText.deleteImageProConfirm,
-                                                                confirmOperationText = BaseResText.confirmBtn,
-                                                                cancelOperationText = BaseResText.cancelBtn,
-                                                                confirmOperation = {
-                                                                    selectorExpandedCoroutine.launch {
-                                                                        BaseApi().unstarEmoji(
-                                                                            userState.token,
-                                                                            emoji.id
-                                                                        )
-
-                                                                        globalDataModel.clearLocalUserExData();
-                                                                        val userEmojis =
-                                                                            BaseApi().getStarEmojis(
-                                                                                userState.token
-                                                                            )
-                                                                        globalDataModel.resetUserEmoji(
-                                                                            userEmojis
-                                                                        )
-
-                                                                        NotificationManager.removeDialogAlert()
-                                                                    }
-                                                                }
-                                                            )
-                                                        )
-                                                    }
-
-                                                }
-                                            )
-                                        }
+                                emojiProImage(
+                                    emoji.readAddress,
+                                    emoji.id,
+                                    sendNow,
+                                    chatModel,
+                                    userState,
+                                    selectorExpandedCoroutine,
+                                    globalDataModel
                                 )
                             }
 
@@ -815,4 +900,70 @@ fun EmojiSelector(
 
 
     }
+}
+
+@Composable
+private fun emojiProImage(
+    emojiAddress: String,
+    emojiId: String,
+    sendNow: (String) -> Unit,
+    chatModel: ChatScreenModel,
+    userState: UserState,
+    selectorExpandedCoroutine: CoroutineScope,
+    globalDataModel: GlobalDataModel
+) {
+    AsyncImage(
+        request = ComposableImageRequest(uri = emojiAddress) {
+            size(5000, 5000)
+            precision(Precision.LESS_PIXELS)
+            scale(Scale.CENTER_CROP)
+        },
+        contentDescription = null,
+        modifier = Modifier.padding(4.dp).width(70.dp).height(70.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = { _ ->
+                        sendNow(emojiAddress)
+                        chatModel.addRecentEmojiProList(emojiAddress)
+                    },
+                    onLongPress = { _ ->
+                        if (emojiId.isNotBlank()) {
+                            if (userState.token.isBlank()) {
+                                MainDialogAlert(
+                                    message = BaseResText.userNoLogin,
+                                    cancelOperationText = BaseResText.cancelBtn
+                                )
+                            } else {
+                                NotificationManager.createDialogAlert(
+                                    MainDialogAlert(
+                                        message = BaseResText.deleteImageProConfirm,
+                                        confirmOperationText = BaseResText.confirmBtn,
+                                        cancelOperationText = BaseResText.cancelBtn,
+                                        confirmOperation = {
+                                            selectorExpandedCoroutine.launch {
+                                                BaseApi().unstarEmoji(
+                                                    userState.token,
+                                                    emojiId
+                                                )
+
+                                                globalDataModel.clearLocalUserExData();
+                                                val userEmojis =
+                                                    BaseApi().getStarEmojis(
+                                                        userState.token
+                                                    )
+                                                globalDataModel.resetUserEmoji(
+                                                    userEmojis
+                                                )
+
+                                                NotificationManager.removeDialogAlert()
+                                            }
+                                        }
+                                    )
+                                )
+                            }
+                        }
+                    }
+                )
+            }
+    )
 }

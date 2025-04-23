@@ -16,6 +16,7 @@ object BaseResText {
     var weekDayList: List<String> = listOf("", "", "", "", "", "", "", "")
 }
 
+const val RECENT_EMOJI_MAX_SIZE = 8;
 const val BASE_SERVER_ADDRESS = "https://api.astercasc.com"
 const val BASE_SERVER_ADDRESS_STATIC = "https://api.astercasc.com/public/resources/"
 const val EMOJI_REPLACE_KEY = "EMOJI_PLACEHOLDER"

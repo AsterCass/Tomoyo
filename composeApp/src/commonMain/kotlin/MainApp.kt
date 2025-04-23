@@ -25,6 +25,7 @@ import constant.enums.ViewEnum
 import data.PlatformInitData
 import data.UserDataModel
 import data.model.ArticleScreenModel
+import data.model.ChatScreenModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
@@ -93,6 +94,7 @@ class PreLoadScreen(
         val articleModel: ArticleScreenModel = koinInject()
         val musicModel: MusicScreenModel = koinInject()
         val contactModel: ContactScreenModel = koinInject()
+        val chatModel: ChatScreenModel = koinInject()
 
         // Custom data inject
         StatusBar().UpdateColor(Color.Transparent, Color.Transparent, false)
@@ -105,14 +107,22 @@ class PreLoadScreen(
         val navigator = LocalNavigator.currentOrThrow
 
         preloadCoroutine.launch {
-            // Data
             val firstTryLinkSocket = mainModel.firstTryLinkSocket.value
-            val userDataStringDb = dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
 
             // User Status
             if (firstTryLinkSocket) {
-                mainModel.triedLinkSocket()
+                // Data
+                val userDataStringDb =
+                    dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
+                val recentEmoji =
+                    dataStorageManager.getNonFlowString(DataStorageManager.RECENT_EMOJI_LIST)
+                val recentKaomoji =
+                    dataStorageManager.getNonFlowString(DataStorageManager.RECENT_KAOMOJI_LIST)
+                val recentEmojiPro =
+                    dataStorageManager.getNonFlowString(DataStorageManager.RECENT_EMOJI_PRO_LIST)
+                chatModel.initEmojiList(recentEmoji, recentKaomoji, recentEmojiPro)
 
+                mainModel.triedLinkSocket()
                 if (userDataStringDb.isNotBlank()) {
                     val userDataDb: UserDataModel = baseJsonConf.decodeFromString(userDataStringDb)
                     if (!userDataDb.token.isNullOrBlank()) {

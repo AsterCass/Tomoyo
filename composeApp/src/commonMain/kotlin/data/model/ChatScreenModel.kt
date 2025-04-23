@@ -1,10 +1,13 @@
 package data.model
 
 import api.BaseApi
+import api.baseJsonConf
 import cafe.adriel.voyager.core.model.ScreenModel
+import constant.RECENT_EMOJI_MAX_SIZE
 import data.ChatRowModel
 import data.UserChatMsgDto
 import data.UserChattingSimple
+import data.store.DataStorageManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -13,7 +16,98 @@ import kotlinx.coroutines.sync.withLock
 import ui.components.messageTimeLabelBuilder
 import ui.components.newMessageLabel
 
-class ChatScreenModel : ScreenModel {
+class ChatScreenModel(
+    private val dataStorageManager: DataStorageManager
+) : ScreenModel {
+
+    // Emoji pro
+    private val _recentEmojiList = MutableStateFlow(listOf<String>())
+    val recentEmojiList = _recentEmojiList.asStateFlow()
+    private val _recentKaomojiList = MutableStateFlow(listOf<String>())
+    val recentKaomojiList = _recentKaomojiList.asStateFlow()
+    private val _recentEmojiProList = MutableStateFlow(listOf<String>())
+    val recentEmojiProList = _recentEmojiProList.asStateFlow()
+
+    fun initEmojiList(emoji: String, kaomoji: String, emojiPro: String) {
+        if (emoji.isNotBlank()) {
+            _recentEmojiList.value = baseJsonConf.decodeFromString(emoji)
+        }
+        if (kaomoji.isNotBlank()) {
+            _recentKaomojiList.value = baseJsonConf.decodeFromString(kaomoji)
+        }
+        if (emojiPro.isNotBlank()) {
+            _recentEmojiProList.value = baseJsonConf.decodeFromString(emojiPro)
+        }
+    }
+
+    fun addRecentEmojiList(data: String) {
+        if (_recentEmojiList.value.isNotEmpty() && data == _recentEmojiList.value.first()) {
+            return
+        }
+        val newList = mutableListOf<String>()
+        newList.add(data)
+        for (preData in _recentEmojiList.value) {
+            if (newList.size >= RECENT_EMOJI_MAX_SIZE) {
+                break
+            }
+            if (preData == data) {
+                continue
+            }
+            newList.add(preData)
+        }
+        _recentEmojiList.value = newList
+        dataStorageManager.setString(
+            DataStorageManager.RECENT_EMOJI_LIST,
+            baseJsonConf.encodeToString(newList)
+        )
+    }
+
+    fun addRecentKaomojiList(data: String) {
+        if (_recentKaomojiList.value.isNotEmpty() && data == _recentKaomojiList.value.first()) {
+            return
+        }
+        val newList = mutableListOf<String>()
+        newList.add(data)
+        for (preData in _recentKaomojiList.value) {
+            if (newList.size >= RECENT_EMOJI_MAX_SIZE) {
+                break
+            }
+            if (preData == data) {
+                continue
+            }
+            newList.add(preData)
+        }
+        _recentKaomojiList.value = newList
+        dataStorageManager.setString(
+            DataStorageManager.RECENT_KAOMOJI_LIST,
+            baseJsonConf.encodeToString(newList)
+        )
+    }
+
+    fun addRecentEmojiProList(data: String) {
+        if (_recentEmojiProList.value.isNotEmpty() && data == _recentEmojiProList.value.first()) {
+            return
+        }
+        val newList = mutableListOf<String>()
+        newList.add(data)
+        for (preData in _recentEmojiProList.value) {
+            if (newList.size >= RECENT_EMOJI_MAX_SIZE) {
+                break
+            }
+            if (preData == data) {
+                continue
+            }
+            newList.add(preData)
+        }
+        _recentEmojiProList.value = newList
+        dataStorageManager.setString(
+            DataStorageManager.RECENT_EMOJI_PRO_LIST,
+            baseJsonConf.encodeToString(newList)
+        )
+    }
+
+
+    // Base
 
     private val mutex = Mutex()
 

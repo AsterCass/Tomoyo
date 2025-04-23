@@ -26,7 +26,7 @@ fun commonModule() = module {
     }
 
     single<ChatScreenModel> {
-        ChatScreenModel()
+        ChatScreenModel(dataStorageManager = get())
     }
 
     single<ContactScreenModel> {

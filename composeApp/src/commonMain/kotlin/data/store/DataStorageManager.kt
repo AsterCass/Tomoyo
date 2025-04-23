@@ -29,6 +29,9 @@ class DataStorageManager @OptIn(ExperimentalSettingsApi::class) constructor(priv
     companion object {
         const val USER_DATA = "user_data"
         const val FAV_AUDIO_ID_LIST = "fav_audio_id_list"
+        const val RECENT_EMOJI_LIST = "recent_emoji_list"
+        const val RECENT_KAOMOJI_LIST = "recent_kaomoji_list"
+        const val RECENT_EMOJI_PRO_LIST = "recent_emoji_pro_list"
     }
 
 }

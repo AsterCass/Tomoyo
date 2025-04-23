@@ -128,5 +128,8 @@
     <string name="chat_emoji_upload_large"> The image size must not exceed 20KB </string>
     <string name="chat_image_upload_large"> The image size must not exceed 5MB </string>
     <string name="chat_image_delete_tip"> Do you want to delete this image pro? </string>
+    <string name="main_chat_emoji_recently"> Recently Used: </string>
+    <string name="main_chat_emoji_all"> All: </string>
+
 
 </resources>
