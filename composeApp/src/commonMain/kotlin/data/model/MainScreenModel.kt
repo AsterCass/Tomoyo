@@ -171,6 +171,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
         CoroutineScope(Dispatchers.IO).launch(socketExceptionHandlerWithReconnect) {
 
             logInfo("[op:login] Init user extra data ${_userState.value.token}")
+            globalDataModel.clearLocalUserExData();
             val userEmojis = BaseApi().getStarEmojis(_userState.value.token)
             globalDataModel.resetUserEmoji(userEmojis)
 

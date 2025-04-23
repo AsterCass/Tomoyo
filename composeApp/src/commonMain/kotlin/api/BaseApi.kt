@@ -394,6 +394,15 @@ class BaseApi : KoinComponent {
         }
     }
 
+    suspend fun unstarEmoji(token: String, emojiId: String) {
+        client.safeRequest<String>(
+            getUrl("/yui/user/file/emoji/unstar/auth?emojiId=${emojiId}")
+        ) {
+            method = HttpMethod.Delete
+            header("User-Token", token)
+        }
+    }
+
     suspend fun uploadUserFile(
         token: String,
         fileType: Int,

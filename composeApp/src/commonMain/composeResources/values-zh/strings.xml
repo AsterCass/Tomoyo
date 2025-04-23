@@ -125,5 +125,6 @@
     <string name="chat_emoji_emoji_pro"> 表情包 </string>
     <string name="chat_emoji_upload_large"> 图片大小不能超过20KB </string>
     <string name="chat_image_upload_large"> 图片大小不能超过5MB </string>
+    <string name="chat_image_delete_tip"> 是否删除该表情包？ </string>
 
 </resources>

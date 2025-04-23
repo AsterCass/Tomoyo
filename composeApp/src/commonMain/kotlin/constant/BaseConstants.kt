@@ -4,10 +4,12 @@ import androidx.compose.ui.graphics.Color
 
 
 object BaseResText {
+    var deleteImageProConfirm: String = ""
     var errorTooLargeUpload5000: String = ""
     var errorTooLargeUpload20: String = ""
     var userNoLogin: String = ""
     var underDevelopment: String = ""
+    var confirmBtn: String = ""
     var cancelBtn: String = ""
     var copyTip: String = ""
     var bgColorList: List<Color> = listOf(Color.White, Color.White, Color.White)

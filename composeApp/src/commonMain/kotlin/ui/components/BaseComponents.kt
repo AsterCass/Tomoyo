@@ -66,8 +66,10 @@ import theme.third
 import theme.unselectedColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.btn_cancel
+import tomoyo.composeapp.generated.resources.btn_confirm
 import tomoyo.composeapp.generated.resources.chat_copy_success
 import tomoyo.composeapp.generated.resources.chat_emoji_upload_large
+import tomoyo.composeapp.generated.resources.chat_image_delete_tip
 import tomoyo.composeapp.generated.resources.chat_image_upload_large
 import tomoyo.composeapp.generated.resources.login_passwd_error
 import tomoyo.composeapp.generated.resources.login_success
@@ -318,9 +320,11 @@ fun InitForNoComposableRes() {
             loginPasswdErrorDes = stringResource(Res.string.login_passwd_error),
         )
     )
+    BaseResText.deleteImageProConfirm = stringResource(Res.string.chat_image_delete_tip)
     BaseResText.errorTooLargeUpload20 = stringResource(Res.string.chat_emoji_upload_large)
     BaseResText.errorTooLargeUpload5000 = stringResource(Res.string.chat_image_upload_large)
     BaseResText.underDevelopment = stringResource(Res.string.under_development)
+    BaseResText.confirmBtn = stringResource(Res.string.btn_confirm)
     BaseResText.cancelBtn = stringResource(Res.string.btn_cancel)
     BaseResText.copyTip = stringResource(Res.string.chat_copy_success)
     BaseResText.userNoLogin = stringResource(Res.string.notification_user_no_login)
