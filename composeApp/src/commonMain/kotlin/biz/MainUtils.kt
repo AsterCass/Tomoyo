@@ -22,6 +22,8 @@ expect fun copyToClipboard(text: String)
 
 expect fun logInfo(text: String)
 
+expect fun isAppInForeground(): Boolean;
+
 fun formatSeconds(seconds: Int): String {
     val hours = seconds / 3600
     val minutes = (seconds % 3600) / 60

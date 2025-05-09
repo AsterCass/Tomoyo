@@ -65,8 +65,8 @@ class MediaPlaybackService : Service() {
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Media Player")
-            .setContentText("Playing media")
+            .setContentTitle("Tomoyo")
+            .setContentText("Playing music ...")
             .setSmallIcon(R.drawable.logo_pro_background)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
@@ -120,7 +120,15 @@ actual class AudioPlayer actual constructor(
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             musicPlayerState.isPlaying = isPlaying
-            if (isPlaying) scheduleUpdate() else stopUpdate()
+            if (isPlaying) {
+                scheduleUpdate()
+            } else {
+                stopUpdate()
+
+                // 无播放时停止前台服务
+                val context = MainActivity.mainContext!!
+                context.stopService(Intent(context, MediaPlaybackService::class.java))
+            }
         }
 
     }
@@ -128,10 +136,6 @@ actual class AudioPlayer actual constructor(
     init {
         mediaPlayer.addListener(listener)
         mediaPlayer.prepare()
-
-        val context = MainActivity.mainContext!!
-        val intent = Intent(context, MediaPlaybackService::class.java)
-        ContextCompat.startForegroundService(context, intent)
     }
 
     actual fun start(id: String) {
@@ -143,6 +147,13 @@ actual class AudioPlayer actual constructor(
 
     actual fun play() {
         if (musicPlayerState.isPlaying) return
+
+        // 启动前台服务
+        val context = MainActivity.mainContext!!
+        val intent = Intent(context, MediaPlaybackService::class.java)
+        ContextCompat.startForegroundService(context, intent)
+
+
         mediaPlayer.play()
     }
 

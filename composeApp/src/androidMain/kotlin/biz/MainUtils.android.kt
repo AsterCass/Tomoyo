@@ -1,5 +1,7 @@
 package biz
 
+import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -15,4 +17,19 @@ actual fun copyToClipboard(text: String) {
 
 actual fun logInfo(text: String) {
     Log.i("Tomoyo", text)
+}
+
+@SuppressLint("ServiceCast")
+actual fun isAppInForeground(): Boolean {
+    val context = MainActivity.mainContext!!
+    val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val appProcesses = activityManager.runningAppProcesses ?: return false
+
+    val packageName = context.packageName
+    for (appProcess in appProcesses) {
+        if (appProcess.processName == packageName) {
+            return appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+        }
+    }
+    return false
 }

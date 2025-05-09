@@ -3,6 +3,7 @@ package data.model
 import androidx.compose.ui.unit.Constraints
 import api.BaseApi
 import api.baseJsonConf
+import biz.isAppInForeground
 import biz.logInfo
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -29,6 +30,7 @@ import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ui.components.sendAppNotification
 
 
 class MainScreenModel : ScreenModel, KoinComponent {
@@ -198,6 +200,9 @@ class MainScreenModel : ScreenModel, KoinComponent {
                     val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
                     logInfo("[op:login] Socket get message from ${chatRow.fromChatId}")
                     chatScreenModel.pushChatMessage(_userState.value.token, chatRow)
+                    if (!isAppInForeground()) {
+                        sendAppNotification(chatRow.sendUserNickname, chatRow.sendMessage)
+                    }
                 }
             }
 

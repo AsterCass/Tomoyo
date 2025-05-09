@@ -11,3 +11,7 @@ actual fun copyToClipboard(text: String) {
 
 actual fun logInfo(text: String) {
 }
+
+actual fun isAppInForeground(): Boolean {
+    return false
+}

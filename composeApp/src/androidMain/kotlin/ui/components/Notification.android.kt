@@ -43,6 +43,12 @@ actual fun CheckAppNotificationPermission(
                 action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
                 putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
             }
+
+            //function 3
+//            val intent = Intent().apply {
+//                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+//                data = Uri.fromParts("package", context.packageName, null)
+//            }
             context.startActivity(intent)
         }
 
