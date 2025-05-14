@@ -12,3 +12,9 @@ actual fun logInfo(text: String) {
 actual fun isAppInForeground(): Boolean {
     return false
 }
+
+actual fun afterLogin() {
+}
+
+actual fun beforeLogout() {
+}

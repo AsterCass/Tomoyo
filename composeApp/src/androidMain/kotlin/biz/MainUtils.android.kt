@@ -5,7 +5,9 @@ import android.app.ActivityManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.aster.yuno.tomoyo.MainActivity
 
 actual fun copyToClipboard(text: String) {
@@ -32,4 +34,17 @@ actual fun isAppInForeground(): Boolean {
         }
     }
     return false
+}
+
+actual fun afterLogin() {
+    val context = MainActivity.mainContext!!
+
+    context.stopService(Intent(context, ChatSocketService::class.java))
+    val intent = Intent(context, ChatSocketService::class.java)
+    ContextCompat.startForegroundService(context, intent)
+}
+
+actual fun beforeLogout() {
+    val context = MainActivity.mainContext!!
+    context.stopService(Intent(context, ChatSocketService::class.java))
 }

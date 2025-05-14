@@ -24,6 +24,10 @@ expect fun logInfo(text: String)
 
 expect fun isAppInForeground(): Boolean;
 
+expect fun afterLogin();
+
+expect fun beforeLogout();
+
 fun formatSeconds(seconds: Int): String {
     val hours = seconds / 3600
     val minutes = (seconds % 3600) / 60

@@ -137,12 +137,12 @@ class PreLoadScreen(
                 articleModel.updateArticleList()
                 musicModel.updateAllAudioList()
                 contactModel.loadPublicUser()
-
-                // Init finish
-                // todo too fast will occur error
-                delay(1000)
-                navigator.replace(tabs)
             }
+
+            // Init finish
+            // todo too fast will occur error
+            delay(1000)
+            navigator.replace(tabs)
         }
 
         Box(
