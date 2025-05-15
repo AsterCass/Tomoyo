@@ -12,6 +12,8 @@ plugins {
     //alias(libs.plugins.javaFx)
 
     kotlin("plugin.serialization") version "2.0.20"
+
+    id("com.google.gms.google-services")
 }
 
 val os: OperatingSystem = OperatingSystem.current()
@@ -76,6 +78,10 @@ kotlin {
 
 
             implementation("com.google.accompanist:accompanist-permissions:0.36.0")
+
+            // google message
+            implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+            implementation("com.google.firebase:firebase-messaging")
         }
         commonMain.dependencies {
             implementation(compose.runtime)

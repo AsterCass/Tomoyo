@@ -37,14 +37,14 @@ actual fun isAppInForeground(): Boolean {
 }
 
 actual fun afterLogin() {
-    val context = MainActivity.mainContext!!
-
-    context.stopService(Intent(context, ChatSocketService::class.java))
-    val intent = Intent(context, ChatSocketService::class.java)
-    ContextCompat.startForegroundService(context, intent)
+//    val context = MainActivity.mainContext!!
+//
+//    context.stopService(Intent(context, ChatSocketService::class.java))
+//    val intent = Intent(context, ChatSocketService::class.java)
+//    ContextCompat.startForegroundService(context, intent)
 }
 
 actual fun beforeLogout() {
-    val context = MainActivity.mainContext!!
-    context.stopService(Intent(context, ChatSocketService::class.java))
+//    val context = MainActivity.mainContext!!
+//    context.stopService(Intent(context, ChatSocketService::class.java))
 }
