@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "597396788436",
+    "project_id": "astercasctomoyo",
+    "storage_bucket": "astercasctomoyo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597396788436:android:2192a3303349d5973e5741",
+        "android_client_info": {
+          "package_name": "com.aster.yuno.tomoyo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqn7rvPiJpCP0PmYT8p7kF-RpjEnvzRrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
