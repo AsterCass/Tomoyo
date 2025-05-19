@@ -1,11 +1,26 @@
 package biz
 
+import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import ui.components.sendAppNotification
 
 
+fun getGoogleMessageToken() {
+    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            val token = task.result
+            Log.i("Tomoyo", "Current google message token token: $token")
+        } else {
+            Log.w("Tomoyo", "Failed to get google message token ", task.exception)
+        }
+    }
+}
+
+
 class FMessagingService : FirebaseMessagingService() {
+
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
