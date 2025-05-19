@@ -66,6 +66,14 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 <img src="image/ios_4.png" width="250"/><img src="image/ios_5.png" width="250"/><img src="image/ios_6.png" width="250"/>
 <img src="image/ios_7.png"  width="250"/><img src="image/ios_8.png"  width="250"/><img src="image/ios_9.png"  width="250"/>
 
+
+## Important Tips
+
+* If you need to test the system-level application notification functionality, please follow [this tutorial](https://firebase.google.com/docs/cloud-messaging). The relevant client-side code is already provided in the repository. However, for security reasons, the corresponding `google-services.json` file is not included. If you are developing a similar feature and wish to use this as a reference, you can replace the file with your own and refer to the related messaging logic. However, it will not be possible to interact with the default server to receive messages from other users or groups within `Tomoyo`
+
+* 如果需要测试系统级应用程序通知功能，需要按照[该教程](https://firebase.google.com/docs/cloud-messaging)处理，相关客户端代码仓库中已经给出。但出于安全考虑，并没有没有提供对应的`google-services.json`文件，如果您有相似的功能需要开发借鉴，可以将其替换，并参考相关消息逻辑，但是无法和默认的服务端进行消息联动进而收到在`Tomoyo`中其他用户或者群组中发来的消息
+
+
 ## Run Project
 
 ### Android
@@ -86,13 +94,9 @@ Run command `./gradlew :composeApp:run`
 
 #### TIPS 
 
-* If you encounter `nw_proxy_resolver_create_parsed_array [C5.1 proxy pac] Evaluation error: NSURLErrorDomain: -1004`, please disable the proxy on your iPhone or the computer where the simulator is running.
+* If you encounter `nw_proxy_resolver_create_parsed_array [C5.1 proxy pac] Evaluation error: NSURLErrorDomain: -1004`, please disable the proxy on your iPhone or the computer where the simulator is running
 
 * 如果遇到`nw_proxy_resolver_create_parsed_array [C5.1 proxy pac] Evaluation error: NSURLErrorDomain: -1004`请关闭苹果手机代理或者模拟器所在电脑的代理
-
-* If you need to test the system-level application notification functionality, please follow [this tutorial](https://firebase.google.com/docs/cloud-messaging). The relevant client-side code is already provided in the repository. However, for security reasons, the corresponding `google-services.json` file is not included. If you are developing a similar feature and wish to use this as a reference, you can replace the file with your own and refer to the related messaging logic. However, it will not be possible to interact with the default server to receive messages from other users or groups within `Tomoyo`.
-
-* 如果需要测试系统级应用程序通知功能，需要按照[该教程](https://firebase.google.com/docs/cloud-messaging)处理，相关客户端代码仓库中已经给出。但是处于安全考虑，并没有没有提供对应的`google-services.json`文件，如果您有相似的功能需要开发借鉴，可以将其替换，并参考相关消息逻辑，但是无法和默认的服务端进行消息联动进而收到在`Tomoyo`中其他用户或者群组中发来的消息
 
 ## Tech Stack
 
