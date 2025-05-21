@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
         }
 
         createAppNotificationChannel(this)
-        getGoogleMessageToken();
+        getGoogleMessageToken()
 
         setContent {
             MainApp(
