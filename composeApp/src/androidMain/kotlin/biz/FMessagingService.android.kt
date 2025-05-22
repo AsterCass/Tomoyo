@@ -6,25 +6,34 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import ui.components.sendAppNotification
 
+var globalGoogleFirebaseToken = ""
 
-fun getGoogleMessageToken() {
+var updateGoogleFirebaseTokenFun: (String) -> Unit = {}
+
+fun reloadGoogleMessageToken() {
     FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
         if (task.isSuccessful) {
-            val token = task.result
-            Log.i("Tomoyo", "Current google message token token: $token")
+            updaterToken(task.result)
         } else {
             Log.w("Tomoyo", "Failed to get google message token ", task.exception)
         }
     }
 }
 
+private fun updaterToken(token: String) {
+    if (token != globalGoogleFirebaseToken) {
+        globalGoogleFirebaseToken = token
+        updateGoogleFirebaseTokenFun(token)
+        Log.i("Tomoyo", "Current google message token: $globalGoogleFirebaseToken")
+    }
+}
+
 
 class FMessagingService : FirebaseMessagingService() {
 
-
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        saveTokenToServer(token)
+        updaterToken(token)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -49,8 +58,6 @@ class FMessagingService : FirebaseMessagingService() {
         }
     }
 
-    private fun saveTokenToServer(token: String) {
-    }
 
     private fun processData(data: Map<String, String>) {
     }

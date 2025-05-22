@@ -15,6 +15,8 @@ import api.baseJsonConf
 import biz.BaseViewTransition
 import biz.StatusBar
 import biz.TabTransition
+import biz.logInfo
+import biz.setUpdateGoogleFirebaseToken
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
@@ -137,6 +139,11 @@ class PreLoadScreen(
                 articleModel.updateArticleList()
                 musicModel.updateAllAudioList()
                 contactModel.loadPublicUser()
+
+
+                setUpdateGoogleFirebaseToken {
+                    str -> logInfo("[op:Content] Update session method $str")
+                }
             }
 
             // Init finish

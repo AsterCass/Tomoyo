@@ -3,6 +3,9 @@ package data.model
 import androidx.compose.ui.unit.Constraints
 import api.BaseApi
 import api.baseJsonConf
+import biz.afterLogin
+import biz.beforeLogout
+import biz.getPlatform
 import biz.isAppInForeground
 import biz.logInfo
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -188,9 +191,12 @@ class MainScreenModel : ScreenModel, KoinComponent {
 
             logInfo("[op:login] Socket connecting")
             _socketSession.value = _socketClient.value.connect(
-                "wss://api.astercasc.com/yui/chat-websocket/no-js/socketAuthNoError?" + "User-Token=${_userState.value.token}"
+                "wss://api.astercasc.com/yui/chat-websocket/no-js/socketAuthNoError?"
+                        + "User-Token=${_userState.value.token}"
+                        + "&platform=${getPlatform()}"
             )
             logInfo("[op:login] Socket connect successful")
+            afterLogin()
             val subscription: Flow<String> = _socketSession.value!!.subscribeText(
                 "/user/${_userState.value.token}/message/receive"
             )
@@ -210,6 +216,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
     }
 
     suspend fun logout() {
+        beforeLogout()
         BaseApi().logout(_userState.value.token)
         globalDataModel.clearLocalUserState()
         _syncUserData.value = true

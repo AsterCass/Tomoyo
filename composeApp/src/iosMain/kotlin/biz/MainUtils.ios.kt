@@ -18,3 +18,10 @@ actual fun afterLogin() {
 
 actual fun beforeLogout() {
 }
+
+actual fun getPlatform(): String {
+    return "mobile_ios"
+}
+
+actual fun setUpdateGoogleFirebaseToken(operation: (String) -> Unit) {
+}

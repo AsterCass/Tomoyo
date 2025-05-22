@@ -21,3 +21,10 @@ actual fun afterLogin() {
 
 actual fun beforeLogout() {
 }
+
+actual fun getPlatform(): String {
+    return "desktop"
+}
+
+actual fun setUpdateGoogleFirebaseToken(operation: (String) -> Unit) {
+}

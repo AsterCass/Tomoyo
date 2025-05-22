@@ -17,16 +17,19 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
+expect fun getPlatform(): String
 
 expect fun copyToClipboard(text: String)
 
 expect fun logInfo(text: String)
 
-expect fun isAppInForeground(): Boolean;
+expect fun isAppInForeground(): Boolean
 
-expect fun afterLogin();
+expect fun afterLogin()
 
-expect fun beforeLogout();
+expect fun beforeLogout()
+
+expect fun setUpdateGoogleFirebaseToken(operation: (String) -> Unit)
 
 fun formatSeconds(seconds: Int): String {
     val hours = seconds / 3600

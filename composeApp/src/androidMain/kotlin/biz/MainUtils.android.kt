@@ -36,9 +36,17 @@ actual fun isAppInForeground(): Boolean {
 }
 
 actual fun afterLogin() {
-    getGoogleMessageToken()
+    reloadGoogleMessageToken()
 }
 
 actual fun beforeLogout() {
     FirebaseMessaging.getInstance().deleteToken()
+}
+
+actual fun getPlatform(): String {
+    return "mobile_android"
+}
+
+actual fun setUpdateGoogleFirebaseToken(operation: (String) -> Unit) {
+    updateGoogleFirebaseTokenFun = operation
 }

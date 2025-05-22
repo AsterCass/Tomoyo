@@ -9,7 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import biz.getGoogleMessageToken
 import constant.enums.MainNavigationEnum
 import data.PlatformInitData
 import di.KoinInit
@@ -48,7 +47,6 @@ class MainActivity : ComponentActivity() {
         }
 
         createAppNotificationChannel(this)
-        getGoogleMessageToken()
 
         setContent {
             MainApp(
