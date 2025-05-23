@@ -71,7 +71,7 @@ On the other hand, it serves as a sample for common functionalities such as navi
   considerations, the corresponding `google-services.json` file is not included. If you need to
   develop similar functionality for reference, you may replace it and adapt the relevant messaging
   logic. Note that it will not be able to interact with the default server to receive messages from
-  other users or groups in `Tomoy`.
+  other users or groups in `Tomoyo`.
 * About the current strategy for system-level message push notifications:
   The current client/server policy is that whenever there is a message and the user is not logged in
   via the web or desktop client, messages are delivered to the user's mobile client via FCM. For
