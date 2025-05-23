@@ -394,6 +394,15 @@ class BaseApi : KoinComponent {
         }
     }
 
+    suspend fun readMessage(token: String, messageToken: String) {
+        client.safeRequest<String>(
+            getUrl("/yui/user/chat/notification/token/update/auth?messageToken=${messageToken}")
+        ) {
+            method = HttpMethod.Post
+            header("User-Token", token)
+        }
+    }
+
     suspend fun unstarEmoji(token: String, emojiId: String) {
         client.safeRequest<String>(
             getUrl("/yui/user/file/emoji/unstar/auth?emojiId=${emojiId}")

@@ -8,6 +8,7 @@ import biz.beforeLogout
 import biz.getPlatform
 import biz.isAppInForeground
 import biz.logInfo
+import biz.setUpdateGoogleFirebaseToken
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import data.ChatRowModel
@@ -197,6 +198,11 @@ class MainScreenModel : ScreenModel, KoinComponent {
             )
             logInfo("[op:login] Socket connect successful")
             afterLogin()
+            setUpdateGoogleFirebaseToken { str ->
+                _commonCoroutine.launch {
+                    BaseApi().readMessage(_userState.value.token, str)
+                }
+            }
             val subscription: Flow<String> = _socketSession.value!!.subscribeText(
                 "/user/${_userState.value.token}/message/receive"
             )

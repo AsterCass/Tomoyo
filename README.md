@@ -1,5 +1,7 @@
 # Tomoyo App
 
+English | [中文](README_zh.md)
+
 ## Introduction
 
 Tomoyo is a Kotlin Multiplatform app.
@@ -8,16 +10,10 @@ its features to be implemented on mobile and desktop platforms.
 On the other hand, it serves as a sample for common functionalities such as navigation, socket
 (for chat), video, audio, and db in Kotlin Multiplatform.
 
-Tomoyo是一个Kotlin Multiplatform 应用程序
-一方面它是一个对于[该网站](https://www.astercasc.com)的功能拷贝，让其中一些功能可以在移动端和桌面端实现。
-另一方面它是一个Kotlin Multiplatform下导航，socket，视频，音频，存储等常用功能的使用用例
-
 ## WIP
 
 > Please note that this project is still under development and some features may not work as
 > expected.
-
-> 请注意，此项目仍在开发中，某些功能可能无法按预期工作
 
 ## Platforms Support
 
@@ -27,23 +23,23 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 ## Documents
 
-[Music playback solution in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下音乐播放解决方案](https://www.astercasc.com/article/detail?articleId=AT182402577020566323)
+[Music playback solution in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182402577020566323)
 
-[Implementing HTTP requests in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下实现HTTP请求](https://www.astercasc.com/article/detail?articleId=AT182174036963389030)
+[Implementing HTTP requests in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182174036963389030)
 
-[Navigation solution in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下导航解决方案](https://www.astercasc.com/article/detail?articleId=AT182028575808345292)
+[Navigation solution in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182028575808345292)
 
-[Building cross-platform client interfaces/构建跨平台的客户端界面](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
+[Building cross-platform client interfaces](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
 
-[Global Notification Component Construction in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下全局通知组件构建](https://www.astercasc.com/article/detail?articleId=AT183303835787436441)
+[Global Notification Component Construction in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT183303835787436441)
 
-[Custom Fonts in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下自定义字体](https://www.astercasc.com/article/detail?articleId=AT183482081114038681)
+[Custom Fonts in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT183482081114038681)
 
-[Global Notification Component Construction in Kotlin Compose Multiplatform (Part II)/Kotlin Compose Multiplatform下全局通知组件构建（续篇）](https://www.astercasc.com/article/detail?articleId=AT183632859813146214)
+[Global Notification Component Construction in Kotlin Compose Multiplatform (Part II)](https://www.astercasc.com/article/detail?articleId=AT183632859813146214)
 
-[Data Persistence Solutions in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下数据持久化解决方案](https://www.astercasc.com/article/detail?articleId=AT183842512953804800)
+[Data Persistence Solutions in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT183842512953804800)
 
-[Socket Solutions in Kotlin Compose Multiplatform/Kotlin Compose Multiplatform下Socket解决方案](https://www.astercasc.com/article/detail?articleId=AT184505260536629248)
+[Socket Solutions in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT184505260536629248)
 
 
 ## Screenshots
@@ -69,10 +65,35 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 ## Important Tips
 
-* If you need to test the system-level application notification functionality, please follow [this tutorial](https://firebase.google.com/docs/cloud-messaging). The relevant client-side code is already provided in the repository. However, for security reasons, the corresponding `google-services.json` file is not included. If you are developing a similar feature and wish to use this as a reference, you can replace the file with your own and refer to the related messaging logic. However, it will not be possible to interact with the default server to receive messages from other users or groups within `Tomoyo`
-
-* 如果需要测试系统级应用程序通知功能，需要按照[该教程](https://firebase.google.com/docs/cloud-messaging)处理，相关客户端代码仓库中已经给出。但出于安全考虑，并没有没有提供对应的`google-services.json`文件，如果您有相似的功能需要开发借鉴，可以将其替换，并参考相关消息逻辑，但是无法和默认的服务端进行消息联动进而收到在`Tomoyo`中其他用户或者群组中发来的消息
-
+* Regarding system-level message push notifications:
+  Processing should follow [this tutorial](https://firebase.google.com/docs/cloud-messaging).
+  Relevant client-side code is already provided in the repository. However, due to security
+  considerations, the corresponding `google-services.json` file is not included. If you need to
+  develop similar functionality for reference, you may replace it and adapt the relevant messaging
+  logic. Note that it will not be able to interact with the default server to receive messages from
+  other users or groups in `Tomoy`.
+* About the current strategy for system-level message push notifications:
+  The current client/server policy is that whenever there is a message and the user is not logged in
+  via the web or desktop client, messages are delivered to the user's mobile client via FCM. For
+  scenarios with a large number of users, you may:
+  * Synchronize active status from the mobile client to the server, and only trigger push
+    notifications when the client is inactive.
+  * Reduce FCM usage through message batching (e.g., sending only the last message to each
+    user/group every N seconds to avoid short-term message overload).
+* Notes on testing system-level message push notifications:
+  Testing has been completed on the author's three mobile devices. More devices could not be tested
+  due to limited resources. If message delivery fails:
+  * First verify whether the device can access internet networks.
+  * Check if Google Play Services is installed (not mandatory, but may be required for certain phone
+    models)
+* If FCM-based messaging cannot be implemented or is unacceptable for your business needs, consider
+  using:
+  * Manufacturer-provided push platforms (e.g., Huawei/Honor Push, Xiaomi Push)
+  * Third-party push platforms (e.g., JPush, Getui).
+* Regarding system-level message push notifications:
+  Requirements vary across different mobile manufacturers. Generally, users need to enable
+  notifications, grant auto-start permissions, and adjust the app's battery optimization settings (
+  to prevent the system from restricting background activity).
 
 ## Run Project
 
@@ -80,13 +101,9 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 Open project in Android Studio and run
 
-在Android Studio打开直接运行即可
-
 ### Desktop
 
 Run command `./gradlew :composeApp:run`
-
-执行命令`./gradlew :composeApp:run`
 
 ### IOS
 
@@ -95,8 +112,6 @@ Run command `./gradlew :composeApp:run`
 #### TIPS 
 
 * If you encounter `nw_proxy_resolver_create_parsed_array [C5.1 proxy pac] Evaluation error: NSURLErrorDomain: -1004`, please disable the proxy on your iPhone or the computer where the simulator is running
-
-* 如果遇到`nw_proxy_resolver_create_parsed_array [C5.1 proxy pac] Evaluation error: NSURLErrorDomain: -1004`请关闭苹果手机代理或者模拟器所在电脑的代理
 
 ## Tech Stack
 
