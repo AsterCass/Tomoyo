@@ -23,13 +23,13 @@ On the other hand, it serves as a sample for common functionalities such as navi
 
 ## Documents
 
+[Building cross-platform client interfaces](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
+
 [Music playback solution in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182402577020566323)
 
 [Implementing HTTP requests in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182174036963389030)
 
 [Navigation solution in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT182028575808345292)
-
-[Building cross-platform client interfaces](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
 
 [Global Notification Component Construction in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT183303835787436441)
 

@@ -33,7 +33,7 @@ actual fun platformModule(): Module = module {
     single<BufferedImage>(qualifier = named("hideIcon")) {
         ImageIO.read(
             Thread.currentThread().contextClassLoader
-                .getResource("notification-lightning.png")
+                .getResource("empty.png")
         )
 
 

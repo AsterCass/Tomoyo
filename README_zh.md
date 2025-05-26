@@ -20,13 +20,13 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 ## 文档
 
+[构建跨平台的客户端界面](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
+
 [Kotlin Compose Multiplatform下音乐播放解决方案](https://www.astercasc.com/article/detail?articleId=AT182402577020566323)
 
 [Kotlin Compose Multiplatform下实现HTTP请求](https://www.astercasc.com/article/detail?articleId=AT182174036963389030)
 
 [Kotlin Compose Multiplatform下导航解决方案](https://www.astercasc.com/article/detail?articleId=AT182028575808345292)
-
-[构建跨平台的客户端界面](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
 
 [Kotlin Compose Multiplatform下全局通知组件构建](https://www.astercasc.com/article/detail?articleId=AT183303835787436441)
 
@@ -65,7 +65,7 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
   文件，如果您有相似的功能需要开发借鉴，可以将其替换，并参考相关消息逻辑，但是无法和默认的服务端进行消息联动，进而收到在
   `Tomoyo`中其他用户或者群组中发来的消息 
 * 关于系统级消息推送，目前客户端/服务端的策略是，只要有消息且该用户没有在web端或者桌面端登录，都走FCM推送该用户的移动端。如果对于使用人数较多的场景下，可以通过移动端将活跃状态同步到服务端，只有在客户端不活跃的情况下，才进行消息推送。同时也可以通过消息合并（即对于每个/组用户每隔N秒发送最后一条消息，避免短期消息爆炸）等方式减少FCM的使用 
-* 关于系统级消息推送，目前作者有的三台移动设备测试完成，其他更多移动设备没有条件测试，如果消息推送无法收到，请检测首先是否允许访问外网，其次是否包含谷歌商店应用，这两者不是必须的，但是对于某个手机型号可能需要。如果无论如何也无法利用FCM发送消息，或者这种方式不能被业务接收，可以尝试使用移动设备所在的厂商提供的消息推送平台，或者其他第三方平台
+* 关于系统级消息推送，目前作者有的三台移动设备测试完成，其他更多移动设备没有条件测试，如果消息推送无法收到，请检测首先是否允许访问外网，其次是否包含谷歌商店应用，这两者不是必须的，但是对于某个手机型号可能需要。如果无论如何也无法利用FCM发送消息，或者这种方式不能被业务接受，可以尝试使用移动设备所在的厂商提供的消息推送平台，或者其他第三方平台
 * 关于系统级消息推送，不同手机厂商需求不同，一般需要打开通知，以及自启动，以及调整应用程序省电策略
 
 ## 运行项目

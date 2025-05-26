@@ -219,6 +219,9 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+// ./gradlew :composeApp:run
+// ./gradlew createReleaseDistributable
+// ./gradlew package
 compose.desktop {
 
 
@@ -229,14 +232,17 @@ compose.desktop {
         mainClass = "MainKt"
 
         buildTypes.release.proguard {
-            isEnabled.set(true)
-            optimize.set(true)
-            obfuscate.set(true)
+            isEnabled.set(false)
+
+//            configurationFiles.from(files("compose-desktop.pro"))
+//            isEnabled.set(true)
+//            optimize.set(true)
+//            obfuscate.set(true)
         }
 
         nativeDistributions {
-//            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            targetFormats(TargetFormat.Exe)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+//            targetFormats(TargetFormat.Exe)
             includeAllModules = true
 
             packageName = "Tomoyo"

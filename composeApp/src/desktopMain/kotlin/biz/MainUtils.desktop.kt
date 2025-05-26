@@ -1,5 +1,6 @@
 package biz
 
+import java.awt.KeyboardFocusManager
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
@@ -13,7 +14,7 @@ actual fun logInfo(text: String) {
 }
 
 actual fun isAppInForeground(): Boolean {
-    return false
+    return KeyboardFocusManager.getCurrentKeyboardFocusManager().activeWindow != null;
 }
 
 actual fun afterLogin() {

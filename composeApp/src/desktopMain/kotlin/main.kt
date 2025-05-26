@@ -1,3 +1,4 @@
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,11 +16,13 @@ import di.KoinInit
 import javafx.embed.swing.JFXPanel
 import org.koin.core.Koin
 import org.koin.core.qualifier.named
+import ui.components.clearAppNotification
 import java.awt.SystemTray
 import java.awt.TrayIcon
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.image.BufferedImage
+
 
 lateinit var koin: Koin
 val tray: SystemTray = SystemTray.getSystemTray()
@@ -41,6 +44,7 @@ fun main() {
     application {
 
         var visible by remember { mutableStateOf(true) }
+        var windowRef: java.awt.Frame? by remember { mutableStateOf(null) }
         val winState = rememberWindowState(
             placement = WindowPlacement.Floating,
             position = WindowPosition.PlatformDefault,
@@ -59,7 +63,19 @@ fun main() {
                         if (isRight) {
                             exitApplication()
                         } else {
-                            visible = true
+                            windowRef?.let { win ->
+                                if (!visible) {
+                                    visible = true
+                                }
+                                if (win.state == java.awt.Frame.ICONIFIED) {
+                                    win.state = java.awt.Frame.NORMAL
+                                }
+                                win.toFront()
+                                win.requestFocus()
+                                win.isAlwaysOnTop = true
+                                win.isAlwaysOnTop = false
+                                clearAppNotification()
+                            }
                         }
                     }
                 }
@@ -75,6 +91,10 @@ fun main() {
         ) {
             window.iconImage = superLowDpiIcon
 
+            LaunchedEffect(Unit) {
+                windowRef = window
+            }
+
             MainApp(
                 platformData = PlatformInitData(
                     extraNavigationList = listOf(
@@ -88,19 +108,4 @@ fun main() {
         }
     }
 }
-
-//object MyAppIcon : Painter() {
-//    override val intrinsicSize = Size(256f, 256f)
-//
-//    override fun DrawScope.onDraw() {
-//        drawOval(Color.Green, Offset(size.width / 4, 0f), Size(size.width / 2f, size.height))
-//        drawOval(Color.Blue, Offset(0f, size.height / 4), Size(size.width, size.height / 2f))
-//        drawOval(
-//            Color.Red,
-//            Offset(size.width / 4, size.height / 4),
-//            Size(size.width / 2f, size.height / 2f)
-//        )
-//    }
-//}
-
 

@@ -223,6 +223,13 @@ class MainScreenModel : ScreenModel, KoinComponent {
 
     suspend fun logout() {
         beforeLogout()
+        try {
+            _collectorJob.value?.cancel()
+            _socketSession.value?.disconnect()
+            _collectorJob.value = null
+            _socketSession.value = null
+        } catch (ignore: Exception) {
+        }
         BaseApi().logout(_userState.value.token)
         globalDataModel.clearLocalUserState()
         _syncUserData.value = true
