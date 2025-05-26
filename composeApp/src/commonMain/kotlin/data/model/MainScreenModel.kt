@@ -212,7 +212,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
                     val chatRow: ChatRowModel = baseJsonConf.decodeFromString(msg)
                     logInfo("[op:login] Socket get message from ${chatRow.fromChatId}")
                     chatScreenModel.pushChatMessage(_userState.value.token, chatRow)
-                    if (!isAppInForeground()) {
+                    if (!isAppInForeground() && chatRow.sendUserId != _userState.value.userData.id) {
                         sendAppNotification(chatRow.sendUserNickname, chatRow.sendMessage)
                     }
                 }

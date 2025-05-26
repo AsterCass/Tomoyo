@@ -21,6 +21,8 @@ import java.awt.SystemTray
 import java.awt.TrayIcon
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
+import java.awt.event.WindowEvent
+import java.awt.event.WindowFocusListener
 import java.awt.image.BufferedImage
 
 
@@ -93,6 +95,16 @@ fun main() {
 
             LaunchedEffect(Unit) {
                 windowRef = window
+
+                windowRef?.addWindowFocusListener(object : WindowFocusListener {
+                    override fun windowGainedFocus(e: WindowEvent?) {
+                        clearAppNotification()
+                    }
+
+                    override fun windowLostFocus(e: WindowEvent?) {
+                    }
+                })
+
             }
 
             MainApp(
