@@ -1,5 +1,7 @@
 package biz
 
+import platform.UIKit.UIApplication
+import platform.UIKit.UIApplicationState
 import platform.UIKit.UIPasteboard
 
 actual fun copyToClipboard(text: String) {
@@ -10,7 +12,14 @@ actual fun logInfo(text: String) {
 }
 
 actual fun isAppInForeground(): Boolean {
-    return false
+    val application = UIApplication.sharedApplication
+
+    return when (application.applicationState) {
+        UIApplicationState.UIApplicationStateActive -> true
+        UIApplicationState.UIApplicationStateInactive -> true
+        UIApplicationState.UIApplicationStateBackground -> false
+        else -> false
+    }
 }
 
 actual fun afterLogin() {
