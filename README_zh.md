@@ -22,6 +22,8 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 [构建跨平台的客户端界面](https://www.astercasc.com/article/detail?articleId=AT1734101922878869)
 
+[利用GoogleFirebase为安卓应用提供系统级消息通知](https://www.astercasc.com/article/detail?articleId=AT192764442002353766)
+
 [Kotlin Compose Multiplatform下音乐播放解决方案](https://www.astercasc.com/article/detail?articleId=AT182402577020566323)
 
 [Kotlin Compose Multiplatform下实现HTTP请求](https://www.astercasc.com/article/detail?articleId=AT182174036963389030)
