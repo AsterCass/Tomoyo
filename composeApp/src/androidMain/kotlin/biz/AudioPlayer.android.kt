@@ -186,7 +186,7 @@ actual class AudioPlayer actual constructor(
 
     actual fun prev() {
         if (playedItems.isEmpty()) return
-        val lastItem = playedItems.removeLast()
+        val lastItem = playedItems.removeAt(playedItems.lastIndex)
         currentItemIndex = mediaItems.keys.indexOf(lastItem.id)
         playWithIndex(currentItemIndex, false)
     }
