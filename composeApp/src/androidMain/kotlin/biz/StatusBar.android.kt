@@ -29,6 +29,11 @@ actual class StatusBar actual constructor() {
                 window.navigationBarColor = navigationBarColor.toArgb()
                 insetsController.isAppearanceLightStatusBars = isLight
                 insetsController.isAppearanceLightNavigationBars = isLight
+
+                // same color to main
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                    window.isNavigationBarContrastEnforced = false
+//                }
             }
         }
 

@@ -142,7 +142,8 @@ fun MainAppNavigationBar(
     BottomNavigation(
         modifier = Modifier
             .navigationBarsPadding()
-            .height(60.dp)
+            .height(60.dp),
+        elevation = 0.dp
     ) {
         MainNavigationEnum.entries.toTypedArray().forEach { nav ->
             val tabNavigator = LocalNavigator.currentOrThrow
