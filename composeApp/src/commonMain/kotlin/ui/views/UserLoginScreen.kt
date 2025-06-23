@@ -69,7 +69,6 @@ import constant.enums.ViewEnum
 import data.model.MainScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
@@ -149,6 +148,7 @@ class UserLoginScreen : Screen {
         var account by rememberSaveable { mutableStateOf("") }
         var passwd by rememberSaveable { mutableStateOf("") }
         var checked by rememberSaveable { mutableStateOf(false) }
+        var loginEnable by rememberSaveable { mutableStateOf(true) }
         val checkNotificationText = stringResource(Res.string.login_notification_check)
         val accountNotificationText = stringResource(Res.string.login_notification_account)
         val passwdNotificationText = stringResource(Res.string.login_notification_passwd)
@@ -310,6 +310,7 @@ class UserLoginScreen : Screen {
                         .padding(20.dp)
                         .fillMaxWidth()
                         .height(50.dp),
+                    enabled = loginEnable,
                     onClick = {
 
                         if (account.isBlank()) {
@@ -342,8 +343,10 @@ class UserLoginScreen : Screen {
                             return@Button
                         }
 
+                        loginEnable = false
                         loginApiCoroutine.launch {
                             mainModel.login(account, passwd)
+                            loginEnable = true
                         }
 
 
