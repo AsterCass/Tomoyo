@@ -171,6 +171,11 @@ kotlin {
             //implementation("org.openjfx:javafx-controls:innerJdkVersion:${platform}")
             //implementation("org.openjfx:javafx-fxml:innerJdkVersion:${platform}")
         }
+        iosMain.dependencies {
+            // google message
+            implementation("dev.gitlive:firebase-messaging:2.1.0")
+            implementation("dev.gitlive:firebase-common:2.1.0")
+        }
     }
 }
 
