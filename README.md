@@ -67,35 +67,36 @@ On the other hand, it serves as a sample for common functionalities such as navi
 
 ## Important Tips
 
-* Regarding system-level message push notifications:
-  Processing should follow [this tutorial](https://firebase.google.com/docs/cloud-messaging).
-  Relevant client-side code is already provided in the repository. However, due to security
-  considerations, the corresponding `google-services.json` file is not included. If you need to
-  develop similar functionality for reference, you may replace it and adapt the relevant messaging
-  logic. Note that it will not be able to interact with the default server to receive messages from
-  other users or groups in `Tomoyo`.
-* About the current strategy for system-level message push notifications:
-  The current client/server policy is that whenever there is a message and the user is not logged in
-  via the web or desktop client, messages are delivered to the user's mobile client via FCM. For
-  scenarios with a large number of users, you may:
-  * Synchronize active status from the mobile client to the server, and only trigger push
-    notifications when the client is inactive.
-  * Reduce FCM usage through message batching (e.g., sending only the last message to each
-    user/group every N seconds to avoid short-term message overload).
-* Notes on testing system-level message push notifications:
-  Testing has been completed on the author's three mobile devices. More devices could not be tested
-  due to limited resources. If message delivery fails:
-  * First verify whether the device can access internet networks.
-  * Check if Google Play Services is installed (not mandatory, but may be required for certain phone
-    models)
-* If FCM-based messaging cannot be implemented or is unacceptable for your business needs, consider
-  using:
-  * Manufacturer-provided push platforms (e.g., Huawei/Honor Push, Xiaomi Push)
-  * Third-party push platforms (e.g., JPush, Getui).
-* Regarding system-level message push notifications:
-  Requirements vary across different mobile manufacturers. Generally, users need to enable
-  notifications, grant auto-start permissions, and adjust the app's battery optimization settings (
-  to prevent the system from restricting background activity).
+* About System-Level Push Notifications:
+  * You need to follow this [tutorial](https://firebase.google.com/docs/cloud-messaging) for setup.
+    Relevant client code has already been provided in
+    the repository. However, for security reasons, the corresponding `google-services.json` file is
+    not included.
+    If you need similar functionality for your own development, you can replace the file and refer
+    to the related message handling logic.
+    However, it will not be possible to interoperate with the default backend server and receive
+    messages from other users or groups within `Tomoyo`.
+  * The current client/server strategy is:
+    As long as a message is generated and the user is not logged in on the web or desktop side, an
+    FCM push will be sent to the user's mobile device.
+    For use cases involving many users, it is recommended to sync the user's activity status from
+    the mobile app to the server, and only send push notifications when the client is inactive.
+    Additionally, FCM usage can be reduced by message aggregation (e.g., sending only the latest
+    message every N seconds per user/group to avoid message flooding).
+  * Currently, I has only tested this on three mobile devices. Testing on more devices is
+    not possible due to limited resources.
+    If you are not receiving push notifications:
+    * First check whether the device is allowed to access the internet;
+    * Then check whether the Google Play Store app is installed.
+      These are not strictly required, but some phone models may depend on them.
+      If you are unable to receive FCM messages or this method is not acceptable for your use case,
+      consider using the vendor-specific push platforms (e.g., HarmonyOS Push, Xiaomi Push), or
+      third-party platforms such as JPush or Getui.
+  * Regarding system-level push notifications, requirements vary by phone manufacturer. In general,
+    notifications need to be enabled, auto-start should be allowed, and the app's battery
+    optimization settings may need to be adjusted.
+  * The iOS version of this feature is not implemented due to the lack of a developer account, but
+    the logic will be the same as on Android.
 
 ## Run Project
 
