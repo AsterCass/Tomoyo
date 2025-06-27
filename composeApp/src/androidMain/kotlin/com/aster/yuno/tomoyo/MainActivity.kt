@@ -15,6 +15,7 @@ import di.KoinInit
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext
+import ui.components.clearAppNotification
 import ui.components.createAppNotificationChannel
 
 
@@ -48,6 +49,8 @@ class MainActivity : ComponentActivity() {
 
         createAppNotificationChannel(this)
 
+        clearAppNotification()
+
         setContent {
             MainApp(
                 platformData = PlatformInitData(
@@ -61,6 +64,11 @@ class MainActivity : ComponentActivity() {
             )
 
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        clearAppNotification()
     }
 }
 
