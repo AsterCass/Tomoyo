@@ -55,19 +55,24 @@ fun MainApp(
         mainModel.initPlatformInitData(platformData)
         val mainTabsScreen = MainTabsScreen();
         val preLoadScreen = PreLoadScreen(mainTabsScreen);
-
+        val customTheme = mainModel.customTheme.collectAsState().value
         //navigation
         Navigator(preLoadScreen) { navigator ->
-            BoxWithConstraints(
-                modifier = Modifier.fillMaxSize()
+            MaterialTheme(
+                colorScheme = customTheme.theme,
+                typography = MainTypography(),
             ) {
-                //screen1
-                BaseViewTransition(mainModel.getViewSecondLastNavKey(), navigator)
-                mainModel.updateViewSecondLastNavKey(navigator.lastItem.key)
+                BoxWithConstraints(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    //screen1
+                    BaseViewTransition(mainModel.getViewSecondLastNavKey(), navigator)
+                    mainModel.updateViewSecondLastNavKey(navigator.lastItem.key)
 
-                //notification
-                Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                    NotificationComponent()
+                    //notification
+                    Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                        NotificationComponent()
+                    }
                 }
             }
         }
