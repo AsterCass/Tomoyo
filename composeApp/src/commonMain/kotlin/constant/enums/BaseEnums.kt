@@ -1,5 +1,6 @@
 package constant.enums
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
@@ -15,6 +16,8 @@ import compose.icons.fontawesomeicons.solid.ListUl
 import compose.icons.fontawesomeicons.solid.Music
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import theme.darkScheme
+import theme.lightScheme
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.chat_emoji_emoji
@@ -40,6 +43,14 @@ import ui.pages.MainHomeScreen
 import ui.pages.MainMusicsScreen
 import ui.pages.MainSettingsScreen
 import ui.pages.MainVideosScreen
+
+
+enum class CustomColorTheme(
+    val theme: ColorScheme,
+) {
+    DARK(darkScheme),
+    COFFEE(lightScheme),
+}
 
 enum class InputEmojiTabModel(
     val text: StringResource,

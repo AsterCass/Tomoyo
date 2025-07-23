@@ -134,8 +134,8 @@ fun MainHomeScreen(
                         MainHomeNotificationBox(
                             text = stringResource(Res.string.notification_check_network),
                             icon = FontAwesomeIcons.Solid.InfoCircle,
-                            color = MaterialTheme.colorScheme.third,
-                            bgColor = MaterialTheme.colorScheme.inverseThird
+//                            color = MaterialTheme.colorScheme.third,
+//                            bgColor = MaterialTheme.colorScheme.inverseThird
                         )
                     }
 
@@ -319,8 +319,8 @@ fun UserChatListItem(
                     .size(12.dp),
                 imageVector = FontAwesomeIcons.Solid.Circle,
                 contentDescription = null,
-                tint = if (true == item.latestRead) Color.Transparent
-                else MaterialTheme.colorScheme.third
+//                tint = if (true == item.latestRead) Color.Transparent
+//                else MaterialTheme.colorScheme.third
             )
         }
 

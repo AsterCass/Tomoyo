@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import constant.enums.CustomColorTheme
 import constant.enums.ViewEnum
 import data.PlatformInitData
 import data.UserDataModel
@@ -35,7 +37,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
-import theme.LightColorScheme
 import theme.MainTypography
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.bg1
@@ -50,34 +51,27 @@ fun MainApp(
     platformData: PlatformInitData = PlatformInitData(),
 ) {
     KoinContext {
-        MaterialTheme(
-            colorScheme = LightColorScheme,
-            typography = MainTypography(),
-        ) {
-            val mainModel: MainScreenModel = koinInject()
-            mainModel.initPlatformInitData(platformData)
-            val mainTabsScreen = MainTabsScreen();
-            val preLoadScreen = PreLoadScreen(mainTabsScreen);
+        val mainModel: MainScreenModel = koinInject()
+        mainModel.initPlatformInitData(platformData)
+        val mainTabsScreen = MainTabsScreen();
+        val preLoadScreen = PreLoadScreen(mainTabsScreen);
 
-            //navigation
-            Navigator(preLoadScreen) { navigator ->
-                BoxWithConstraints(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    //screen1
-                    BaseViewTransition(mainModel.getViewSecondLastNavKey(), navigator)
-                    mainModel.updateViewSecondLastNavKey(navigator.lastItem.key)
+        //navigation
+        Navigator(preLoadScreen) { navigator ->
+            BoxWithConstraints(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                //screen1
+                BaseViewTransition(mainModel.getViewSecondLastNavKey(), navigator)
+                mainModel.updateViewSecondLastNavKey(navigator.lastItem.key)
 
-                    //notification
-                    Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                        NotificationComponent()
-                    }
+                //notification
+                Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                    NotificationComponent()
                 }
             }
-
         }
     }
-
 }
 
 class PreLoadScreen(
@@ -171,45 +165,52 @@ class MainTabsScreen : Screen {
         // Model Inject
         val mainModel: MainScreenModel = koinInject()
 
+        val customTheme = mainModel.customTheme.collectAsState().value
+
         // Reset color
         StatusBar().UpdateColor(
-            Color.Transparent,
-            MaterialTheme.colorScheme.surface,
-            true,
+            customTheme.theme.surface,
+            customTheme.theme.surface,
+            CustomColorTheme.DARK != customTheme,
         )
+
 
         //navigator
         Navigator(MainHomeScreen) { navigator ->
-            Scaffold(
-                topBar = {
-                    MainAppBar()
-                },
-                bottomBar = {
-                    MainAppNavigationBar(
-                        extraNavigationList = mainModel.getPlatformInitData().extraNavigationList,
-                    )
-                },
-                content = { padding ->
+            MaterialTheme(
+                colorScheme = customTheme.theme,
+                typography = MainTypography(),
+            ) {
+                Scaffold(
+                    topBar = {
+                        MainAppBar()
+                    },
+                    bottomBar = {
+                        MainAppNavigationBar(
+                            extraNavigationList = mainModel.getPlatformInitData().extraNavigationList,
+                        )
+                    },
+                    content = { padding ->
 
-                    BoxWithConstraints(
-                        modifier = Modifier.padding(padding).fillMaxSize()
-                    ) {
-                        //size
-                        val constraints = this.constraints
-                        mainModel.updateMainPageContainerConstraints(constraints)
+                        BoxWithConstraints(
+                            modifier = Modifier.padding(padding).fillMaxSize()
+                        ) {
+                            //size
+                            val constraints = this.constraints
+                            mainModel.updateMainPageContainerConstraints(constraints)
 
-                        //screen1
-                        TabTransition(mainModel.getSecondLastNavKey(), navigator)
-                        mainModel.updateSecondLastNavKey(navigator.lastItem.key)
+                            //screen1
+                            TabTransition(mainModel.getSecondLastNavKey(), navigator)
+                            mainModel.updateSecondLastNavKey(navigator.lastItem.key)
 
-                        //notification
-                        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                            NotificationComponent()
+                            //notification
+                            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                                NotificationComponent()
+                            }
                         }
                     }
-
-                }
-            )
+                )
+            }
         }
     }
 }

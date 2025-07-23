@@ -11,6 +11,7 @@ import biz.logInfo
 import biz.setUpdateGoogleFirebaseToken
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import constant.enums.CustomColorTheme
 import data.ChatRowModel
 import data.PlatformInitData
 import data.UserDataModel
@@ -44,6 +45,13 @@ class MainScreenModel : ScreenModel, KoinComponent {
 
     private val _userState = globalDataModel.userState
     val userState = _userState
+
+    // Theme
+    private val _customTheme = MutableStateFlow(CustomColorTheme.DARK)
+    val customTheme = _customTheme.asStateFlow()
+    fun updateCustomTheme(theme: CustomColorTheme) {
+        _customTheme.value = theme
+    }
 
     // PlatformInitData
     private lateinit var _platformInitData: PlatformInitData

@@ -30,7 +30,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -58,12 +57,12 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.Bell
 import constant.BaseResText
+import constant.enums.CustomColorTheme
 import constant.enums.MainNavigationEnum
 import data.model.MainScreenModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import theme.third
-import theme.unselectedColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.btn_cancel
 import tomoyo.composeapp.generated.resources.btn_confirm
@@ -92,6 +91,7 @@ fun MainAppBar(
 ) {
 
     val title = MainNavigationEnum.getEnumByCode(LocalNavigator.currentOrThrow.lastItem.key).title
+    val mainModel: MainScreenModel = koinInject()
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -108,7 +108,8 @@ fun MainAppBar(
                     modifier = Modifier
                         .clip(RoundedCornerShape(5.dp))
                         .clickable {
-                            sendAppNotification("Test Title", "Test content some data")
+//                            sendAppNotification("Test Title", "Test content some data")
+                            mainModel.updateCustomTheme(CustomColorTheme.DARK)
                         }
                         .size(28.dp),
                     imageVector = Icons.Outlined.Person,
@@ -122,7 +123,7 @@ fun MainAppBar(
                     modifier = Modifier
                         .clip(RoundedCornerShape(5.dp))
                         .clickable {
-                            clearAppNotification()
+                            mainModel.updateCustomTheme(CustomColorTheme.COFFEE)
                         }
                         .size(22.dp),
                     imageVector = FontAwesomeIcons.Regular.Bell,
@@ -151,9 +152,9 @@ fun MainAppNavigationBar(
             if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
                 NavigationBarItem(
                     modifier = Modifier.background(MaterialTheme.colorScheme.surface).height(60.dp),
-                    colors = NavigationBarItemDefaults.colors().copy(
-                        unselectedIconColor = MaterialTheme.colorScheme.unselectedColor,
-                    ),
+//                    colors = NavigationBarItemDefaults.colors().copy(
+//                        unselectedIconColor = MaterialTheme.colorScheme.unselectedColor,
+//                    ),
                     icon = {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally

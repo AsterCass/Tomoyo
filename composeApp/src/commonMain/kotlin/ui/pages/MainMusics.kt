@@ -529,8 +529,8 @@ fun MusicGlobalPlayRow(
                     .padding(2.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .size(28.dp),
-                tint = if (isPlaying) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.deepIconColor
+//                tint = if (isPlaying) MaterialTheme.colorScheme.primary
+//                else MaterialTheme.colorScheme.deepIconColor
             )
             Text(
                 modifier = Modifier.padding(end = 10.dp),
@@ -627,8 +627,8 @@ fun MusicListItem(
                         onFav(!favList.contains(item.id), item.id)
                     }
                     .size(22.dp),
-                tint = if (isOnThisItem) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.deepIconColor
+//                tint = if (isOnThisItem) MaterialTheme.colorScheme.primary
+//                else MaterialTheme.colorScheme.deepIconColor
             )
             Icon(
                 imageVector = if (isPlaying && isOnThisItem) vectorResource(Res.drawable.media_pause)
@@ -649,8 +649,8 @@ fun MusicListItem(
                         }
                     }
                     .size(28.dp),
-                tint = if (isOnThisItem) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.deepIconColor
+//                tint = if (isOnThisItem) MaterialTheme.colorScheme.primary
+//                else MaterialTheme.colorScheme.deepIconColor
             )
         }
 
