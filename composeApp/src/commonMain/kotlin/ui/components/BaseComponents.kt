@@ -15,25 +15,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -56,6 +55,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.Bell
+import compose.icons.fontawesomeicons.regular.File
 import constant.BaseResText
 import constant.enums.CustomColorTheme
 import constant.enums.MainNavigationEnum
@@ -86,97 +86,168 @@ import tomoyo.composeapp.generated.resources.web_wed
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainAppBar(
-
-) {
+fun MainAppBar() {
 
     val title = MainNavigationEnum.getEnumByCode(LocalNavigator.currentOrThrow.lastItem.key).title
     val mainModel: MainScreenModel = koinInject()
 
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-        title = {
-            Row(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+//    CenterAlignedTopAppBar(
+//        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+//            containerColor = MaterialTheme.colorScheme.primaryContainer,
+//            titleContentColor = MaterialTheme.colorScheme.primary,
+//        ),
+//        title = {
+//            Text(
+//                "Centered Top App Bar",
+//                maxLines = 1,
+//                overflow = TextOverflow.Ellipsis
+//            )
+//        },
+//        navigationIcon = {
+//            IconButton(onClick = { /* do something */ }) {
+//                Icon(
+//                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+//                    contentDescription = "Localized description"
+//                )
+//            }
+//        },
+//        actions = {
+//            IconButton(onClick = { /* do something */ }) {
+//                Icon(
+//                    imageVector = Icons.Filled.Menu,
+//                    contentDescription = "Localized description"
+//                )
+//            }
+//        },
+//
+//    )
+
+    Surface(
+        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 7.dp)
+                .graphicsLayer { alpha = 0.8f },
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            TextButton(
+                colors = ButtonDefaults.textButtonColors().copy(
+                    contentColor = LocalContentColor.current
+                ),
+                shape = RoundedCornerShape(4.dp),
+                onClick = { mainModel.updateCustomTheme(CustomColorTheme.DARK) }
             ) {
-
                 Icon(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(5.dp))
-                        .clickable {
-//                            sendAppNotification("Test Title", "Test content some data")
-                            mainModel.updateCustomTheme(CustomColorTheme.DARK)
-                        }
-                        .size(28.dp),
-                    imageVector = Icons.Outlined.Person,
+                    modifier = Modifier.size(22.dp),
+                    imageVector = FontAwesomeIcons.Regular.File,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
                 )
+            }
 
-                Text(stringResource(title))
+            Text(
+                text = stringResource(title),
+                color = LocalContentColor.current,
+                style = MaterialTheme.typography.titleLarge
+            )
 
+            TextButton(
+                colors = ButtonDefaults.textButtonColors().copy(
+                    contentColor = LocalContentColor.current
+                ),
+                shape = RoundedCornerShape(4.dp),
+                onClick = { mainModel.updateCustomTheme(CustomColorTheme.COFFEE) }
+            ) {
                 Icon(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(5.dp))
-                        .clickable {
-                            mainModel.updateCustomTheme(CustomColorTheme.COFFEE)
-                        }
-                        .size(22.dp),
+                    modifier = Modifier.size(22.dp),
                     imageVector = FontAwesomeIcons.Regular.Bell,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
                 )
-
             }
-        },
-    )
+        }
+    }
 }
 
 @Composable
 fun MainAppNavigationBar(
     extraNavigationList: List<MainNavigationEnum> = emptyList(),
 ) {
-    BottomNavigation(
-        modifier = Modifier
-            .navigationBarsPadding()
-            .height(60.dp),
-        elevation = 0.dp
+
+
+    Surface(
+        modifier = Modifier.navigationBarsPadding()
     ) {
-        MainNavigationEnum.entries.toTypedArray().forEach { nav ->
-            val tabNavigator = LocalNavigator.currentOrThrow
-            val isSelected = tabNavigator.lastItem == nav.screen
-            if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
-                NavigationBarItem(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface).height(60.dp),
-//                    colors = NavigationBarItemDefaults.colors().copy(
-//                        unselectedIconColor = MaterialTheme.colorScheme.unselectedColor,
-//                    ),
-                    icon = {
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 7.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            MainNavigationEnum.entries.toTypedArray().forEach { nav ->
+                val tabNavigator = LocalNavigator.currentOrThrow
+                val isSelected = tabNavigator.lastItem == nav.screen
+                if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
+                    TextButton(
+                        modifier = if (isSelected) Modifier else Modifier.graphicsLayer {
+                            alpha = 0.6f
+                        },
+                        colors = if (isSelected) ButtonDefaults.textButtonColors() else
+                            ButtonDefaults.textButtonColors().copy(
+                                contentColor = LocalContentColor.current
+                            ),
+                        shape = RoundedCornerShape(4.dp),
+                        onClick = { tabNavigator.replaceAll(nav.screen) }
+                    ) {
                         Column(
+                            verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Icon(
                                 imageVector = nav.icon,
                                 contentDescription = nav.name,
-                                modifier = Modifier.size(19.dp),
+                                modifier = Modifier.size(20.dp),
                             )
                             Text(
-                                modifier = Modifier.padding(top = 1.dp),
                                 text = stringResource(nav.title),
                                 style = MaterialTheme.typography.labelSmall,
                             )
                         }
-                    },
-                    selected = isSelected,
-                    onClick = { tabNavigator.replaceAll(nav.screen) },
-                )
+                    }
+                }
             }
         }
+
     }
+
+//    NavigationBar(
+//        windowInsets = NavigationBarDefaults.windowInsets
+//    ) {
+//        MainNavigationEnum.entries.toTypedArray().forEach { nav ->
+//            val tabNavigator = LocalNavigator.currentOrThrow
+//            if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
+//                NavigationBarItem(
+//                    icon = {
+//                        Icon(
+//                            imageVector = nav.icon,
+//                            contentDescription = nav.name,
+//                            modifier = Modifier.size(20.dp),
+//                        )
+//                    },
+////                    label = {
+////                        Text(
+////                            text = stringResource(nav.title),
+//////                            style = MaterialTheme.typography.labelSmall,
+////                        )
+////                    },
+//                    selected = tabNavigator.lastItem == nav.screen,
+//                    onClick = { tabNavigator.replaceAll(nav.screen) },
+//                )
+//            }
+//        }
+//    }
 
 
 //    Row(

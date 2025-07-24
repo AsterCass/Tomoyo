@@ -47,7 +47,7 @@ class MainScreenModel : ScreenModel, KoinComponent {
     val userState = _userState
 
     // Theme
-    private val _customTheme = MutableStateFlow(CustomColorTheme.DARK)
+    private val _customTheme = MutableStateFlow(CustomColorTheme.COFFEE)
     val customTheme = _customTheme.asStateFlow()
     fun updateCustomTheme(theme: CustomColorTheme) {
         _customTheme.value = theme
