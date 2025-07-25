@@ -48,9 +48,6 @@ import data.model.ArticleScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import theme.halfTransSurfaceVariant
-import theme.subTextColor
-
 
 class ArticleDetailScreen : Screen {
 
@@ -97,7 +94,6 @@ class ArticleDetailScreen : Screen {
                     Button(
                         shape = RoundedCornerShape(15.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                         contentPadding = PaddingValues(0.dp),
@@ -155,7 +151,7 @@ class ArticleDetailScreen : Screen {
                                 Text(
                                     text = articleData.createTime ?: "",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.subTextColor
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             }
 

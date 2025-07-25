@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -48,10 +49,6 @@ import data.model.MusicScreenModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import theme.inverseThird
-import theme.onThird
-import theme.subTextColor
-import theme.third
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.chat_delete
 import tomoyo.composeapp.generated.resources.chat_pin
@@ -107,140 +104,140 @@ fun MainHomeScreen(
     val token = userState.token
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier.align(Alignment.TopCenter),
-        ) {
+    Surface {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier.align(Alignment.TopCenter),
+            ) {
 
-            if (token.isBlank()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(Res.string.notification_user_login_suggest),
-                        color = MaterialTheme.colorScheme.inversePrimary,
-                    )
-                }
-                return
-                //todo show some dialogs
-            }
-
-            LazyColumn {
-
-                item {
-
-                    if (!socketConnected || !netStatus) {
-                        MainHomeNotificationBox(
-                            text = stringResource(Res.string.notification_check_network),
-                            icon = FontAwesomeIcons.Solid.InfoCircle,
-//                            color = MaterialTheme.colorScheme.third,
-//                            bgColor = MaterialTheme.colorScheme.inverseThird
+                if (token.isBlank()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.notification_user_login_suggest),
+                            color = MaterialTheme.colorScheme.outline,
                         )
                     }
-
-                    CheckAppNotificationPermission { func ->
-                        MainHomeNotificationBox(
-                            text = stringResource(Res.string.notification_no_permission_notification),
-                            icon = FontAwesomeIcons.Solid.InfoCircle,
-                        ) {
-                            func()
-                        }
-                    }
-
-                    if (musicPlayerState.currentPlayId.isNotBlank()) {
-                        val currentMusic = musicScreenModel.getCurrentMusicData()
-                        MainHomeNotificationBox(
-                            icon = FontAwesomeIcons.Solid.InfoCircle,
-                            isTranslating = musicPlayerState.isPlaying,
-                            text = if (musicPlayerState.isPlaying)
-                                stringResource(Res.string.play_audio_playing_home)
-                                        + currentMusic.audioName
-                            else stringResource(Res.string.play_audio_playing_home)
-                                    + currentMusic.audioName +
-                                    stringResource(Res.string.play_audio_playing_pause)
-                        ) {
-                            navigator.parent?.push(MusicsPlayerScreen())
-                        }
-                    }
-
+                    return@Surface
+                    //todo show some dialogs
                 }
 
-                items(chatDataList.size) { index ->
+                LazyColumn {
 
-                    Column(modifier = Modifier.padding(top = 5.dp)) {
-                        SwipeToRevealCard(
-                            modifier = Modifier.height(70.dp),
-                            optionList = listOf(
-                                SwipeToRevealCardOption(
-                                    optionText = stringResource(Res.string.chat_pin),
-                                    optionOperation = {
-                                        NotificationManager.createDialogAlert(
-                                            MainDialogAlert(
-                                                message = BaseResText.underDevelopment,
-                                                cancelOperationText = BaseResText.cancelBtn
-                                            )
-                                        )
-                                    },
-                                    optColor = MaterialTheme.colorScheme.onSecondary,
-                                    optBgColor = MaterialTheme.colorScheme.secondary,
-                                    width = 75.dp,
-                                ),
-                                SwipeToRevealCardOption(
-                                    optionText = stringResource(Res.string.chat_unread),
-                                    optionOperation = {
-                                        commonApiCoroutine.launch {
-                                            chatDataModel.readMessage(
-                                                token = token,
-                                                chatId =
-                                                chatDataList[index].chatId ?: "",
-                                                messageId = ""
-                                            )
-                                        }
-                                    },
-                                    optColor = MaterialTheme.colorScheme.onPrimary,
-                                    optBgColor = MaterialTheme.colorScheme.primary,
-                                    width = 125.dp,
-                                ),
-                                SwipeToRevealCardOption(
-                                    optionText = stringResource(Res.string.chat_delete),
-                                    optionOperation = {
-                                        commonApiCoroutine.launch {
-                                            chatDataModel.hideChat(
-                                                token = token,
-                                                chatId = chatDataList[index].chatId ?: ""
-                                            )
-                                        }
-                                    },
-                                    optColor = MaterialTheme.colorScheme.onThird,
-                                    optBgColor = MaterialTheme.colorScheme.third,
-                                    width = 75.dp,
-                                )
-                            ),
-                            content = {
-                                UserChatListItem(
-                                    item = chatDataList[index],
-                                    onClick = {
-                                        commonApiCoroutine.launch {
-                                            navigator.parent?.push(
-                                                UserChatScreen(
-                                                    "",
-                                                    chatDataList[index].chatId ?: ""
+                    item {
+
+                        if (!socketConnected || !netStatus) {
+                            MainHomeNotificationBox(
+                                text = stringResource(Res.string.notification_check_network),
+                                icon = FontAwesomeIcons.Solid.InfoCircle,
+                            )
+                        }
+
+                        CheckAppNotificationPermission { func ->
+                            MainHomeNotificationBox(
+                                text = stringResource(Res.string.notification_no_permission_notification),
+                                icon = FontAwesomeIcons.Solid.InfoCircle,
+                            ) {
+                                func()
+                            }
+                        }
+
+                        if (musicPlayerState.currentPlayId.isNotBlank()) {
+                            val currentMusic = musicScreenModel.getCurrentMusicData()
+                            MainHomeNotificationBox(
+                                icon = FontAwesomeIcons.Solid.InfoCircle,
+                                isTranslating = musicPlayerState.isPlaying,
+                                text = if (musicPlayerState.isPlaying)
+                                    stringResource(Res.string.play_audio_playing_home)
+                                            + currentMusic.audioName
+                                else stringResource(Res.string.play_audio_playing_home)
+                                        + currentMusic.audioName +
+                                        stringResource(Res.string.play_audio_playing_pause)
+                            ) {
+                                navigator.parent?.push(MusicsPlayerScreen())
+                            }
+                        }
+
+                    }
+
+                    items(chatDataList.size) { index ->
+
+                        Column(modifier = Modifier.padding(top = 5.dp)) {
+                            SwipeToRevealCard(
+                                modifier = Modifier.height(70.dp),
+                                optionList = listOf(
+                                    SwipeToRevealCardOption(
+                                        optionText = stringResource(Res.string.chat_pin),
+                                        optionOperation = {
+                                            NotificationManager.createDialogAlert(
+                                                MainDialogAlert(
+                                                    message = BaseResText.underDevelopment,
+                                                    cancelOperationText = BaseResText.cancelBtn
                                                 )
                                             )
-                                        }
-                                    },
-                                )
-                            }
-                        )
+                                        },
+                                        optColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        optBgColor = MaterialTheme.colorScheme.secondaryContainer,
+                                        width = 75.dp,
+                                    ),
+                                    SwipeToRevealCardOption(
+                                        optionText = stringResource(Res.string.chat_unread),
+                                        optionOperation = {
+                                            commonApiCoroutine.launch {
+                                                chatDataModel.readMessage(
+                                                    token = token,
+                                                    chatId =
+                                                    chatDataList[index].chatId ?: "",
+                                                    messageId = ""
+                                                )
+                                            }
+                                        },
+                                        optColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        optBgColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                        width = 125.dp,
+                                    ),
+                                    SwipeToRevealCardOption(
+                                        optionText = stringResource(Res.string.chat_delete),
+                                        optionOperation = {
+                                            commonApiCoroutine.launch {
+                                                chatDataModel.hideChat(
+                                                    token = token,
+                                                    chatId = chatDataList[index].chatId ?: ""
+                                                )
+                                            }
+                                        },
+                                        optColor = MaterialTheme.colorScheme.onErrorContainer,
+                                        optBgColor = MaterialTheme.colorScheme.errorContainer,
+                                        width = 75.dp,
+                                    )
+                                ),
+                                content = {
+                                    UserChatListItem(
+                                        item = chatDataList[index],
+                                        onClick = {
+                                            commonApiCoroutine.launch {
+                                                navigator.parent?.push(
+                                                    UserChatScreen(
+                                                        "",
+                                                        chatDataList[index].chatId ?: ""
+                                                    )
+                                                )
+                                            }
+                                        },
+                                    )
+                                }
+                            )
+                        }
                     }
+
                 }
+
 
             }
 
-
         }
-
     }
 
 
@@ -296,7 +293,7 @@ fun UserChatListItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.subTextColor,
+                color = MaterialTheme.colorScheme.outline,
             )
         }
 
@@ -311,7 +308,7 @@ fun UserChatListItem(
             Text(
                 text = getLastTime(item.lastMessageTime),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.subTextColor,
+                color = MaterialTheme.colorScheme.outline,
             )
             Icon(
                 modifier = Modifier
@@ -319,8 +316,8 @@ fun UserChatListItem(
                     .size(12.dp),
                 imageVector = FontAwesomeIcons.Solid.Circle,
                 contentDescription = null,
-//                tint = if (true == item.latestRead) Color.Transparent
-//                else MaterialTheme.colorScheme.third
+                tint = if (true == item.latestRead) Color.Transparent
+                else MaterialTheme.colorScheme.error
             )
         }
 

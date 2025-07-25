@@ -1,6 +1,5 @@
 package ui.pages
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +23,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,8 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -53,7 +50,6 @@ import data.model.MainScreenModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.search_keyword
 import ui.components.MainBaseCardBox
@@ -93,92 +89,93 @@ fun MainArticlesScreen(
     var searchArticleKey by remember { mutableStateOf(articleDataKey) }
 
     //data
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
+    Surface {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
 
-        item {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                MainBaseCardBox(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(top = 15.dp, start = 75.dp, end = 75.dp, bottom = 25.dp)
-                ) {
-                    OutlinedTextField(
-                        modifier = Modifier.height(50.dp),
-                        value = searchArticleKey,
-                        onValueChange = { searchArticleKey = it },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                        ),
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = null,
-                            )
-                        },
-                        textStyle = MaterialTheme.typography.bodyMedium,
-                        placeholder = {
-                            Text(
-                                text = stringResource(Res.string.search_keyword),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.subTextColor
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Search
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onSearch = {
-                                screenModel.clearResetKeyword(searchArticleKey)
-                                searchArticleKey = ""
-                                keyboardController?.hide()
-                            },
-                            onDone = {
-                                screenModel.clearResetKeyword(searchArticleKey)
-                                searchArticleKey = ""
-                                keyboardController?.hide()
-                            }
-                        ),
-                        maxLines = 1,
-                    )
-
-                }
-
-            }
-
-        }
-
-        items(articleDataList.size) { index ->
-            ArticleListItem(item = articleDataList[index],
-                toDetail = {
-                    screenModel.updateReadingMeta(it)
-                    navigator.parent?.push(ArticleDetailScreen())
-                })
-        }
-
-        item {
-            if (!articleIsLoadAll) {
+            item {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    MainBaseCardBox(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(top = 15.dp, start = 75.dp, end = 75.dp, bottom = 25.dp)
+                    ) {
+                        OutlinedTextField(
+                            modifier = Modifier.height(50.dp),
+                            value = searchArticleKey,
+                            onValueChange = { searchArticleKey = it },
+//                        colors = OutlinedTextFieldDefaults.colors(
+//                            unfocusedBorderColor = Color.Transparent,
+//                            focusedBorderColor = Color.Transparent,
+//                        ),
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Search,
+                                    contentDescription = null,
+                                )
+                            },
+                            textStyle = MaterialTheme.typography.bodyMedium,
+                            placeholder = {
+                                Text(
+                                    text = stringResource(Res.string.search_keyword),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Search
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onSearch = {
+                                    screenModel.clearResetKeyword(searchArticleKey)
+                                    searchArticleKey = ""
+                                    keyboardController?.hide()
+                                },
+                                onDone = {
+                                    screenModel.clearResetKeyword(searchArticleKey)
+                                    searchArticleKey = ""
+                                    keyboardController?.hide()
+                                }
+                            ),
+                            maxLines = 1,
+                        )
+
+                    }
+
+                }
+
+            }
+
+            items(articleDataList.size) { index ->
+                ArticleListItem(item = articleDataList[index],
+                    toDetail = {
+                        screenModel.updateReadingMeta(it)
+                        navigator.parent?.push(ArticleDetailScreen())
+                    })
+            }
+
+            item {
+                if (!articleIsLoadAll) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+
+                articleApiCoroutine.launch {
+                    screenModel.updateArticleList()
                 }
             }
 
-            articleApiCoroutine.launch {
-                screenModel.updateArticleList()
-            }
         }
-
     }
 
 }
@@ -220,34 +217,34 @@ fun ArticleListItem(
                         Text(
                             text = item.authorName ?: "",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.subTextColor
+                            color = MaterialTheme.colorScheme.outline
                         )
                         Text(
                             text = item.createTime ?: "",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.subTextColor
+                            color = MaterialTheme.colorScheme.outline
                         )
                     }
                 }
 
             }
 
-
-            Box(
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .clip(
-                        shape = RoundedCornerShape(15.dp)
-                    )
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+            Surface(
+                color = MaterialTheme.colorScheme.surfaceContainer,
+//                contentColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(top = 10.dp),
+                shape = RoundedCornerShape(4.dp)
             ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = item.articleBrief?.replace(Regex("[\t\n ]"), "") ?: "",
-                    maxLines = 5,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Box {
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = item.articleBrief?.replace(Regex("[\t\n ]"), "") ?: "",
+                        maxLines = 5,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
+
 
         }
     }

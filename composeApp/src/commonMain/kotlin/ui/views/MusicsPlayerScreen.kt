@@ -70,8 +70,6 @@ import data.model.MusicScreenModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
-import theme.halfTransSurfaceVariant
-import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.logo_pro_round_512
 import tomoyo.composeapp.generated.resources.media_audio
@@ -129,7 +127,6 @@ class MusicsPlayerScreen : Screen {
                 Button(
                     shape = RoundedCornerShape(15.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
                     contentPadding = PaddingValues(0.dp),
@@ -235,7 +232,7 @@ class MusicsPlayerScreen : Screen {
                     Text(
                         modifier = Modifier.padding(horizontal = 10.dp),
                         text = currentMusicData.audioAuthor,
-                        color = MaterialTheme.colorScheme.subTextColor,
+                        color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.bodyMedium,
                     )
 

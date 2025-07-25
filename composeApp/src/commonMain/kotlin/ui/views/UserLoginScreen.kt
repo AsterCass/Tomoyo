@@ -72,8 +72,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
-import theme.halfTransSurfaceVariant
-import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.github
 import tomoyo.composeapp.generated.resources.google
@@ -168,7 +166,6 @@ class UserLoginScreen : Screen {
                 Button(
                     shape = RoundedCornerShape(15.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.halfTransSurfaceVariant,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
                     contentPadding = PaddingValues(0.dp),
@@ -190,7 +187,7 @@ class UserLoginScreen : Screen {
                 modifier = Modifier.padding(10.dp),
                 text = stringResource(Res.string.login_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.subTextColor
+                color = MaterialTheme.colorScheme.secondary
             )
 
             Column(
@@ -214,7 +211,7 @@ class UserLoginScreen : Screen {
                             Text(
                                 text = stringResource(Res.string.login_account_placeholder),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.subTextColor
+                                color = MaterialTheme.colorScheme.secondary
                             )
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
@@ -247,7 +244,7 @@ class UserLoginScreen : Screen {
                             Text(
                                 text = stringResource(Res.string.login_passwd_placeholder),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.subTextColor
+                                color = MaterialTheme.colorScheme.secondary
                             )
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
@@ -370,7 +367,7 @@ class UserLoginScreen : Screen {
                     Text(
                         modifier = Modifier.padding(10.dp),
                         text = stringResource(Res.string.login_more),
-                        color = MaterialTheme.colorScheme.subTextColor,
+                        color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Divider(modifier = Modifier.weight(0.3f))

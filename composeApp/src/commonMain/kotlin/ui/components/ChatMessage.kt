@@ -1,11 +1,9 @@
 package ui.components
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -68,9 +66,6 @@ import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import theme.baseBackgroundBlack
-import theme.pureColor
-import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.chat_copy
 import tomoyo.composeapp.generated.resources.chat_relay
@@ -185,7 +180,7 @@ fun MessageCard(
             ) {
                 Text(
                     text = item.webChatLabel ?: "",
-                    color = MaterialTheme.colorScheme.subTextColor,
+                    color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall
                 )
             }
@@ -207,8 +202,8 @@ fun MessageCard(
                 ) {
                     MessageCardBody(
                         item = item,
-                        bgColor = MaterialTheme.colorScheme.primary,
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        bgColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
                     )
                 }
                 MessageCardAvtar(item.sendUserAvatar)
@@ -223,8 +218,8 @@ fun MessageCard(
                 ) {
                     MessageCardBody(
                         item = item,
-                        bgColor = MaterialTheme.colorScheme.pureColor,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        bgColor = MaterialTheme.colorScheme.secondaryContainer,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
                     )
                 }
             }
@@ -256,7 +251,7 @@ private fun MessageCardBody(
 
     Surface(
         shape = MaterialTheme.shapes.small,
-        shadowElevation = 1.dp,
+//        shadowElevation = 1.dp,
         color = actualBgColor,
         modifier = Modifier.padding(1.dp)
             .pointerInput(Unit) {
@@ -431,60 +426,61 @@ private fun MessageCardOperation(
     baseHeight: Dp,
     dismiss: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
-            .clip(RoundedCornerShape(5.dp))
-            .background(MaterialTheme.colorScheme.baseBackgroundBlack)
-            .height(baseHeight),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-
+    Surface(
+        modifier = Modifier.padding(0.dp),
+        shape = RoundedCornerShape(5.dp),
+        color = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
     ) {
-        TextButton(
-            shape = RoundedCornerShape(5.dp),
-            contentPadding = PaddingValues(0.dp),
-            onClick = {
-                copyToClipboard(item.message ?: "")
-                NotificationManager.showNotification(
-                    MainNotification(
-                        BaseResText.copyTip,
-                        NotificationType.SUCCESS
-                    )
-                )
-                dismiss()
-            },
+        Row(
+            modifier = Modifier.height(baseHeight),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+
         ) {
-            Text(
-                text = stringResource(Res.string.chat_copy),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onPrimary,
-            )
-        }
-
-        VerticalDivider(
-            modifier = Modifier
-                .padding(0.dp).height(12.dp)
-        )
-
-        TextButton(
-            shape = RoundedCornerShape(5.dp),
-            contentPadding = PaddingValues(0.dp),
-            onClick = {
-                NotificationManager.createDialogAlert(
-                    MainDialogAlert(
-                        message = BaseResText.underDevelopment,
-                        cancelOperationText = BaseResText.cancelBtn
+            TextButton(
+                shape = RoundedCornerShape(5.dp),
+                contentPadding = PaddingValues(0.dp),
+                onClick = {
+                    copyToClipboard(item.message ?: "")
+                    NotificationManager.showNotification(
+                        MainNotification(
+                            BaseResText.copyTip,
+                            NotificationType.SUCCESS
+                        )
                     )
+                    dismiss()
+                },
+            ) {
+                Text(
+                    text = stringResource(Res.string.chat_copy),
+                    style = MaterialTheme.typography.bodySmall,
                 )
-                dismiss()
             }
-        ) {
-            Text(
-                text = stringResource(Res.string.chat_relay),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onPrimary,
+
+            VerticalDivider(
+                modifier = Modifier.padding(0.dp).height(12.dp)
             )
+
+            TextButton(
+                shape = RoundedCornerShape(5.dp),
+                contentPadding = PaddingValues(0.dp),
+                onClick = {
+                    NotificationManager.createDialogAlert(
+                        MainDialogAlert(
+                            message = BaseResText.underDevelopment,
+                            cancelOperationText = BaseResText.cancelBtn
+                        )
+                    )
+                    dismiss()
+                }
+            ) {
+                Text(
+                    text = stringResource(Res.string.chat_relay),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
     }
+
 }

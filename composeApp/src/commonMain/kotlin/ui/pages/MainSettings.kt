@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,7 +25,6 @@ import constant.enums.ViewEnum
 import data.model.MainScreenModel
 import data.store.DataStorageManager
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
@@ -71,51 +71,54 @@ fun MainSettingsScreen(
         )
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(20.dp),
-    ) {
+
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(20.dp),
+        ) {
 
 
-        if (token.isNotBlank()) {
-            Button(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth()
-                    .height(50.dp),
-                onClick = {
-                    settingApiCoroutine.launch {
-                        mainModel.logout()
-                    }
-                },
-                colors = ButtonDefaults.buttonColors().copy(
+            if (token.isNotBlank()) {
+                Button(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    onClick = {
+                        settingApiCoroutine.launch {
+                            mainModel.logout()
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors().copy(
 
-                )
-            ) {
-                Text(
-                    text = stringResource(Res.string.logout_btn),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+                    )
+                ) {
+                    Text(
+                        text = stringResource(Res.string.logout_btn),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            } else {
+                Button(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    onClick = {
+                        navigator.parent?.push(UserLoginScreen())
+                    },
+                    colors = ButtonDefaults.buttonColors().copy(
+
+                    )
+                ) {
+                    Text(
+                        text = stringResource(Res.string.login_btn),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
             }
-        } else {
-            Button(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth()
-                    .height(50.dp),
-                onClick = {
-                    navigator.parent?.push(UserLoginScreen())
-                },
-                colors = ButtonDefaults.buttonColors().copy(
 
-                )
-            ) {
-                Text(
-                    text = stringResource(Res.string.login_btn),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            }
+
         }
-
-
     }
 }

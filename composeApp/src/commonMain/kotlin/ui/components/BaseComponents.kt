@@ -15,24 +15,27 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,17 +55,12 @@ import api.ApiResText
 import api.BaseApi
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Regular
-import compose.icons.fontawesomeicons.regular.Bell
-import compose.icons.fontawesomeicons.regular.File
 import constant.BaseResText
 import constant.enums.CustomColorTheme
 import constant.enums.MainNavigationEnum
 import data.model.MainScreenModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import theme.third
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.btn_cancel
 import tomoyo.composeapp.generated.resources.btn_confirm
@@ -91,81 +89,43 @@ fun MainAppBar() {
     val title = MainNavigationEnum.getEnumByCode(LocalNavigator.currentOrThrow.lastItem.key).title
     val mainModel: MainScreenModel = koinInject()
 
-//    CenterAlignedTopAppBar(
-//        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-//            containerColor = MaterialTheme.colorScheme.primaryContainer,
-//            titleContentColor = MaterialTheme.colorScheme.primary,
-//        ),
-//        title = {
-//            Text(
-//                "Centered Top App Bar",
-//                maxLines = 1,
-//                overflow = TextOverflow.Ellipsis
-//            )
-//        },
-//        navigationIcon = {
-//            IconButton(onClick = { /* do something */ }) {
-//                Icon(
-//                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-//                    contentDescription = "Localized description"
-//                )
-//            }
-//        },
-//        actions = {
-//            IconButton(onClick = { /* do something */ }) {
-//                Icon(
-//                    imageVector = Icons.Filled.Menu,
-//                    contentDescription = "Localized description"
-//                )
-//            }
-//        },
-//
-//    )
-
     Surface(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars)
+        color = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 7.dp)
-                .graphicsLayer { alpha = 0.8f },
+            modifier = Modifier.windowInsetsPadding(TopAppBarDefaults.windowInsets)
+                .fillMaxWidth()
+                .padding(horizontal = 3.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
-            TextButton(
-                colors = ButtonDefaults.textButtonColors().copy(
-                    contentColor = LocalContentColor.current
-                ),
-                shape = RoundedCornerShape(4.dp),
+            IconButton(
                 onClick = { mainModel.updateCustomTheme(CustomColorTheme.DARK) }
             ) {
                 Icon(
-                    modifier = Modifier.size(22.dp),
-                    imageVector = FontAwesomeIcons.Regular.File,
+                    modifier = Modifier.size(25.dp),
+                    imageVector = Icons.Default.Menu,
                     contentDescription = null,
                 )
             }
 
             Text(
                 text = stringResource(title),
-                color = LocalContentColor.current,
                 style = MaterialTheme.typography.titleLarge
             )
 
-            TextButton(
-                colors = ButtonDefaults.textButtonColors().copy(
-                    contentColor = LocalContentColor.current
-                ),
-                shape = RoundedCornerShape(4.dp),
+            IconButton(
                 onClick = { mainModel.updateCustomTheme(CustomColorTheme.COFFEE) }
             ) {
                 Icon(
-                    modifier = Modifier.size(22.dp),
-                    imageVector = FontAwesomeIcons.Regular.Bell,
+                    modifier = Modifier.size(25.dp),
+                    imageVector = Icons.Default.Search,
                     contentDescription = null,
                 )
             }
+
         }
     }
 }
@@ -175,13 +135,9 @@ fun MainAppNavigationBar(
     extraNavigationList: List<MainNavigationEnum> = emptyList(),
 ) {
 
-
-    Surface(
-        modifier = Modifier.navigationBarsPadding()
-    ) {
-
+    Surface {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.navigationBarsPadding().fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 7.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -194,7 +150,9 @@ fun MainAppNavigationBar(
                         modifier = if (isSelected) Modifier else Modifier.graphicsLayer {
                             alpha = 0.6f
                         },
-                        colors = if (isSelected) ButtonDefaults.textButtonColors() else
+                        colors = if (isSelected) ButtonDefaults.textButtonColors().copy(
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ) else
                             ButtonDefaults.textButtonColors().copy(
                                 contentColor = LocalContentColor.current
                             ),
@@ -221,98 +179,6 @@ fun MainAppNavigationBar(
         }
 
     }
-
-//    NavigationBar(
-//        windowInsets = NavigationBarDefaults.windowInsets
-//    ) {
-//        MainNavigationEnum.entries.toTypedArray().forEach { nav ->
-//            val tabNavigator = LocalNavigator.currentOrThrow
-//            if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
-//                NavigationBarItem(
-//                    icon = {
-//                        Icon(
-//                            imageVector = nav.icon,
-//                            contentDescription = nav.name,
-//                            modifier = Modifier.size(20.dp),
-//                        )
-//                    },
-////                    label = {
-////                        Text(
-////                            text = stringResource(nav.title),
-//////                            style = MaterialTheme.typography.labelSmall,
-////                        )
-////                    },
-//                    selected = tabNavigator.lastItem == nav.screen,
-//                    onClick = { tabNavigator.replaceAll(nav.screen) },
-//                )
-//            }
-//        }
-//    }
-
-
-//    Row(
-//        modifier = Modifier.background(MaterialTheme.colorScheme.surface).height(50.dp)
-//    ) {
-//        MainNavigationEnum.entries.toTypedArray().forEach { nav ->
-//
-//            val tabNavigator = LocalTabNavigator.current
-//            val isSelected = tabNavigator.current == nav.tab
-//
-//            if (nav == MainNavigationEnum.HOME || extraNavigationList.contains(nav)) {
-//
-//                NavigationBarItem(
-//                    modifier = Modifier.padding(0.dp)
-//                        .clip(RoundedCornerShape(100.dp)),
-//                    colors = NavigationBarItemDefaults.colors().copy(
-//                        unselectedIconColor = MaterialTheme.colorScheme.unselectedColor,
-//                    ),
-//                    icon = {
-//                        Column(
-//                            horizontalAlignment = Alignment.CenterHorizontally
-//                        ) {
-//                            //todo use svg instead png
-//                            if (nav == MainNavigationEnum.HOME) {
-//                                if (isSelected) {
-//                                    Icon(
-//                                        painter = painterResource(
-//                                            Res.drawable.logo_pro_trans_128
-//                                        ),
-//                                        contentDescription = nav.name,
-//                                        modifier = Modifier.size(45.dp),
-//                                        tint = Color.Unspecified
-//                                    )
-//                                } else {
-//                                    Icon(
-//                                        imageVector = vectorResource(
-//                                            Res.drawable.logo_pro_trans_unselected
-//                                        ),
-//                                        contentDescription = nav.name,
-//                                        modifier = Modifier.size(31.dp),
-//                                        tint = Color.Unspecified
-//                                    )
-//                                }
-//
-//                            } else {
-//                                Icon(
-//                                    imageVector = nav.icon,
-//                                    contentDescription = nav.name,
-//                                    modifier = Modifier.size(20.dp),
-//                                )
-//                                Text(
-//                                    modifier = Modifier.padding(top = 1.dp),
-//                                    text = stringResource(nav.title),
-//                                    style = MaterialTheme.typography.bodySmall,
-//                                )
-//                            }
-//
-//                        }
-//                    },
-//                    selected = isSelected,
-//                    onClick = { tabNavigator.current = nav.tab },
-//                )
-//            }
-//        }
-//    }
 }
 
 @Composable
@@ -328,8 +194,6 @@ fun MainAlertDialog(
     ) {
         Surface(
             shape = RoundedCornerShape(10.dp),
-            color = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.onBackground,
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth().padding(
@@ -404,7 +268,6 @@ fun InitForNoComposableRes() {
     BaseResText.bgColorList = listOf(
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.secondary,
-        MaterialTheme.colorScheme.third
     )
     BaseResText.weekDayList = listOf(
         stringResource(Res.string.web_sun),
@@ -480,8 +343,8 @@ fun MainHomeNotificationBox(
     isTranslating: Boolean = false,
     text: String,
     icon: ImageVector? = null,
-    color: Color = MaterialTheme.colorScheme.primary,
-    bgColor: Color = MaterialTheme.colorScheme.inversePrimary,
+    color: Color = MaterialTheme.colorScheme.onSecondaryContainer,
+    bgColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     onClick: () -> Unit = {}
 ) {
 
@@ -504,7 +367,7 @@ fun MainHomeNotificationBox(
 
     Column(
         modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 5.dp)
+            .padding(start = 10.dp, top = 10.dp, end = 10.dp)
             .clip(RoundedCornerShape(5.dp))
             .height(40.dp).fillMaxWidth().background(bgColor)
             .clickable {

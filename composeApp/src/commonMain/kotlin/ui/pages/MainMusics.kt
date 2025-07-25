@@ -33,6 +33,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -75,8 +76,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
-import theme.deepIconColor
-import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.logo_pro
 import tomoyo.composeapp.generated.resources.media_audio
@@ -144,342 +143,341 @@ fun MainMusicsScreen(
     val listStateCommon = rememberLazyListState()
     val listStateFav = rememberLazyListState()
 
-
-    Box(
-        modifier = Modifier
-            .height(minHeightDp)
-            .width(minWidthDp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(start = 10.dp, end = 10.dp)
+    Surface {
+        Box(
+            modifier = Modifier
+                .height(minHeightDp)
+                .width(minWidthDp)
         ) {
-
-            TabRow(
-                modifier = Modifier.fillMaxWidth(),
-                selectedTabIndex = tabOrdinal.value,
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.onBackground,
-                divider = {},
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .padding(start = 10.dp, end = 10.dp)
             ) {
-                for (tabEnum in MusicPlayScreenTabModel.entries) {
-                    Tab(
-                        selected = tabOrdinal.value == tabEnum.ordinal,
-                        onClick = {
-                            screenModel.updateMusicTab(tabEnum)
-                            musicApiCoroutine.launch {
-                                tabPageState.animateScrollToPage(
-                                    page = tabEnum.ordinal,
-                                    animationSpec = tween(durationMillis = 500)
+
+                TabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = tabOrdinal.value,
+                    divider = {},
+                ) {
+                    for (tabEnum in MusicPlayScreenTabModel.entries) {
+                        Tab(
+                            selected = tabOrdinal.value == tabEnum.ordinal,
+                            onClick = {
+                                screenModel.updateMusicTab(tabEnum)
+                                musicApiCoroutine.launch {
+                                    tabPageState.animateScrollToPage(
+                                        page = tabEnum.ordinal,
+                                        animationSpec = tween(durationMillis = 500)
+                                    )
+                                }
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(tabEnum.text),
+                                    color = if (tabOrdinal.value == tabEnum.ordinal)
+                                        MaterialTheme.colorScheme.primary
+                                    else Color.Unspecified,
+                                    style = MaterialTheme.typography.bodyMedium,
                                 )
-                            }
-                        },
-                        text = {
-                            Text(
-                                text = stringResource(tabEnum.text),
-                                color = if (tabOrdinal.value == tabEnum.ordinal)
-                                    MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onBackground,
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        },
-                        modifier = Modifier.clip(
-                            RoundedCornerShape(10.dp)
-                        ),
-                    )
+                            },
+                            modifier = Modifier.clip(
+                                RoundedCornerShape(10.dp)
+                            ),
+                        )
+                    }
                 }
-            }
 
 
-            HorizontalPager(
-                state = tabPageState,
-                verticalAlignment = Alignment.Top
-            ) { page ->
-                Column {
-                    when (page) {
-                        MusicPlayScreenTabModel.COMMON.ordinal -> {
+                HorizontalPager(
+                    state = tabPageState,
+                    verticalAlignment = Alignment.Top
+                ) { page ->
+                    Column {
+                        when (page) {
+                            MusicPlayScreenTabModel.COMMON.ordinal -> {
 
-                            MainBaseCardBox(
-                                modifier = Modifier.padding(
-                                    start = 10.dp,
-                                    end = 10.dp,
-                                    top = 12.dp,
-                                    bottom = 5.dp
-                                )
-                                    .height(62.dp),
-                                alignment = Alignment.CenterStart,
-                            ) {
-                                OutlinedTextField(
-                                    modifier = Modifier.height(52.dp),
-                                    value = searchKey,
-                                    onValueChange = { searchKey = it },
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        unfocusedBorderColor = Color.Transparent,
-                                        focusedBorderColor = Color.Transparent,
-                                    ),
-                                    textStyle = MaterialTheme.typography.bodyMedium,
-                                    placeholder = {
-                                        Text(
-                                            text = stringResource(Res.string.search_keyword),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.subTextColor
+                                MainBaseCardBox(
+                                    modifier = Modifier.padding(
+                                        start = 10.dp,
+                                        end = 10.dp,
+                                        top = 12.dp,
+                                        bottom = 5.dp
+                                    )
+                                        .height(62.dp),
+                                    alignment = Alignment.CenterStart,
+                                ) {
+                                    OutlinedTextField(
+                                        modifier = Modifier.height(52.dp),
+                                        value = searchKey,
+                                        onValueChange = { searchKey = it },
+                                        colors = OutlinedTextFieldDefaults.colors(
+                                            unfocusedBorderColor = Color.Transparent,
+                                            focusedBorderColor = Color.Transparent,
+                                        ),
+                                        textStyle = MaterialTheme.typography.bodyMedium,
+                                        placeholder = {
+                                            Text(
+                                                text = stringResource(Res.string.search_keyword),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.outline
+                                            )
+                                        },
+                                        maxLines = 1,
+                                        keyboardOptions = KeyboardOptions(
+                                            keyboardType = KeyboardType.Text,
+                                            imeAction = ImeAction.Search
+                                        ),
+                                        keyboardActions = KeyboardActions(
+                                            onSearch = {
+                                                searchKey = ""
+                                                keyboardController?.hide()
+                                                NotificationManager.createDialogAlert(
+                                                    MainDialogAlert(
+                                                        message = BaseResText.underDevelopment,
+                                                        cancelOperationText = BaseResText.cancelBtn
+                                                    )
+                                                )
+                                            },
+                                        ),
+                                    )
+                                }
+
+                                MusicGlobalPlayRow(
+                                    isPlaying = isPlaying,
+                                    musicPlayMap = musicPlayMap,
+                                    currentPlayId = currentPlayId,
+                                    screenModel = screenModel,
+                                    onStart = {
+                                        screenModel.onStart(
+                                            playListId = musicPlayMap.keys.first(),
+                                            playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
                                         )
                                     },
-                                    maxLines = 1,
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Search
-                                    ),
-                                    keyboardActions = KeyboardActions(
-                                        onSearch = {
-                                            searchKey = ""
-                                            keyboardController?.hide()
-                                            NotificationManager.createDialogAlert(
-                                                MainDialogAlert(
-                                                    message = BaseResText.underDevelopment,
-                                                    cancelOperationText = BaseResText.cancelBtn
-                                                )
-                                            )
-                                        },
-                                    ),
+                                    isMatchCollection = currentCollectionId ==
+                                            MusicPlayScreenTabModel.entries[tabOrdinal.value].collectionId
                                 )
-                            }
-
-                            MusicGlobalPlayRow(
-                                isPlaying = isPlaying,
-                                musicPlayMap = musicPlayMap,
-                                currentPlayId = currentPlayId,
-                                screenModel = screenModel,
-                                onStart = {
-                                    screenModel.onStart(
-                                        playListId = musicPlayMap.keys.first(),
-                                        playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
-                                    )
-                                },
-                                isMatchCollection = currentCollectionId ==
-                                        MusicPlayScreenTabModel.entries[tabOrdinal.value].collectionId
-                            )
 
 
-                            LazyColumn(state = listStateCommon) {
+                                LazyColumn(state = listStateCommon) {
 
-                                items(musicPlayMap.size) { index ->
-                                    val playingItem = musicPlayMap.values.toList()[index]
-                                    MusicListItem(
-                                        favList = favList,
-                                        isOnThisItem = currentPlayId == playingItem.id,
-                                        isPlaying = isPlaying,
-                                        item = playingItem,
-                                        onStart = {
-                                            screenModel.onStart(
-                                                playListId = playingItem.id,
-                                                playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
-                                            )
-                                            if (it) {
-                                                navigator.parent?.push(MusicsPlayerScreen())
-                                            }
-                                        },
-                                        onFav = { isFav, id ->
-                                            if (isFav) screenModel.addFav(id) else screenModel.delFav(
-                                                id
-                                            )
-                                        },
-                                        onPause = { screenModel.onPause() },
-                                        onPlay = { screenModel.onPlay() },
-                                    )
-                                }
-
-                                item {
-                                    if (musicPlayMap.isEmpty()) {
-                                        Box(
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            CircularProgressIndicator(
-                                                modifier = Modifier.padding(16.dp)
-                                            )
-                                        }
-                                    }
-                                    musicApiCoroutine.launch {
-                                        musicApiCoroutine.launch { screenModel.updateAllAudioList() }
-                                    }
-                                }
-
-                                item {
-                                    Row(
-                                        modifier = Modifier.height(150.dp).fillMaxSize()
-                                            .padding(10.dp),
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-                                        Text("底部背景图，没想好放什么") //todo
-                                    }
-                                }
-
-                            }
-
-                        }
-
-                        MusicPlayScreenTabModel.FAV.ordinal -> {
-
-                            val playFavMap = musicPlayMap.filter { favList.contains(it.key) }
-
-                            MusicGlobalPlayRow(
-                                isPlaying = isPlaying,
-                                musicPlayMap = musicPlayMap,
-                                currentPlayId = currentPlayId,
-                                screenModel = screenModel,
-                                onStart = {
-                                    if (playFavMap.isNotEmpty()) {
-                                        screenModel.onStart(
-                                            playListId = playFavMap.keys.first(),
-                                            playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
-                                            musicPlayMap = playFavMap,
+                                    items(musicPlayMap.size) { index ->
+                                        val playingItem = musicPlayMap.values.toList()[index]
+                                        MusicListItem(
+                                            favList = favList,
+                                            isOnThisItem = currentPlayId == playingItem.id,
+                                            isPlaying = isPlaying,
+                                            item = playingItem,
+                                            onStart = {
+                                                screenModel.onStart(
+                                                    playListId = playingItem.id,
+                                                    playCollectionId = MusicPlayScreenTabModel.COMMON.collectionId,
+                                                )
+                                                if (it) {
+                                                    navigator.parent?.push(MusicsPlayerScreen())
+                                                }
+                                            },
+                                            onFav = { isFav, id ->
+                                                if (isFav) screenModel.addFav(id) else screenModel.delFav(
+                                                    id
+                                                )
+                                            },
+                                            onPause = { screenModel.onPause() },
+                                            onPlay = { screenModel.onPlay() },
                                         )
                                     }
-                                },
-                                isMatchCollection = currentCollectionId ==
-                                        MusicPlayScreenTabModel.entries[tabOrdinal.value].collectionId
-                            )
 
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                state = listStateFav
-                            ) {
+                                    item {
+                                        if (musicPlayMap.isEmpty()) {
+                                            Box(
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                CircularProgressIndicator(
+                                                    modifier = Modifier.padding(16.dp)
+                                                )
+                                            }
+                                        }
+                                        musicApiCoroutine.launch {
+                                            musicApiCoroutine.launch { screenModel.updateAllAudioList() }
+                                        }
+                                    }
 
-                                items(playFavMap.size) { index ->
-                                    val playingItem = playFavMap.values.toList()[index]
-                                    MusicListItem(
-                                        favList = favList,
-                                        isOnThisItem = currentPlayId == playingItem.id,
-                                        isPlaying = isPlaying,
-                                        item = playingItem,
-                                        onStart = {
+                                    item {
+                                        Row(
+                                            modifier = Modifier.height(150.dp).fillMaxSize()
+                                                .padding(10.dp),
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text("底部背景图，没想好放什么") //todo
+                                        }
+                                    }
+
+                                }
+
+                            }
+
+                            MusicPlayScreenTabModel.FAV.ordinal -> {
+
+                                val playFavMap = musicPlayMap.filter { favList.contains(it.key) }
+
+                                MusicGlobalPlayRow(
+                                    isPlaying = isPlaying,
+                                    musicPlayMap = musicPlayMap,
+                                    currentPlayId = currentPlayId,
+                                    screenModel = screenModel,
+                                    onStart = {
+                                        if (playFavMap.isNotEmpty()) {
                                             screenModel.onStart(
-                                                playListId = playingItem.id,
+                                                playListId = playFavMap.keys.first(),
                                                 playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
                                                 musicPlayMap = playFavMap,
                                             )
-                                            if (it) {
-                                                navigator.parent?.push(MusicsPlayerScreen())
-                                            }
-                                        },
-                                        onFav = { isFav, id ->
-                                            if (isFav) screenModel.addFav(id) else screenModel.delFav(
-                                                id
-                                            )
-                                        },
-                                        onPause = { screenModel.onPause() },
-                                        onPlay = { screenModel.onPlay() },
-                                    )
-                                }
+                                        }
+                                    },
+                                    isMatchCollection = currentCollectionId ==
+                                            MusicPlayScreenTabModel.entries[tabOrdinal.value].collectionId
+                                )
 
+                                LazyColumn(
+                                    modifier = Modifier.fillMaxSize(),
+                                    state = listStateFav
+                                ) {
 
-                                item {
-                                    Row(
-                                        modifier = Modifier.height(150.dp).fillMaxSize()
-                                            .padding(10.dp),
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-                                        Text("底部背景图，没想好放什么") //todo
+                                    items(playFavMap.size) { index ->
+                                        val playingItem = playFavMap.values.toList()[index]
+                                        MusicListItem(
+                                            favList = favList,
+                                            isOnThisItem = currentPlayId == playingItem.id,
+                                            isPlaying = isPlaying,
+                                            item = playingItem,
+                                            onStart = {
+                                                screenModel.onStart(
+                                                    playListId = playingItem.id,
+                                                    playCollectionId = MusicPlayScreenTabModel.FAV.collectionId,
+                                                    musicPlayMap = playFavMap,
+                                                )
+                                                if (it) {
+                                                    navigator.parent?.push(MusicsPlayerScreen())
+                                                }
+                                            },
+                                            onFav = { isFav, id ->
+                                                if (isFav) screenModel.addFav(id) else screenModel.delFav(
+                                                    id
+                                                )
+                                            },
+                                            onPause = { screenModel.onPause() },
+                                            onPlay = { screenModel.onPlay() },
+                                        )
                                     }
+
+
+                                    item {
+                                        Row(
+                                            modifier = Modifier.height(150.dp).fillMaxSize()
+                                                .padding(10.dp),
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text("底部背景图，没想好放什么") //todo
+                                        }
+                                    }
+
                                 }
 
                             }
 
-                        }
 
-
-                        MusicPlayScreenTabModel.COLLECTIONS.ordinal -> {
-                            Row(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Text(stringResource(Res.string.under_development))
+                            MusicPlayScreenTabModel.COLLECTIONS.ordinal -> {
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(stringResource(Res.string.under_development))
+                                }
                             }
-                        }
 
+                        }
                     }
                 }
+
             }
 
-        }
-
-        if (musicPlayMap.isNotEmpty() && currentPlayId.isNotBlank()) {
-            Box(
-                modifier = Modifier.align(Alignment.BottomCenter)
-                    .padding(15.dp)
-                    .height(110.dp)
-                    .width(minWidthDp - 50.dp)
-            ) {
-                MainBaseCardBox(
-                    modifier = Modifier.fillMaxSize()
-                        .padding(5.dp)
+            if (musicPlayMap.isNotEmpty() && currentPlayId.isNotBlank()) {
+                Box(
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                        .padding(15.dp)
+                        .height(110.dp)
+                        .width(minWidthDp - 50.dp)
                 ) {
-
-                    Column(
-                        modifier = Modifier.clickable {
-                            navigator.parent?.push(MusicsPlayerScreen())
-                        }
+                    MainBaseCardBox(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(5.dp)
                     ) {
 
-                        Box(modifier = Modifier.weight(0.8f).fillMaxSize()) {
-                            MusicPlayItem(
-                                item = musicPlayMap[currentPlayId],
-                                isPlaying = isPlaying,
-                                onPause = { screenModel.onPause() },
-                                onPlay = { screenModel.onPlay() },
-                                toPlaying = {
-                                    musicApiCoroutine.launch {
+                        Column(
+                            modifier = Modifier.clickable {
+                                navigator.parent?.push(MusicsPlayerScreen())
+                            }
+                        ) {
 
-                                        when (tabOrdinal.value) {
-                                            MusicPlayScreenTabModel.COMMON.ordinal -> {
-                                                listStateCommon.scrollToItem(
-                                                    musicPlayMap.keys.indexOf(
-                                                        currentPlayId
+                            Box(modifier = Modifier.weight(0.8f).fillMaxSize()) {
+                                MusicPlayItem(
+                                    item = musicPlayMap[currentPlayId],
+                                    isPlaying = isPlaying,
+                                    onPause = { screenModel.onPause() },
+                                    onPlay = { screenModel.onPlay() },
+                                    toPlaying = {
+                                        musicApiCoroutine.launch {
+
+                                            when (tabOrdinal.value) {
+                                                MusicPlayScreenTabModel.COMMON.ordinal -> {
+                                                    listStateCommon.scrollToItem(
+                                                        musicPlayMap.keys.indexOf(
+                                                            currentPlayId
+                                                        )
                                                     )
-                                                )
+                                                }
+
+                                                MusicPlayScreenTabModel.FAV.ordinal -> {
+                                                    listStateFav.scrollToItem(
+                                                        favList.indexOf(
+                                                            currentPlayId
+                                                        )
+                                                    )
+                                                }
+
+                                                else -> {}
                                             }
 
-                                            MusicPlayScreenTabModel.FAV.ordinal -> {
-                                                listStateFav.scrollToItem(
-                                                    favList.indexOf(
-                                                        currentPlayId
-                                                    )
-                                                )
-                                            }
-
-                                            else -> {}
                                         }
-
                                     }
-                                }
+                                )
+                            }
+
+
+                            Slider(
+                                value = curPosition.toFloat(),
+                                onValueChange = { curPosition = it.toDouble() },
+                                valueRange = 0f..totalDuration.toFloat(),
+                                enabled = false,
+                                thumb = {},
+                                modifier = Modifier
+                                    .weight(0.2f)
+                                    .fillMaxWidth()
+                                    .align(Alignment.CenterHorizontally).padding(
+                                        top = 2.dp, start = 5.dp, end = 5.dp, bottom = 10.dp
+                                    ),
                             )
+
+
                         }
 
-
-                        Slider(
-                            value = curPosition.toFloat(),
-                            onValueChange = { curPosition = it.toDouble() },
-                            valueRange = 0f..totalDuration.toFloat(),
-                            enabled = false,
-                            thumb = {},
-                            modifier = Modifier
-                                .weight(0.2f)
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally).padding(
-                                    top = 2.dp, start = 5.dp, end = 5.dp, bottom = 10.dp
-                                ),
-                        )
-
-
                     }
-
                 }
             }
+
+
         }
-
-
     }
 
 }
@@ -529,8 +527,8 @@ fun MusicGlobalPlayRow(
                     .padding(2.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .size(28.dp),
-//                tint = if (isPlaying) MaterialTheme.colorScheme.primary
-//                else MaterialTheme.colorScheme.deepIconColor
+                tint = if (isPlaying) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onSurface
             )
             Text(
                 modifier = Modifier.padding(end = 10.dp),
@@ -538,7 +536,7 @@ fun MusicGlobalPlayRow(
                 else stringResource(Res.string.play_audio_play_all),
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (isPlaying) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.onBackground,
+                else MaterialTheme.colorScheme.onSurface
             )
 
         }
@@ -558,7 +556,6 @@ fun MusicGlobalPlayRow(
                     )
                 }
                 .size(28.dp),
-            tint = MaterialTheme.colorScheme.onBackground
         )
 
     }
@@ -598,14 +595,14 @@ fun MusicListItem(
                 text = item.audioName,
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (isOnThisItem) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.onBackground,
+                else MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
                 text = item.audioAuthor,
                 style = MaterialTheme.typography.bodySmall,
-                color = if (isOnThisItem) MaterialTheme.colorScheme.inversePrimary
-                else MaterialTheme.colorScheme.subTextColor,
+                color = if (isOnThisItem) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onSurface,
             )
 
         }
@@ -627,8 +624,8 @@ fun MusicListItem(
                         onFav(!favList.contains(item.id), item.id)
                     }
                     .size(22.dp),
-//                tint = if (isOnThisItem) MaterialTheme.colorScheme.primary
-//                else MaterialTheme.colorScheme.deepIconColor
+                tint = if (isOnThisItem) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onSurface
             )
             Icon(
                 imageVector = if (isPlaying && isOnThisItem) vectorResource(Res.drawable.media_pause)
@@ -649,8 +646,8 @@ fun MusicListItem(
                         }
                     }
                     .size(28.dp),
-//                tint = if (isOnThisItem) MaterialTheme.colorScheme.primary
-//                else MaterialTheme.colorScheme.deepIconColor
+                tint = if (isOnThisItem) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onSurface
             )
         }
 
@@ -684,7 +681,7 @@ fun MusicPlayItem(
                 .align(Alignment.CenterVertically)
                 .clip(RoundedCornerShape(15.dp))
                 .border(
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
                     shape = RoundedCornerShape(15.dp)
                 )
         )
@@ -698,13 +695,13 @@ fun MusicPlayItem(
                 modifier = Modifier.padding(start = 2.dp, bottom = 3.dp),
                 text = item.audioName,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
                 text = item.audioAuthor,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.subTextColor,
+                color = MaterialTheme.colorScheme.outline,
             )
 
         }
@@ -726,7 +723,6 @@ fun MusicPlayItem(
                     .padding(horizontal = 2.dp)
                     .size(25.dp)
                     .padding(2.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = if (isPlaying) vectorResource(Res.drawable.media_pause)
@@ -742,7 +738,6 @@ fun MusicPlayItem(
                         }
                     }
                     .size(28.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
         }
 

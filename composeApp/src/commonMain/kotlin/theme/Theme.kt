@@ -2,51 +2,10 @@ package theme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.ui.graphics.Color
 
 
 // https://m3.material.io/styles/color/roles
 // https://m3.material.io/styles/color/dynamic/user-generated-source#602fc8d8-6bb7-4b0c-a652-2aa8e7b6a5bb
-
-val androidx.compose.material3.ColorScheme.unselectedColor: Color
-    get() = if (this.background == lightScheme.background)
-        Color(0XFFc8c8c8) else Color.Transparent
-
-val androidx.compose.material3.ColorScheme.subTextColor: Color
-    get() = if (this.background == lightScheme.background)
-        Color(0XFF979797) else Color.Transparent
-
-val androidx.compose.material3.ColorScheme.deepIconColor: Color
-    get() = if (this.background == lightScheme.background)
-        Color(0XFF333333) else Color.Transparent
-
-val androidx.compose.material3.ColorScheme.third: Color
-    get() = if (this.background == lightScheme.background)
-        Color((0XFFF26E56)) else Color.Transparent
-
-val androidx.compose.material3.ColorScheme.onThird: Color
-    get() = if (this.background == lightScheme.background)
-        Color((0xFFE9E9E9)) else Color.Transparent
-
-val androidx.compose.material3.ColorScheme.inverseThird: Color
-    get() = if (this.background == lightScheme.background)
-        Color((0XFFf6b5a9)) else Color.Transparent
-
-val androidx.compose.material3.ColorScheme.baseBackground: Color
-    get() = if (this.background == lightScheme.background)
-        Color(0XE0FFFFFF) else Color.Black
-
-val androidx.compose.material3.ColorScheme.baseBackgroundBlack: Color
-    get() = if (this.background == lightScheme.background)
-        Color(0XE0222222) else Color.Black
-
-val androidx.compose.material3.ColorScheme.halfTransSurfaceVariant: Color
-    get() = if (this.background == lightScheme.background)
-        Color(0XE0E0E0E0) else Color.Black
-
-val androidx.compose.material3.ColorScheme.pureColor: Color
-    get() = if (this.background == lightScheme.background)
-        Color.White else Color.Black
 
 
 val lightScheme = lightColorScheme(

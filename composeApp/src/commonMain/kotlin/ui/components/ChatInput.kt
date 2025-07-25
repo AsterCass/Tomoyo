@@ -57,7 +57,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.semantics.SemanticsPropertyKey
@@ -132,8 +131,7 @@ fun UserInput(
     val dismissKeyboard = { currentInputSelector = InputSelector.NONE }
 
     Column(
-        modifier = modifier.imePadding()
-            .background(MaterialTheme.colorScheme.surface),
+        modifier = modifier.imePadding(),
         verticalArrangement = Arrangement.Center
     ) {
         UserInputText(
@@ -261,7 +259,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_folder),
@@ -278,7 +275,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_calendar),
@@ -295,7 +291,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_map),
@@ -312,7 +307,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_film),
@@ -329,7 +323,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_globe),
@@ -346,7 +339,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_phone),
@@ -363,7 +355,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_settings),
@@ -380,7 +371,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_store),
@@ -397,7 +387,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = vectorResource(Res.drawable.input_users_three),
@@ -414,7 +403,6 @@ fun ExtraSelector(
                     .padding(15.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .size(32.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -443,7 +431,6 @@ fun FunctionalityNotAvailablePanel() {
                 text = "not_available_subtitle",
                 modifier = Modifier.paddingFrom(FirstBaseline, before = 32.dp),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -490,7 +477,6 @@ private fun UserInputText(
                     )
                 }
                 .size(28.dp),
-            tint = MaterialTheme.colorScheme.onBackground
         )
 
 
@@ -517,7 +503,6 @@ private fun UserInputText(
                     onSelectorChange(InputSelector.EMOJI)
                 }
                 .size(28.dp),
-            tint = MaterialTheme.colorScheme.onBackground
         )
 
         if (sendMessageEnabled) {
@@ -531,7 +516,6 @@ private fun UserInputText(
                         onMessageSent(textFieldValue)
                     }
                     .size(28.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
         } else {
             Icon(
@@ -544,9 +528,7 @@ private fun UserInputText(
                         onSelectorChange(InputSelector.EXTRA)
                     }
                     .size(28.dp),
-                tint = MaterialTheme.colorScheme.onBackground
             )
-
         }
 
     }
@@ -568,7 +550,7 @@ private fun BoxScope.UserInputTextField(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(5.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(vertical = 10.dp, horizontal = 10.dp)
             .align(Alignment.CenterStart)
             .onFocusChanged { state ->
@@ -620,8 +602,6 @@ fun EmojiSelector(
         TabRow(
             modifier = Modifier.fillMaxWidth(),
             selectedTabIndex = tabOrdinal.value,
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onBackground,
             divider = {},
         ) {
             for (tabEnum in InputEmojiTabModel.entries) {
@@ -638,9 +618,6 @@ fun EmojiSelector(
                     text = {
                         Text(
                             text = stringResource(tabEnum.text),
-                            color = if (tabOrdinal.value == tabEnum.ordinal)
-                                MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     },
@@ -749,7 +726,6 @@ fun EmojiSelector(
                                             },
                                         style = MaterialTheme.typography.bodyLarge,
                                         text = emoji,
-                                        color = MaterialTheme.colorScheme.onBackground,
                                     )
                                 }
                             }
@@ -781,7 +757,6 @@ fun EmojiSelector(
                                         },
                                     style = MaterialTheme.typography.bodyLarge,
                                     text = emoji,
-                                    color = MaterialTheme.colorScheme.onBackground,
                                 )
                             }
                         }
@@ -888,7 +863,6 @@ fun EmojiSelector(
                                     .height(70.dp)
                                     .width(70.dp)
                                     .padding(15.dp),
-                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
 

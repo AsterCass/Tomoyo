@@ -80,8 +80,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
-import theme.baseBackground
-import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.bg3
@@ -184,7 +182,6 @@ class UserDetailScreen(
                     Button(
                         shape = RoundedCornerShape(15.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.baseBackground,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                         contentPadding = PaddingValues(0.dp),
@@ -208,9 +205,7 @@ class UserDetailScreen(
                             .clip(
                                 RoundedCornerShape(16.dp)
                             )
-                            .background(
-                                color = MaterialTheme.colorScheme.baseBackground
-                            )
+
                             .padding(horizontal = 20.dp)
                     ) {
                         Column(
@@ -692,7 +687,7 @@ class UserDetailScreen(
                             ) {
                                 Text(
                                     text = stringResource(Res.string.user_no_friend),
-                                    color = MaterialTheme.colorScheme.subTextColor
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             }
                         } else {

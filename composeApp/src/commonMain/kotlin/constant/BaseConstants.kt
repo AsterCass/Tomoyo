@@ -12,7 +12,7 @@ object BaseResText {
     var confirmBtn: String = ""
     var cancelBtn: String = ""
     var copyTip: String = ""
-    var bgColorList: List<Color> = listOf(Color.White, Color.White, Color.White)
+    var bgColorList: List<Color> = listOf(Color.White, Color.White)
     var weekDayList: List<String> = listOf("", "", "", "", "", "", "", "")
 }
 

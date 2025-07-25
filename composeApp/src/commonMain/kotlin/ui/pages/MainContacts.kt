@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,7 +48,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
-import theme.subTextColor
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.user_no_motto
 import ui.views.UserDetailScreen
@@ -84,42 +84,43 @@ fun MainContactsScreen(
     //scroller
     val listState = rememberLazyListState()
 
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp)
+        ) {
+            LazyColumn(state = listState) {
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 10.dp)
-    ) {
-        LazyColumn(state = listState) {
+                items(publicUserDataList.size) { index ->
+                    PublicUserListItem(
+                        item = publicUserDataList[index],
+                        onClick = {
+                            navigator.parent?.push(UserDetailScreen(it))
+                        }
+                    )
+                }
 
-            items(publicUserDataList.size) { index ->
-                PublicUserListItem(
-                    item = publicUserDataList[index],
-                    onClick = {
-                        navigator.parent?.push(UserDetailScreen(it))
+
+                item {
+                    if (!loadAllPublicUser) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
                     }
-                )
-            }
 
-
-            item {
-                if (!loadAllPublicUser) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.padding(16.dp)
-                        )
+                    contactApiCoroutine.launch {
+                        screenModel.loadPublicUser()
                     }
                 }
 
-                contactApiCoroutine.launch {
-                    screenModel.loadPublicUser()
-                }
-            }
 
+            }
 
         }
-
     }
 
 }
@@ -154,7 +155,7 @@ fun PublicUserListItem(
                 .align(Alignment.CenterVertically)
                 .clip(CircleShape)
                 .border(
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
                     shape = CircleShape
                 ),
 
@@ -174,7 +175,6 @@ fun PublicUserListItem(
                     modifier = Modifier.padding(horizontal = 2.dp),
                     text = item.nickName,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
                 )
                 Row(
                     modifier = Modifier
@@ -190,38 +190,22 @@ fun PublicUserListItem(
                         imageVector = vectorResource(thisRoleType.logo),
                         contentDescription = null,
                         modifier = Modifier.size(10.dp),
-                        tint = Color.White
+                        tint = Color.White,
                     )
                     Text(
                         modifier = Modifier.padding(start = 2.dp),
                         text = stringResource(thisRoleType.label),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.background,
+                        color = Color.White,
                     )
                 }
-//                Box(
-//                    modifier = Modifier
-//                        .padding(vertical = 2.dp, horizontal = 4.dp)
-//                        .clip(
-//                            RoundedCornerShape(3.dp)
-//                        )
-//                        .background(thisGender.color)
-//                        .padding(horizontal = 2.dp)
-//                ) {
-//                    Text(
-//                        modifier = Modifier.padding(horizontal = 2.dp),
-//                        text = stringResource(thisGender.label),
-//                        style = MaterialTheme.typography.bodySmall,
-//                        color = MaterialTheme.colorScheme.background,
-//                    )
-//                }
             }
 
             Text(
                 modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
                 text = item.motto ?: stringResource(Res.string.user_no_motto),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.subTextColor,
+                color = MaterialTheme.colorScheme.outline,
             )
         }
 
