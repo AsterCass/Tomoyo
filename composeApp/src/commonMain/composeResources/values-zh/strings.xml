@@ -129,4 +129,6 @@
     <string name="main_chat_emoji_recently"> 最近使用： </string>
     <string name="main_chat_emoji_all"> 全部表情： </string>
 
+    <string name="main_theme"> 主题： </string>
+
 </resources>

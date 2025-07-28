@@ -131,5 +131,7 @@
     <string name="main_chat_emoji_recently"> Recently Used: </string>
     <string name="main_chat_emoji_all"> All: </string>
 
+    <string name="main_theme"> Theme:  </string>
+
 
 </resources>

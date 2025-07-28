@@ -1,19 +1,24 @@
 package ui.pages
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import api.baseJsonConf
 import cafe.adriel.voyager.core.screen.Screen
@@ -21,6 +26,7 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import constant.enums.CustomColorTheme
 import constant.enums.ViewEnum
 import data.model.MainScreenModel
 import data.store.DataStorageManager
@@ -30,6 +36,7 @@ import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.login_btn
 import tomoyo.composeapp.generated.resources.logout_btn
+import tomoyo.composeapp.generated.resources.main_theme
 import ui.views.UserLoginScreen
 
 
@@ -70,6 +77,8 @@ fun MainSettingsScreen(
             baseJsonConf.encodeToString(userData)
         )
     }
+
+    val customTheme = mainModel.customTheme.collectAsState().value
 
 
     Surface {
@@ -117,6 +126,39 @@ fun MainSettingsScreen(
                     )
                 }
             }
+
+
+            Text(
+                modifier = Modifier.padding(top = 20.dp, bottom = 15.dp),
+                text = stringResource(Res.string.main_theme),
+                style = MaterialTheme.typography.titleLarge,
+
+                )
+
+            CustomColorTheme.entries.forEach { theme ->
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .selectable(
+                            selected = (theme == customTheme),
+                            onClick = { mainModel.updateCustomTheme(theme) },
+                            role = Role.RadioButton
+                        )
+                        .padding(vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    RadioButton(
+                        selected = (theme == customTheme),
+                        onClick = null
+                    )
+                    Text(
+                        text = theme.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
+            }
+
 
 
         }

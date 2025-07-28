@@ -17,7 +17,11 @@ import compose.icons.fontawesomeicons.solid.Music
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import theme.darkScheme
+import theme.darkSchemeCoffee
+import theme.darkSchemeTea
 import theme.lightScheme
+import theme.lightSchemeCoffee
+import theme.lightSchemeTea
 import tomoyo.composeapp.generated.resources.Res
 import tomoyo.composeapp.generated.resources.articles
 import tomoyo.composeapp.generated.resources.chat_emoji_emoji
@@ -48,8 +52,12 @@ import ui.pages.MainVideosScreen
 enum class CustomColorTheme(
     val theme: ColorScheme,
 ) {
+    LIGHT(lightScheme),
     DARK(darkScheme),
-    COFFEE(lightScheme),
+    COFFEE_LIGHT(lightSchemeCoffee),
+    COFFEE_DARK(darkSchemeCoffee),
+    TEA_LIGHT(lightSchemeTea),
+    TEA_DARK(darkSchemeTea),
 }
 
 enum class InputEmojiTabModel(

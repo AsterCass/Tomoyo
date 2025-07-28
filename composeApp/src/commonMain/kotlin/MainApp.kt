@@ -176,7 +176,9 @@ class MainTabsScreen : Screen {
         StatusBar().UpdateColor(
             customTheme.theme.surface,
             customTheme.theme.surface,
-            CustomColorTheme.DARK != customTheme,
+            customTheme == CustomColorTheme.TEA_LIGHT ||
+                    customTheme == CustomColorTheme.COFFEE_LIGHT ||
+                    customTheme == CustomColorTheme.LIGHT,
         )
 
 

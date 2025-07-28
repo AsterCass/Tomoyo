@@ -56,7 +56,6 @@ import api.BaseApi
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import constant.BaseResText
-import constant.enums.CustomColorTheme
 import constant.enums.MainNavigationEnum
 import data.model.MainScreenModel
 import org.jetbrains.compose.resources.stringResource
@@ -102,7 +101,10 @@ fun MainAppBar() {
         ) {
 
             IconButton(
-                onClick = { mainModel.updateCustomTheme(CustomColorTheme.DARK) }
+                onClick = {
+                    sendAppNotification("Test Title", "Test content some data")
+//                    mainModel.updateCustomTheme(CustomColorTheme.DARK)
+                }
             ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
@@ -117,7 +119,10 @@ fun MainAppBar() {
             )
 
             IconButton(
-                onClick = { mainModel.updateCustomTheme(CustomColorTheme.COFFEE) }
+                onClick = {
+//                    mainModel.updateCustomTheme(CustomColorTheme.COFFEE)
+                    clearAppNotification()
+                }
             ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
