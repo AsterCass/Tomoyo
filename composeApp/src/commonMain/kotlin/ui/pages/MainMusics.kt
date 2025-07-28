@@ -4,7 +4,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +32,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -72,12 +73,11 @@ import data.AudioSimpleModel
 import data.model.MainScreenModel
 import data.model.MusicScreenModel
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import tomoyo.composeapp.generated.resources.Res
-import tomoyo.composeapp.generated.resources.logo_pro
+import tomoyo.composeapp.generated.resources.logo
 import tomoyo.composeapp.generated.resources.media_audio
 import tomoyo.composeapp.generated.resources.media_pause
 import tomoyo.composeapp.generated.resources.media_play
@@ -460,12 +460,38 @@ fun MainMusicsScreen(
                                 onValueChange = { curPosition = it.toDouble() },
                                 valueRange = 0f..totalDuration.toFloat(),
                                 enabled = false,
-                                thumb = {},
+                                track = { sliderPositions ->
+                                    SliderDefaults.Track(
+                                        sliderState = sliderPositions,
+                                        modifier = Modifier.height(8.dp)
+                                    )
+                                },
+                                thumb =
+                                {
+                                    Icon(
+                                        imageVector = vectorResource(Res.drawable.logo),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp),
+                                        tint = MaterialTheme.colorScheme.primary,
+                                    )
+                                },
+                                colors = SliderColors(
+                                    thumbColor = MaterialTheme.colorScheme.outline,
+                                    activeTrackColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    activeTickColor = MaterialTheme.colorScheme.outline,
+                                    inactiveTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                                    inactiveTickColor = MaterialTheme.colorScheme.outline,
+                                    disabledThumbColor = MaterialTheme.colorScheme.outline,
+                                    disabledActiveTrackColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    disabledActiveTickColor = MaterialTheme.colorScheme.outline,
+                                    disabledInactiveTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                                    disabledInactiveTickColor = MaterialTheme.colorScheme.outline,
+                                ),
                                 modifier = Modifier
                                     .weight(0.2f)
                                     .fillMaxWidth()
                                     .align(Alignment.CenterHorizontally).padding(
-                                        top = 2.dp, start = 5.dp, end = 5.dp, bottom = 10.dp
+                                        top = 2.dp, start = 10.dp, end = 10.dp, bottom = 10.dp
                                     ),
                             )
 
@@ -674,16 +700,11 @@ fun MusicPlayItem(
     ) {
 
         Image(
-            painter = painterResource(Res.drawable.logo_pro),
+            imageVector = vectorResource(Res.drawable.logo),
             contentDescription = null,
             modifier = Modifier
                 .weight(0.15f)
                 .align(Alignment.CenterVertically)
-                .clip(RoundedCornerShape(15.dp))
-                .border(
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
-                    shape = RoundedCornerShape(15.dp)
-                )
         )
 
         Column(

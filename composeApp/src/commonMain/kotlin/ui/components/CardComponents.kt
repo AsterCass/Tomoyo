@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -76,7 +75,7 @@ fun SwipeToRevealCard(
         }
 
         Box(modifier = Modifier.offset { IntOffset(offsetX.toInt(), 0) }.fillMaxSize()
-            .background(MaterialTheme.colorScheme.background).pointerInput(Unit) {
+            .pointerInput(Unit) {
                 detectHorizontalDragGestures(onHorizontalDrag = { _, dragAmount ->
                     val newOffset = offsetX + dragAmount
                     offsetX = max(-maxOffset, min(0f, newOffset))

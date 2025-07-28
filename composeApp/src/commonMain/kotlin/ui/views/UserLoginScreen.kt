@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,20 +14,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -151,350 +149,352 @@ class UserLoginScreen : Screen {
         val accountNotificationText = stringResource(Res.string.login_notification_account)
         val passwdNotificationText = stringResource(Res.string.login_notification_passwd)
 
-        Column(
-            Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars)
-                .padding(vertical = 4.dp, horizontal = 15.dp)
-                .verticalScroll(rememberScrollState()),
+
+        Surface(
+
         ) {
-
-            Row(
-                Modifier.height(50.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Button(
-                    shape = RoundedCornerShape(15.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
-                    contentPadding = PaddingValues(0.dp),
-                    onClick = { navigator.popUntilRoot() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = null,
-                    )
-                }
-            }
-
-            Text(
-                modifier = Modifier.padding(top = 30.dp, start = 10.dp),
-                text = stringResource(Res.string.login_title),
-                style = MaterialTheme.typography.headlineMedium,
-            )
-
-            Text(
-                modifier = Modifier.padding(10.dp),
-                text = stringResource(Res.string.login_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
-            )
-
             Column(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 30.dp)
+                Modifier.windowInsetsPadding(WindowInsets.systemBars).fillMaxSize()
+                    .padding(vertical = 4.dp, horizontal = 15.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
 
-                MainBaseCardBox(
-                    modifier = Modifier.padding(8.dp).height(62.dp),
-                    alignment = Alignment.CenterStart,
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 3.dp, vertical = 6.dp),
                 ) {
-                    OutlinedTextField(
-                        modifier = Modifier.height(52.dp).focusRequester(focusAccount),
-                        value = account,
-                        onValueChange = { account = it },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                        ),
-                        textStyle = MaterialTheme.typography.bodyMedium,
-                        placeholder = {
-                            Text(
-                                text = stringResource(Res.string.login_account_placeholder),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = {
-                                focusPasswd.requestFocus()
+
+                    IconButton(
+                        modifier = Modifier.align(Alignment.CenterStart),
+                        onClick = { navigator.pop() }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(25.dp),
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                }
+
+                Text(
+                    modifier = Modifier.padding(top = 30.dp, start = 10.dp),
+                    text = stringResource(Res.string.login_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+
+                Text(
+                    modifier = Modifier.padding(10.dp),
+                    text = stringResource(Res.string.login_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+
+                Column(
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 30.dp)
+                ) {
+
+                    MainBaseCardBox(
+                        modifier = Modifier.padding(8.dp).height(62.dp),
+                        alignment = Alignment.CenterStart,
+                    ) {
+                        OutlinedTextField(
+                            modifier = Modifier.height(52.dp).focusRequester(focusAccount),
+                            value = account,
+                            onValueChange = { account = it },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedBorderColor = Color.Transparent,
+                            ),
+                            textStyle = MaterialTheme.typography.bodyMedium,
+                            placeholder = {
+                                Text(
+                                    text = stringResource(Res.string.login_account_placeholder),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.outlineVariant
+                                )
                             },
-                        ),
-                        maxLines = 1,
-                    )
-                }
-
-                MainBaseCardBox(
-                    modifier = Modifier.padding(8.dp).height(62.dp),
-                    alignment = Alignment.CenterStart,
-                ) {
-                    OutlinedTextField(
-                        modifier = Modifier.height(52.dp).focusRequester(focusPasswd),
-                        value = passwd,
-                        onValueChange = { passwd = it },
-                        visualTransformation = PasswordVisualTransformation(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                        ),
-                        textStyle = MaterialTheme.typography.bodyMedium,
-                        placeholder = {
-                            Text(
-                                text = stringResource(Res.string.login_passwd_placeholder),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = {
-                                keyboardController?.hide()
-                            }
-                        ),
-                        maxLines = 1,
-                    )
-                }
-
-
-                Row(
-                    modifier = Modifier.padding(horizontal = 15.dp, vertical = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                        Checkbox(
-                            modifier = Modifier.padding(end = 3.dp).scale(.9f),
-                            checked = checked,
-                            onCheckedChange = { checked = it },
-                            colors = CheckboxDefaults.colors().copy(
-                            )
-
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    focusPasswd.requestFocus()
+                                },
+                            ),
+                            maxLines = 1,
                         )
                     }
 
-                    Text(
-                        text = stringResource(Res.string.login_check_privacy_terms_prefix),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                    MainBaseCardBox(
+                        modifier = Modifier.padding(8.dp).height(62.dp),
+                        alignment = Alignment.CenterStart,
+                    ) {
+                        OutlinedTextField(
+                            modifier = Modifier.height(52.dp).focusRequester(focusPasswd),
+                            value = passwd,
+                            onValueChange = { passwd = it },
+                            visualTransformation = PasswordVisualTransformation(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedBorderColor = Color.Transparent,
+                            ),
+                            textStyle = MaterialTheme.typography.bodyMedium,
+                            placeholder = {
+                                Text(
+                                    text = stringResource(Res.string.login_passwd_placeholder),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.outlineVariant
+                                )
+                            },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    keyboardController?.hide()
+                                }
+                            ),
+                            maxLines = 1,
+                        )
+                    }
 
-                    Text(
-                        text = stringResource(Res.string.login_check_privacy_terms),
-                        textDecoration = TextDecoration.Underline,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(5.dp))
 
-                            .clickable {
-                                NotificationManager.createDialogAlert(
-                                    MainDialogAlert(
-                                        message = BaseResText.underDevelopment,
-                                        cancelOperationText = BaseResText.cancelBtn
+                    Row(
+                        modifier = Modifier.padding(horizontal = 15.dp, vertical = 15.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                            Checkbox(
+                                modifier = Modifier.padding(end = 3.dp).scale(.9f),
+                                checked = checked,
+                                onCheckedChange = { checked = it },
+                                colors = CheckboxDefaults.colors().copy(
+                                )
+
+                            )
+                        }
+
+                        Text(
+                            text = stringResource(Res.string.login_check_privacy_terms_prefix),
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+
+                        Text(
+                            text = stringResource(Res.string.login_check_privacy_terms),
+                            textDecoration = TextDecoration.Underline,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5.dp))
+
+                                .clickable {
+                                    NotificationManager.createDialogAlert(
+                                        MainDialogAlert(
+                                            message = BaseResText.underDevelopment,
+                                            cancelOperationText = BaseResText.cancelBtn
+                                        )
                                     )
+                                }
+                                .padding(1.dp)
+                        )
+
+                    }
+
+
+                    Button(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        enabled = loginEnable,
+                        onClick = {
+
+                            if (account.isBlank()) {
+                                NotificationManager.showNotification(
+                                    MainNotification(
+                                        accountNotificationText,
+                                        NotificationType.SUCCESS
+                                    )
+                                )
+                                return@Button
+                            }
+
+                            if (passwd.isBlank()) {
+                                NotificationManager.showNotification(
+                                    MainNotification(
+                                        passwdNotificationText,
+                                        NotificationType.SUCCESS
+                                    )
+                                )
+                                return@Button
+                            }
+
+                            if (!checked) {
+                                NotificationManager.showNotification(
+                                    MainNotification(
+                                        checkNotificationText,
+                                        NotificationType.SUCCESS
+                                    )
+                                )
+                                return@Button
+                            }
+
+                            loginEnable = false
+                            loginApiCoroutine.launch {
+                                mainModel.login(account, passwd)
+                                loginEnable = true
+                            }
+
+
+                        },
+                        shape = RoundedCornerShape(15.dp),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.login_btn),
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
+
+
+                    Row(
+                        modifier = Modifier.padding(top = 40.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Divider(modifier = Modifier.weight(0.3f))
+                        Text(
+                            modifier = Modifier.padding(10.dp),
+                            text = stringResource(Res.string.login_more),
+                            color = MaterialTheme.colorScheme.secondary,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                        Divider(modifier = Modifier.weight(0.3f))
+
+                    }
+
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 20.dp, horizontal = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        MainBaseCardBox(
+                            modifier = Modifier.height(60.dp).width(90.dp),
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clickable {
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
+                                            )
+                                        )
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.github),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.Unspecified
                                 )
                             }
-                            .padding(1.dp)
-                    )
-
-                }
-
-
-                Button(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    enabled = loginEnable,
-                    onClick = {
-
-                        if (account.isBlank()) {
-                            NotificationManager.showNotification(
-                                MainNotification(
-                                    accountNotificationText,
-                                    NotificationType.SUCCESS
-                                )
-                            )
-                            return@Button
                         }
 
-                        if (passwd.isBlank()) {
-                            NotificationManager.showNotification(
-                                MainNotification(
-                                    passwdNotificationText,
-                                    NotificationType.SUCCESS
-                                )
-                            )
-                            return@Button
-                        }
-
-                        if (!checked) {
-                            NotificationManager.showNotification(
-                                MainNotification(
-                                    checkNotificationText,
-                                    NotificationType.SUCCESS
-                                )
-                            )
-                            return@Button
-                        }
-
-                        loginEnable = false
-                        loginApiCoroutine.launch {
-                            mainModel.login(account, passwd)
-                            loginEnable = true
-                        }
-
-
-                    },
-                    shape = RoundedCornerShape(15.dp),
-                ) {
-                    Text(
-                        text = stringResource(Res.string.login_btn),
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
-
-
-                Row(
-                    modifier = Modifier.padding(top = 40.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Divider(modifier = Modifier.weight(0.3f))
-                    Text(
-                        modifier = Modifier.padding(10.dp),
-                        text = stringResource(Res.string.login_more),
-                        color = MaterialTheme.colorScheme.secondary,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    Divider(modifier = Modifier.weight(0.3f))
-
-                }
-
-
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(vertical = 20.dp, horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    MainBaseCardBox(
-                        modifier = Modifier.height(60.dp).width(90.dp),
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clickable {
-                                    NotificationManager.createDialogAlert(
-                                        MainDialogAlert(
-                                            message = BaseResText.underDevelopment,
-                                            cancelOperationText = BaseResText.cancelBtn
-                                        )
-                                    )
-                                },
-                            contentAlignment = Alignment.Center
+                        MainBaseCardBox(
+                            modifier = Modifier.height(60.dp).width(90.dp),
                         ) {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.github),
-                                contentDescription = null,
-                                modifier = Modifier.size(25.dp),
-                                tint = Color.Unspecified,
-                            )
-                        }
-                    }
-
-                    MainBaseCardBox(
-                        modifier = Modifier.height(60.dp).width(90.dp),
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clickable {
-                                    NotificationManager.createDialogAlert(
-                                        MainDialogAlert(
-                                            message = BaseResText.underDevelopment,
-                                            cancelOperationText = BaseResText.cancelBtn
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clickable {
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
+                                            )
                                         )
-                                    )
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.reddit),
-                                contentDescription = null,
-                                modifier = Modifier.size(25.dp),
-                                tint = Color.Unspecified,
-                            )
-                        }
-                    }
-
-                    MainBaseCardBox(
-                        modifier = Modifier.height(60.dp).width(90.dp),
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clickable {
-                                    NotificationManager.createDialogAlert(
-                                        MainDialogAlert(
-                                            message = BaseResText.underDevelopment,
-                                            cancelOperationText = BaseResText.cancelBtn
-                                        )
-                                    )
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.google),
-                                contentDescription = null,
-                                modifier = Modifier.size(25.dp),
-                                tint = Color.Unspecified
-                            )
-                        }
-                    }
-                }
-
-
-                Row(
-                    modifier = Modifier.padding(
-                        top = 30.dp,
-                        start = 20.dp,
-                        end = 20.dp,
-                        bottom = 20.dp
-                    ).fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(Res.string.login_create_account_prefix),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-
-                    Text(
-                        text = stringResource(Res.string.login_create_account),
-                        textDecoration = TextDecoration.Underline,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(5.dp))
-                            .clickable {
-                                NotificationManager.createDialogAlert(
-                                    MainDialogAlert(
-                                        message = BaseResText.underDevelopment,
-                                        cancelOperationText = BaseResText.cancelBtn
-                                    )
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.reddit),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.Unspecified
                                 )
                             }
-                            .padding(1.dp)
-                    )
+                        }
+
+                        MainBaseCardBox(
+                            modifier = Modifier.height(60.dp).width(90.dp),
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clickable {
+                                        NotificationManager.createDialogAlert(
+                                            MainDialogAlert(
+                                                message = BaseResText.underDevelopment,
+                                                cancelOperationText = BaseResText.cancelBtn
+                                            )
+                                        )
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.google),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.Unspecified
+                                )
+                            }
+                        }
+                    }
+
+
+                    Row(
+                        modifier = Modifier.padding(
+                            top = 30.dp,
+                            start = 20.dp,
+                            end = 20.dp,
+                            bottom = 20.dp
+                        ).fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.login_create_account_prefix),
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+
+                        Text(
+                            text = stringResource(Res.string.login_create_account),
+                            textDecoration = TextDecoration.Underline,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5.dp))
+                                .clickable {
+                                    NotificationManager.createDialogAlert(
+                                        MainDialogAlert(
+                                            message = BaseResText.underDevelopment,
+                                            cancelOperationText = BaseResText.cancelBtn
+                                        )
+                                    )
+                                }
+                                .padding(1.dp)
+                        )
+                    }
                 }
+
+
             }
-
-
         }
     }
 }

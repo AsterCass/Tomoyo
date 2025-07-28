@@ -550,7 +550,7 @@ private fun BoxScope.UserInputTextField(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(5.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .padding(vertical = 10.dp, horizontal = 10.dp)
             .align(Alignment.CenterStart)
             .onFocusChanged { state ->

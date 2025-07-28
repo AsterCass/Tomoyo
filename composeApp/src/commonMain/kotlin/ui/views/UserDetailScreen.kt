@@ -14,11 +14,14 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -27,12 +30,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -151,57 +156,53 @@ class UserDetailScreen(
             return
         }
 
-
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.bg3),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentScale = ContentScale.FillWidth,
-            )
-
-
-
-            Column(
-                Modifier.padding(
-                    start = 15.dp,
-                    end = 15.dp,
-                    top = statusBarHigh + 4.dp,
-                    bottom = 4.dp
-                ).fillMaxSize()
-
+        Surface {
+            Box(
+                modifier = Modifier.fillMaxSize()
             ) {
+                Image(
+                    painter = painterResource(Res.drawable.bg3),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth,
+                )
 
-                Row(
-                    Modifier.height(50.dp),
-                    verticalAlignment = Alignment.CenterVertically
+
+
+                Column(
+                    Modifier.windowInsetsPadding(WindowInsets.systemBars).fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Button(
-                        shape = RoundedCornerShape(15.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        ),
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = { navigator.popUntilRoot() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = null,
-                        )
+
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 3.dp, vertical = 6.dp),
+                    ) {
+
+                        IconButton(
+                            modifier = Modifier.align(Alignment.CenterStart),
+                            onClick = { navigator.pop() }
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(25.dp),
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null,
+                            )
+                        }
                     }
-                }
 
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(top = 20.dp),
+
+                    Box(
+                        modifier = Modifier.weight(1f)
+                            .fillMaxSize().padding(top = 20.dp),
                     contentAlignment = Alignment.TopCenter
-                ) {
+                    ) {
 
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(top = 50.dp, bottom = 20.dp)
+                            .padding(top = 40.dp, bottom = 20.dp)
                             .clip(
                                 RoundedCornerShape(16.dp)
                             )
@@ -244,7 +245,8 @@ class UserDetailScreen(
                                             horizontal = 1.dp
                                         ),
                                         colors = ButtonDefaults.buttonColors().copy(
-                                            containerColor = MaterialTheme.colorScheme.secondary
+                                            containerColor = MaterialTheme.colorScheme.primary,
+                                            contentColor = MaterialTheme.colorScheme.onPrimary
                                         ),
                                         modifier = Modifier
                                             .height(22.dp)
@@ -270,7 +272,8 @@ class UserDetailScreen(
                                             horizontal = 1.dp
                                         ),
                                         colors = ButtonDefaults.buttonColors().copy(
-                                            containerColor = MaterialTheme.colorScheme.primary
+                                            containerColor = MaterialTheme.colorScheme.primary,
+                                            contentColor = MaterialTheme.colorScheme.onPrimary
                                         ),
                                         modifier = Modifier
                                             .height(22.dp)
@@ -285,9 +288,10 @@ class UserDetailScreen(
                             }
 
                             Text(
+                                modifier = Modifier.padding(top = 12.dp),
                                 text = userDetailData.nickName,
                                 style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onBackground
+                                color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Row(
@@ -310,7 +314,7 @@ class UserDetailScreen(
                                     modifier = Modifier.padding(start = 2.dp),
                                     text = stringResource(thisRoleType.label),
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.background,
+                                    color = Color.White,
                                 )
                             }
 
@@ -610,7 +614,7 @@ class UserDetailScreen(
                             .border(
                                 border = BorderStroke(
                                     2.dp,
-                                    MaterialTheme.colorScheme.background
+                                    MaterialTheme.colorScheme.primary
                                 ),
                                 shape = CircleShape
                             )
@@ -619,9 +623,10 @@ class UserDetailScreen(
 
                 }
 
+                }
+
+
             }
-
-
         }
 
 
@@ -641,8 +646,6 @@ class UserDetailScreen(
         TabRow(
             modifier = Modifier.fillMaxWidth(),
             selectedTabIndex = tabOrdinal.value,
-            containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.onBackground,
             divider = {},
         ) {
             for (tabEnum in UserDetailTabScreenTabModel.entries) {
@@ -654,9 +657,6 @@ class UserDetailScreen(
                     text = {
                         Text(
                             text = stringResource(tabEnum.text),
-                            color = if (tabOrdinal.value == tabEnum.ordinal)
-                                MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     },
@@ -687,7 +687,7 @@ class UserDetailScreen(
                             ) {
                                 Text(
                                     text = stringResource(Res.string.user_no_friend),
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = MaterialTheme.colorScheme.outline
                                 )
                             }
                         } else {
@@ -728,7 +728,6 @@ class UserDetailScreen(
                                                 modifier = Modifier.padding(start = 4.dp),
                                                 text = friend.nickName,
                                                 style = MaterialTheme.typography.bodyMedium,
-                                                color = MaterialTheme.colorScheme.primary,
                                             )
 
                                             Row(
@@ -754,7 +753,7 @@ class UserDetailScreen(
                                                         modifier = Modifier.padding(start = 2.dp),
                                                         text = stringResource(thisRoleType.label),
                                                         style = MaterialTheme.typography.bodySmall,
-                                                        color = MaterialTheme.colorScheme.background,
+                                                        color = Color.White
                                                     )
                                                 }
                                                 Box(
@@ -770,7 +769,7 @@ class UserDetailScreen(
                                                         modifier = Modifier.padding(horizontal = 2.dp),
                                                         text = stringResource(thisGender.label),
                                                         style = MaterialTheme.typography.bodySmall,
-                                                        color = MaterialTheme.colorScheme.background,
+                                                        color = Color.White,
                                                     )
                                                 }
                                             }

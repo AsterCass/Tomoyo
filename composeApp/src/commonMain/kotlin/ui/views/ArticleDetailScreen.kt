@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,10 +21,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,7 +33,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
@@ -81,32 +78,33 @@ class ArticleDetailScreen : Screen {
         }
 
         Surface {
+
             Column(
-                Modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.systemBars)
+                Modifier.windowInsetsPadding(WindowInsets.systemBars).fillMaxSize()
                     .padding(vertical = 4.dp, horizontal = 20.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Box(
-                    Modifier.weight(0.07f),
-                    contentAlignment = Alignment.CenterStart
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 3.dp, vertical = 6.dp),
                 ) {
-                    Button(
-                        shape = RoundedCornerShape(15.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        ),
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = { navigator.pop() }) {
+
+                    IconButton(
+                        modifier = Modifier.align(Alignment.CenterStart),
+                        onClick = { navigator.pop() }
+                    ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            modifier = Modifier.size(25.dp),
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
                         )
                     }
                 }
+
+
                 Column(
                     modifier = Modifier
-                        .weight(0.93f)
+                        .weight(1f)
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -135,7 +133,10 @@ class ArticleDetailScreen : Screen {
                                         .size(30.dp)
                                         .clip(RoundedCornerShape(15.dp))
                                         .border(
-                                            border = BorderStroke(2.dp, Color.Black),
+                                            border = BorderStroke(
+                                                2.dp,
+                                                MaterialTheme.colorScheme.primary
+                                            ),
                                             shape = RoundedCornerShape(20.dp)
                                         )
                                 )
@@ -151,7 +152,7 @@ class ArticleDetailScreen : Screen {
                                 Text(
                                     text = articleData.createTime ?: "",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = MaterialTheme.colorScheme.outline
                                 )
                             }
 
@@ -170,7 +171,7 @@ class ArticleDetailScreen : Screen {
                                 .clip(
                                     shape = RoundedCornerShape(15.dp)
                                 )
-                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .background(MaterialTheme.colorScheme.surfaceContainer)
                         ) {
                             Text(
                                 modifier = Modifier.padding(10.dp),

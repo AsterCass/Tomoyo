@@ -284,10 +284,10 @@ fun InitForNoComposableRes() {
 
 @Composable
 fun MainBaseCardBox(
-    color: Color = MaterialTheme.colorScheme.onBackground,
+    color: Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier,
     alignment: Alignment = Alignment.TopStart,
-    contentBgColor: Color = MaterialTheme.colorScheme.background,
+    contentBgColor: Color = MaterialTheme.colorScheme.onPrimary,
     content: @Composable () -> Unit,
 ) {
 

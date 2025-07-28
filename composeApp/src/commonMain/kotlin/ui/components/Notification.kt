@@ -4,10 +4,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -79,23 +80,24 @@ fun NotificationComponent() {
 
     AnimatedVisibility(
         visible = null != notification && false == notification?.isExpire,
-        enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
-                slideInVertically(
-                    initialOffsetY = { it },
-                    animationSpec = tween(durationMillis = 500)
+        enter = fadeIn(animationSpec = tween(durationMillis = 1000)) +
+                slideInHorizontally(
+                    initialOffsetX = { -it },
+                    animationSpec = tween(durationMillis = 1000)
                 ),
-        exit = fadeOut(animationSpec = tween(durationMillis = 2000)) +
-                slideOutVertically(
-                    targetOffsetY = { it },
-                    animationSpec = tween(durationMillis = 2000)
+        exit = fadeOut(animationSpec = tween(durationMillis = 1500)) +
+                slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(durationMillis = 1500)
                 ),
     ) {
         Box(
             modifier = Modifier
+                .navigationBarsPadding()
                 .wrapContentWidth()
-                .padding(15.dp)
+                .padding(bottom = 20.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = RoundedCornerShape(8.dp)
                 )
                 .padding(8.dp)
@@ -103,7 +105,7 @@ fun NotificationComponent() {
             Text(
                 text = notification?.message ?: "",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -127,5 +129,6 @@ fun NotificationComponent() {
             confirmOperation = dialogAlert!!.confirmOperation
         )
     }
+
 
 }
