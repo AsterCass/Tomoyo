@@ -18,7 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
-import androidx.compose.material.Surface
+import androidx.compose.material3.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -150,9 +150,7 @@ class UserLoginScreen : Screen {
         val passwdNotificationText = stringResource(Res.string.login_notification_passwd)
 
 
-        Surface(
-
-        ) {
+        Surface {
             Column(
                 Modifier.windowInsetsPadding(WindowInsets.systemBars).fillMaxSize()
                     .padding(vertical = 4.dp, horizontal = 15.dp),
@@ -177,7 +175,7 @@ class UserLoginScreen : Screen {
                 }
 
                 Text(
-                    modifier = Modifier.padding(top = 30.dp, start = 10.dp),
+                    modifier = Modifier.padding(top = 10.dp, start = 10.dp),
                     text = stringResource(Res.string.login_title),
                     style = MaterialTheme.typography.headlineMedium,
                 )
@@ -190,7 +188,7 @@ class UserLoginScreen : Screen {
                 )
 
                 Column(
-                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 30.dp)
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 20.dp)
                 ) {
 
                     MainBaseCardBox(
@@ -268,9 +266,6 @@ class UserLoginScreen : Screen {
                                 modifier = Modifier.padding(end = 3.dp).scale(.9f),
                                 checked = checked,
                                 onCheckedChange = { checked = it },
-                                colors = CheckboxDefaults.colors().copy(
-                                )
-
                             )
                         }
 
@@ -283,7 +278,7 @@ class UserLoginScreen : Screen {
                             text = stringResource(Res.string.login_check_privacy_terms),
                             textDecoration = TextDecoration.Underline,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colorScheme.outline,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(5.dp))
 
@@ -357,7 +352,7 @@ class UserLoginScreen : Screen {
 
 
                     Row(
-                        modifier = Modifier.padding(top = 40.dp),
+                        modifier = Modifier.padding(top = 30.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -366,7 +361,7 @@ class UserLoginScreen : Screen {
                         Text(
                             modifier = Modifier.padding(10.dp),
                             text = stringResource(Res.string.login_more),
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colorScheme.outline,
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         Divider(modifier = Modifier.weight(0.3f))
