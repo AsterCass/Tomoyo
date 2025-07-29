@@ -22,9 +22,11 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.timeout
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
@@ -84,6 +86,12 @@ class BaseApi : KoinComponent {
     private val client = HttpClient {
         install(ContentNegotiation) {
             json(baseJsonConf)
+        }
+
+        install(HttpTimeout) {
+            requestTimeoutMillis = 10_000
+            connectTimeoutMillis = 5_000
+            socketTimeoutMillis = 10_000
         }
 
         HttpResponseValidator {
@@ -227,6 +235,12 @@ class BaseApi : KoinComponent {
             getUrl("/kotomi/article/list")
         ) {
             method = HttpMethod.Get
+            timeout {
+                requestTimeoutMillis = 6_000
+                connectTimeoutMillis = 3_000
+                socketTimeoutMillis = 6_000
+            }
+
             url {
                 parameters.append("offset", offset.toString())
                 parameters.append("keyword", keyword)
@@ -261,6 +275,11 @@ class BaseApi : KoinComponent {
             getUrl("/ushio/video-pro/audios")
         ) {
             method = HttpMethod.Get
+            timeout {
+                requestTimeoutMillis = 6_000
+                connectTimeoutMillis = 3_000
+                socketTimeoutMillis = 6_000
+            }
         }
         return if (body is ApiResponse.Success) {
             body.body ?: emptyList()
@@ -274,6 +293,11 @@ class BaseApi : KoinComponent {
             getUrl("/yui/user/public/users")
         ) {
             method = HttpMethod.Get
+            timeout {
+                requestTimeoutMillis = 6_000
+                connectTimeoutMillis = 3_000
+                socketTimeoutMillis = 6_000
+            }
         }
         return if (body is ApiResponse.Success) {
             body.body.data ?: emptyList()

@@ -106,43 +106,47 @@ class PreLoadScreen(
         val navigator = LocalNavigator.currentOrThrow
 
         preloadCoroutine.launch {
-            val firstTryLinkSocket = mainModel.firstTryLinkSocket.value
+            try {
+                val firstTryLinkSocket = mainModel.firstTryLinkSocket.value
 
-            // User Status
-            if (firstTryLinkSocket) {
-                // Data
-                val userDataStringDb =
-                    dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
-                val recentEmoji =
-                    dataStorageManager.getNonFlowString(DataStorageManager.RECENT_EMOJI_LIST)
-                val recentKaomoji =
-                    dataStorageManager.getNonFlowString(DataStorageManager.RECENT_KAOMOJI_LIST)
-                val recentEmojiPro =
-                    dataStorageManager.getNonFlowString(DataStorageManager.RECENT_EMOJI_PRO_LIST)
-                chatModel.initEmojiList(recentEmoji, recentKaomoji, recentEmojiPro)
+                // User Status
+                if (firstTryLinkSocket) {
+                    // Data
+                    val userDataStringDb =
+                        dataStorageManager.getNonFlowString(DataStorageManager.USER_DATA)
+                    val recentEmoji =
+                        dataStorageManager.getNonFlowString(DataStorageManager.RECENT_EMOJI_LIST)
+                    val recentKaomoji =
+                        dataStorageManager.getNonFlowString(DataStorageManager.RECENT_KAOMOJI_LIST)
+                    val recentEmojiPro =
+                        dataStorageManager.getNonFlowString(DataStorageManager.RECENT_EMOJI_PRO_LIST)
+                    chatModel.initEmojiList(recentEmoji, recentKaomoji, recentEmojiPro)
 
-                mainModel.triedLinkSocket()
-                if (userDataStringDb.isNotBlank()) {
-                    val userDataDb: UserDataModel = baseJsonConf.decodeFromString(userDataStringDb)
-                    if (!userDataDb.token.isNullOrBlank()) {
-                        mainModel.login(
-                            dbData = userDataDb,
-                            forceLogin = true
-                        )
+                    mainModel.triedLinkSocket()
+                    if (userDataStringDb.isNotBlank()) {
+                        val userDataDb: UserDataModel =
+                            baseJsonConf.decodeFromString(userDataStringDb)
+                        if (!userDataDb.token.isNullOrBlank()) {
+                            mainModel.login(
+                                dbData = userDataDb,
+                                forceLogin = true
+                            )
+                        }
                     }
+
+                    // Data pre load
+                    articleModel.updateArticleList()
+                    musicModel.updateAllAudioList()
+                    contactModel.loadPublicUser()
+
                 }
 
-                // Data pre load
-                articleModel.updateArticleList()
-                musicModel.updateAllAudioList()
-                contactModel.loadPublicUser()
-
+                // Init finish
+                // todo too fast will occur error
+                delay(500)
+            } finally {
+                navigator.replace(tabs)
             }
-
-            // Init finish
-            // todo too fast will occur error
-            delay(1000)
-            navigator.replace(tabs)
         }
 
         Box(
