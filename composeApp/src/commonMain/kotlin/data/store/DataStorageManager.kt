@@ -32,6 +32,7 @@ class DataStorageManager @OptIn(ExperimentalSettingsApi::class) constructor(priv
         const val RECENT_EMOJI_LIST = "recent_emoji_list"
         const val RECENT_KAOMOJI_LIST = "recent_kaomoji_list"
         const val RECENT_EMOJI_PRO_LIST = "recent_emoji_pro_list"
+        const val USER_THEME = "user_theme"
     }
 
 }

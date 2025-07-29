@@ -16,6 +16,7 @@ import data.ChatRowModel
 import data.PlatformInitData
 import data.UserDataModel
 import data.UserExData
+import data.store.DataStorageManager
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.WebSockets
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -42,12 +43,20 @@ class MainScreenModel : ScreenModel, KoinComponent {
 
     private val globalDataModel: GlobalDataModel by inject()
     private val chatScreenModel: ChatScreenModel by inject()
+    private val dataStorageManager: DataStorageManager by inject()
 
     private val _userState = globalDataModel.userState
     val userState = _userState
 
     // Theme
-    private val _customTheme = MutableStateFlow(CustomColorTheme.LIGHT)
+    private val _customTheme = MutableStateFlow(run {
+        val data = dataStorageManager.getNonFlowString(DataStorageManager.USER_THEME)
+        if (data.isEmpty()) {
+            CustomColorTheme.LIGHT
+        } else {
+            CustomColorTheme.getEnumByName(data)
+        }
+    })
     val customTheme = _customTheme.asStateFlow()
     fun updateCustomTheme(theme: CustomColorTheme) {
         _customTheme.value = theme

@@ -90,7 +90,7 @@ fun MainAppBar() {
 
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ) {
         Row(
             modifier = Modifier.windowInsetsPadding(TopAppBarDefaults.windowInsets)

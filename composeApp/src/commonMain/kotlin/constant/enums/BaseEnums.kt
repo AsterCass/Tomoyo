@@ -58,6 +58,21 @@ enum class CustomColorTheme(
     COFFEE_DARK(darkSchemeCoffee),
     TEA_LIGHT(lightSchemeTea),
     TEA_DARK(darkSchemeTea),
+
+    ;
+
+    companion object {
+        fun getEnumByName(name: String): CustomColorTheme {
+            var ret = LIGHT
+            for (thisEnum in CustomColorTheme.entries) {
+                if (name == thisEnum.name) {
+                    ret = thisEnum
+                    break
+                }
+            }
+            return ret
+        }
+    }
 }
 
 enum class InputEmojiTabModel(

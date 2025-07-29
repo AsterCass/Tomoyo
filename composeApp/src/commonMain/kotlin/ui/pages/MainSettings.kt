@@ -141,7 +141,13 @@ fun MainSettingsScreen(
                         .fillMaxWidth()
                         .selectable(
                             selected = (theme == customTheme),
-                            onClick = { mainModel.updateCustomTheme(theme) },
+                            onClick = {
+                                mainModel.updateCustomTheme(theme)
+                                dataStorageManager.setString(
+                                    DataStorageManager.USER_THEME,
+                                    theme.name
+                                )
+                            },
                             role = Role.RadioButton
                         )
                         .padding(vertical = 2.dp),
