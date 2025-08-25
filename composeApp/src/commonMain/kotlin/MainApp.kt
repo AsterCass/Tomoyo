@@ -214,10 +214,10 @@ class MainTabsScreen : Screen {
                             TabTransition(mainModel.getSecondLastNavKey(), navigator)
                             mainModel.updateSecondLastNavKey(navigator.lastItem.key)
 
-                            //notification
-                            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                                NotificationComponent()
-                            }
+//                            //notification
+//                            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+//                                NotificationComponent()
+//                            }
                         }
                     }
                 )
