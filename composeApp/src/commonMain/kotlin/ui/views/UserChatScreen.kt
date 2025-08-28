@@ -38,7 +38,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import constant.enums.ViewEnum
 import data.UserChattingSimple
 import data.model.ChatScreenModel
-import data.model.GlobalDataModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,82 +48,24 @@ import org.koin.compose.koinInject
 import ui.components.MessageCard
 import ui.components.UserInput
 
-class UserChatScreen(
-    private val inputUserId: String = "",
-    private val inputChatId: String = "",
-) : Screen {
+class UserChatScreen : Screen {
 
     override val key: ScreenKey = "${ViewEnum.USER_CHAT.code}$uniqueScreenKey"
 
 
     @Composable
     override fun Content() {
-        val mainModel: MainScreenModel = koinInject()
-        val chatScreenModel: ChatScreenModel = koinInject()
-        val globalDataModel: GlobalDataModel = koinInject()
-//        val dataStorageManager: DataStorageManager = koinInject()
-
         //navigation
         val navigator = LocalNavigator.currentOrThrow
 
-        //coroutine
-        val chatApiCoroutine = rememberCoroutineScope()
+        // model
+        val chatScreenModel: ChatScreenModel = koinInject()
 
-//        //soft keyboard
-//        val keyboardController = LocalSoftwareKeyboardController.current
-//
-//        //data
-//        val ime = WindowInsets.ime
-//        val constraints = mainModel.mainPageContainerConstraints.collectAsState().value
-//        val density = LocalDensity.current
-//        val minHeightDp = with(density) { constraints.minHeight.toDp() }
-//        val imeHeightDp = with(density) { ime.getBottom(density).toDp() }
-
-        //user data
-        val userState = mainModel.userState.collectAsState().value
-        val socketConnected = globalDataModel.socketConnected.collectAsState().value
-        val token = userState.token
-        val thisUserId = userState.userData.id
-
-        logInfo("[op:UserChatScreen] Load userState ${userState.token} socket $socketConnected")
-
-        //finish login
-        if (token.isBlank() || thisUserId.isNullOrBlank()) {
-            navigator.pop()
-            return
-        }
-
-        if (inputUserId.isNotEmpty()) {
-            chatScreenModel.clearCurrentChatData(inputUserId)
-            chatApiCoroutine.launch {
-                chatScreenModel.updateCurrentChatDataWithUserId(token, inputUserId)
-            }
-        } else if (inputChatId.isNotBlank()) {
-            chatScreenModel.updateCurrentChatData(inputChatId)
-        }
-
-        //chat data
+        //data
         val chatData = chatScreenModel.currentChatData.collectAsState().value
         val chatId = chatData.chatId ?: return
 
-        chatApiCoroutine.launch {
-            chatScreenModel.readMessage(
-                token = token,
-                chatId = chatId,
-                messageId = chatData.lastMessageId ?: ""
-            )
-        }
-
-        //chat status
-        DisposableEffect(Unit) {
-            chatScreenModel.rebuildMessageTime()
-            chatScreenModel.resetChattingId(chatId)
-            onDispose {
-                chatScreenModel.resetChattingId()
-            }
-        }
-
-
+        logInfo("[op:UserChatScreen:Content] Build Content chat data = $chatData")
 
         Surface {
             Column(
@@ -173,9 +114,6 @@ class UserChatScreen(
                     //todo 这里之后可以自定义背景
                     BaseUserChatColumn(
                         chatData,
-                        thisUserId,
-                        chatApiCoroutine,
-                        token
                     )
                 }
 
@@ -191,13 +129,29 @@ class UserChatScreen(
     @Composable
     private fun BaseUserChatColumn(
         chatData: UserChattingSimple,
-        thisUserId: String,
-        chatApiCoroutine: CoroutineScope,
-        token: String
     ) {
+        // model
         val chatScreenModel: ChatScreenModel = koinInject()
+        val mainModel: MainScreenModel = koinInject()
+        val chatApiCoroutine = rememberCoroutineScope()
+
+        // data
+        val userState = mainModel.userState.collectAsState().value
+        val token = userState.token
+        val thisUserId = userState.userData.id ?: ""
         val chatRowList = chatData.userChattingDataFlow.collectAsState().value
         val loadAllHistoryMessage = chatData.clientLoadAllHistoryMessage.collectAsState().value
+
+        //chat status
+        DisposableEffect(Unit) {
+            chatScreenModel.rebuildMessageTime()
+            chatScreenModel.resetChattingId(chatData.chatId ?: "")
+            onDispose {
+                chatScreenModel.resetChattingId()
+            }
+        }
+
+        logInfo("[op:BaseUserChatColumn] Build row list = $chatRowList")
 
         LazyColumn(
             state = rememberLazyListState(),

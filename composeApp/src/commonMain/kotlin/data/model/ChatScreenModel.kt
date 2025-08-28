@@ -171,20 +171,6 @@ class ChatScreenModel(
             sendUserId = chatRow.sendUserId,
         )
 
-        //update map
-//        if (_chatData.value.containsKey(chatRow.fromChatId)) {
-//            val thisChat = _chatData.value[chatRow.fromChatId]
-//            thisChat?.userChattingData?.add(0, newMessage)
-//            thisChat?.lastMessageTime = chatRow.sendDate
-//            thisChat?.lastMessageId = chatRow.sendMessageId
-//            thisChat?.lastMessageText = chatRow.sendMessage
-//            thisChat?.latestRead = _currentChatData.value.chatId == chatRow.fromChatId
-//            //update status
-//            _updateStatus.value++
-//        } else {
-//            updateChatData(token)
-//        }
-
 
         //update list
         var lastChatIdIndex = -1;
@@ -197,6 +183,7 @@ class ChatScreenModel(
                 }
                 if (item.chatId == chatRow.fromChatId) {
                     alreadyChatting = true
+
                     val lastChatTime = item.userChattingDataFlow.value.getOrNull(0)?.sendDate
                     item.userChattingDataFlow.update { chattingList ->
                         chattingList.toMutableList().apply {
@@ -250,6 +237,18 @@ class ChatScreenModel(
 //        _chatData.value = data
 
         _chatDataList.value = data.values.toMutableList()
+
+        if (currentChatData.value.userChattingDataFlow.value.isNotEmpty()) {
+            _chatDataList.value.forEach {
+                if (it.chatId == currentChatData.value.chatId) {
+                    it.userChattingDataFlow.value =
+                        currentChatData.value.userChattingDataFlow.value
+                    it.clientLoadAllHistoryMessage.value =
+                        currentChatData.value.clientLoadAllHistoryMessage.value
+                    _currentChatData.value = it
+                }
+            }
+        }
     }
 
     suspend fun loadMoreMessage(token: String) {
@@ -282,9 +281,10 @@ class ChatScreenModel(
     }
 
     fun clearCurrentChatData(userId: String) {
-        if (!_currentChatData.value.chatUserId.isNullOrBlank() && _currentChatData.value.chatUserId != userId) {
-            _currentChatData.value = UserChattingSimple()
+        if (currentChatData.value.chatUserId.isNullOrBlank() || currentChatData.value.chatUserId == userId) {
+            return
         }
+        _currentChatData.value = UserChattingSimple()
     }
 
     fun updateCurrentChatData(chatId: String) {

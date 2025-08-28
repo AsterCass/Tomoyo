@@ -77,6 +77,7 @@ import constant.enums.RoleTypeEnum
 import constant.enums.UserDetailTabScreenTabModel
 import constant.enums.ViewEnum
 import data.UserDetailModel
+import data.model.ChatScreenModel
 import data.model.ContactScreenModel
 import data.model.MainScreenModel
 import kotlinx.coroutines.launch
@@ -112,6 +113,7 @@ class UserDetailScreen(
     override fun Content() {
         //inject
         val mainModel: MainScreenModel = koinInject()
+        val chatModel: ChatScreenModel = koinInject()
         val contactScreenModel: ContactScreenModel = koinInject()
         val isMobile: Boolean = koinInject(qualifier = named("isMobile"))
 
@@ -226,7 +228,14 @@ class UserDetailScreen(
                                                 if (isFromChatScreen) {
                                                     navigator.pop()
                                                 } else {
-                                                    navigator.push(UserChatScreen(userId, ""))
+                                                    navigator.push(UserChatScreen())
+                                                    chatModel.clearCurrentChatData(userId)
+                                                    userDetailApiCoroutine.launch {
+                                                        chatModel.updateCurrentChatDataWithUserId(
+                                                            token,
+                                                            userId
+                                                        )
+                                                    }
                                                 }
 
                                             } else {

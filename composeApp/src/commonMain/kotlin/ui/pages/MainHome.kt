@@ -219,10 +219,10 @@ fun MainHomeScreen(
                                         onClick = {
                                             commonApiCoroutine.launch {
                                                 navigator.parent?.push(
-                                                    UserChatScreen(
-                                                        "",
-                                                        chatDataList[index].chatId ?: ""
-                                                    )
+                                                    UserChatScreen()
+                                                )
+                                                chatDataModel.updateCurrentChatData(
+                                                    chatDataList[index].chatId ?: ""
                                                 )
                                             }
                                         },
