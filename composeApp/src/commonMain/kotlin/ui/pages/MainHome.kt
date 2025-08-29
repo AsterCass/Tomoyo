@@ -188,9 +188,7 @@ fun MainHomeScreen(
                                             commonApiCoroutine.launch {
                                                 chatDataModel.readMessage(
                                                     token = token,
-                                                    chatId =
-                                                    chatDataList[index].chatId ?: "",
-                                                    messageId = ""
+                                                    chatId = chatDataList[index].chatId ?: "",
                                                 )
                                             }
                                         },
@@ -249,6 +247,8 @@ fun UserChatListItem(
     item: UserChattingSimple,
     onClick: (String) -> Unit,
 ) {
+
+    val lastMsgId = item.latestReadWeb.collectAsState().value
 
     val chatId = item.chatId
     if (chatId.isNullOrBlank()) {
@@ -316,7 +316,7 @@ fun UserChatListItem(
                     .size(12.dp),
                 imageVector = FontAwesomeIcons.Solid.Circle,
                 contentDescription = null,
-                tint = if (true == item.latestRead) Color.Transparent
+                tint = if (lastMsgId) Color.Transparent
                 else MaterialTheme.colorScheme.error
             )
         }

@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import biz.logInfo
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
@@ -147,6 +148,13 @@ class UserChatScreen : Screen {
             chatScreenModel.rebuildMessageTime()
             chatScreenModel.resetChattingId(chatData.chatId ?: "")
             onDispose {
+                chatScreenModel.screenModelScope.launch {
+                    chatScreenModel.readMessage(
+                        token = token,
+                        chatId = chatData.chatId ?: "",
+                        autoFoundMessageId = true
+                    )
+                }
                 chatScreenModel.resetChattingId()
             }
         }

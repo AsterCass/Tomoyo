@@ -146,7 +146,7 @@ class ChatScreenModel(
                 it.lastMessageTime = input.lastMessageTime
                 it.lastMessageText = input.lastMessageText
                 it.lastMessageId = input.lastMessageId
-                it.latestRead = input.latestRead
+                it.latestReadWeb.value = input.latestReadWeb.value
             }
         }
         if (!alreadyChatting) {
@@ -198,11 +198,11 @@ class ChatScreenModel(
                             )
                         }
                     }
+                    item.latestReadWeb.value = _chattingId.value == item.chatId
                     item.copy(
                         lastMessageTime = chatRow.sendDate,
                         lastMessageId = chatRow.sendMessageId,
                         lastMessageText = chatRow.sendMessage,
-                        latestRead = _chattingId.value == item.chatId
                     )
                 } else {
                     item
@@ -238,8 +238,9 @@ class ChatScreenModel(
 
         _chatDataList.value = data.values.toMutableList()
 
-        if (currentChatData.value.userChattingDataFlow.value.isNotEmpty()) {
-            _chatDataList.value.forEach {
+        _chatDataList.value.forEach {
+            // build currentChatData
+            if (currentChatData.value.userChattingDataFlow.value.isNotEmpty()) {
                 if (it.chatId == currentChatData.value.chatId) {
                     it.userChattingDataFlow.value =
                         currentChatData.value.userChattingDataFlow.value
@@ -248,6 +249,8 @@ class ChatScreenModel(
                     _currentChatData.value = it
                 }
             }
+            // base
+            it.latestReadWeb.value = it.latestRead == true
         }
     }
 
@@ -302,7 +305,7 @@ class ChatScreenModel(
         data.userChattingDataFlow.value = data.userChattingData.toMutableList()
         data.lastMessageText = data.userChattingData.getOrNull(0)?.message ?: ""
         data.lastMessageId = data.userChattingData.getOrNull(0)?.messageId ?: ""
-        data.latestRead = true
+        data.latestReadWeb.value = true
         //assign
         if (!data.chatId.isNullOrBlank()) {
             _currentChatData.value = data
@@ -324,13 +327,21 @@ class ChatScreenModel(
         updateChatData(token)
     }
 
-    suspend fun readMessage(token: String, chatId: String, messageId: String) {
-        BaseApi().readMessage(token, chatId, messageId)
-//        _chatData.value[chatId]?.latestRead = "" != messageId
-        _chatDataList.value.forEach { obj ->
-            if (obj.chatId == chatId) obj.latestRead = "" != messageId
+    suspend fun readMessage(
+        token: String, chatId: String,
+        messageId: String = "",
+        autoFoundMessageId: Boolean = false
+    ) {
+        var msgId = messageId;
+        if (autoFoundMessageId) {
+            msgId = _chatDataList.value.findLast { it.chatId == chatId }?.lastMessageId ?: ""
         }
-//        updateChatData(token)
+
+        _chatDataList.value.forEach { obj ->
+            if (obj.chatId == chatId) obj.latestReadWeb.value = "" != msgId
+        }
+
+        BaseApi().readMessage(token, chatId, msgId)
     }
 
     fun rebuildMessageTime() {
