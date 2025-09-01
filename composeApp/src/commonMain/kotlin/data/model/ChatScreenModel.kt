@@ -225,32 +225,50 @@ class ChatScreenModel(
     }
 
     suspend fun updateChatData(token: String) {
-        val newChatData = BaseApi().chattingUsers(token)
-        if (newChatData.isEmpty()) {
-            return
-        }
-        val data = newChatData
-            .associateBy { it.chatId }
-            .filterKeys { null != it }
-            .mapKeys { it.key!! }
-            .toMutableMap()
+        mutex.withLock {
+            val newChatData = BaseApi().chattingUsers(token)
+            if (newChatData.isEmpty()) {
+                return
+            }
+            val data = newChatData
+                .associateBy { it.chatId }
+                .filterKeys { null != it }
+                .mapKeys { it.key!! }
+                .toMutableMap()
 //        _chatData.value = data
 
-        _chatDataList.value = data.values.toMutableList()
+            _chatDataList.value = data.values.toMutableList()
 
-        _chatDataList.value.forEach {
-            // build currentChatData
-            if (currentChatData.value.userChattingDataFlow.value.isNotEmpty()) {
-                if (it.chatId == currentChatData.value.chatId) {
-                    it.userChattingDataFlow.value =
-                        currentChatData.value.userChattingDataFlow.value
-                    it.clientLoadAllHistoryMessage.value =
-                        currentChatData.value.clientLoadAllHistoryMessage.value
-                    _currentChatData.value = it
+            _chatDataList.value.forEach {
+                // build currentChatData
+                if (currentChatData.value.userChattingDataFlow.value.isNotEmpty()) {
+                    if (it.chatId == currentChatData.value.chatId) {
+                        // 断网期间是否有收到新消息
+                        if (_currentChatData.value.lastMessageId == it.lastMessageId) {
+                            it.userChattingDataFlow.value =
+                                currentChatData.value.userChattingDataFlow.value
+                            it.clientLoadAllHistoryMessage.value =
+                                currentChatData.value.clientLoadAllHistoryMessage.value
+                            _currentChatData.value = it
+                        } else {
+                            val moreMessage = BaseApi().moreMessage(
+                                token, it.chatId ?: "", ""
+                            )
+                            if (moreMessage.isEmpty()) {
+                                it.userChattingDataFlow.value = emptyList()
+                                it.clientLoadAllHistoryMessage.value = true
+                                _currentChatData.value = it
+                            } else {
+                                it.userChattingDataFlow.value = moreMessage
+                                _currentChatData.value = it
+                            }
+                            rebuildMessageTime()
+                        }
+                    }
                 }
+                // base
+                it.latestReadWeb.value = it.latestRead == true
             }
-            // base
-            it.latestReadWeb.value = it.latestRead == true
         }
     }
 
