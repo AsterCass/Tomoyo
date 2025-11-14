@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     //alias(libs.plugins.javaFx)
 
-    kotlin("plugin.serialization") version "2.0.20"
+    kotlin("plugin.serialization") version "2.2.21"
 
     id("com.google.gms.google-services")
 }
@@ -80,7 +80,7 @@ kotlin {
             implementation("com.google.accompanist:accompanist-permissions:0.36.0")
 
             // google message
-            implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.12.0"))
             implementation("com.google.firebase:firebase-messaging")
         }
         commonMain.dependencies {
@@ -145,6 +145,11 @@ kotlin {
 
             //tools https://www.hutool.cn/ for chinese date
             implementation("cn.hutool:hutool-core:5.8.31")
+
+
+            // https://github.com/whyoleg/cryptography-kotlin
+            implementation("dev.whyoleg.cryptography:cryptography-core:0.5.0")
+            implementation("dev.whyoleg.cryptography:cryptography-provider-optimal:0.5.0")
 
 
             //https://github.com/MohamedRejeb/Compose-Rich-Editor/blob/main/docs/getting_started.md

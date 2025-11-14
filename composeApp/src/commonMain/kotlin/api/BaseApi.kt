@@ -1,5 +1,6 @@
 package api
 
+import biz.generalOneWayEncryptStr
 import biz.logInfo
 import constant.BASE_SERVER_ADDRESS
 import constant.NETWORK_CHECK_HOST
@@ -171,13 +172,13 @@ class BaseApi : KoinComponent {
 
     suspend fun login(account: String, passwd: String): UserDataModel {
         try {
-            val response = client.post(getUrl("/yui/user/login"))
+            val response = client.post(getUrl("/yui/user/login/v2"))
             {
                 contentType(ContentType.Application.Json)
                 setBody(
                     LoginParam(
                         accountMail = account,
-                        passwd = passwd,
+                        passwd = generalOneWayEncryptStr(passwd, account),
                     )
                 )
             }

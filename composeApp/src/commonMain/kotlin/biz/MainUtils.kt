@@ -4,6 +4,10 @@ import constant.BaseResText
 import constant.LUNAR_CODE
 import constant.enums.UserChineseZodiac
 import constant.enums.UserZodiac
+import dev.whyoleg.cryptography.BinarySize.Companion.bits
+import dev.whyoleg.cryptography.CryptographyProvider
+import dev.whyoleg.cryptography.algorithms.PBKDF2
+import dev.whyoleg.cryptography.algorithms.SHA256
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -16,6 +20,9 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.io.bytestring.encodeToByteString
+import kotlin.io.encoding.Base64
+
 
 expect fun getPlatform(): String
 
@@ -46,6 +53,17 @@ fun formatSeconds(seconds: Int): String {
 fun getChineseZodiac(date: LocalDate): UserChineseZodiac {
     val chineseYear = getChineseYear(date)
     return UserChineseZodiac.entries[(chineseYear - 1900) % UserChineseZodiac.entries.size]
+}
+
+fun generalOneWayEncryptStr(passwd: String, salt: String): String {
+    val provider = CryptographyProvider.Default
+    val pbkdf2 = provider.get(PBKDF2)
+    val hasher = pbkdf2.secretDerivation(
+        SHA256, 110_000, 256.bits, salt.encodeToByteString()
+    )
+    val bytes = hasher.deriveSecretBlocking(passwd.encodeToByteString())
+    val b64 = Base64.encode(bytes.toByteArray())
+    return b64
 }
 
 
