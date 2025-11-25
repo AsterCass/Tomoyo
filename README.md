@@ -43,6 +43,8 @@ On the other hand, it serves as a sample for common functionalities such as navi
 
 [Socket Solutions in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT184505260536629248)
 
+[Support theme switching in Kotlin Compose Multiplatform](https://www.astercasc.com/article/detail?articleId=AT199322086682527744)
+
 
 ## Screenshots
 

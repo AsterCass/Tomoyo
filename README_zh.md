@@ -40,6 +40,8 @@ Tomoyo是一个Kotlin Multiplatform 应用程序
 
 [Kotlin Compose Multiplatform下Socket解决方案](https://www.astercasc.com/article/detail?articleId=AT184505260536629248)
 
+[Kotlin Compose Multiplatform下支持主题切换](https://www.astercasc.com/article/detail?articleId=AT199322086682527744)
+
 ## 截图
 
 ### 安卓
