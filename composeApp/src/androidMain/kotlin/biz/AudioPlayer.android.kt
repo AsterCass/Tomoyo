@@ -1,43 +1,85 @@
 package biz
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.PowerManager
 import androidx.annotation.OptIn
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.aster.yuno.tomoyo.MainActivity
 import com.aster.yuno.tomoyo.R
 import constant.enums.MusicPlayModel
 import data.AudioSimpleModel
 import data.MusicPlayerState
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import java.net.UnknownHostException
 import kotlin.random.Random
 
-val mediaPlayer = ExoPlayer.Builder(MainActivity.mainContext!!).build()
+
+object PlayerHolder {
+    @Volatile
+    var player: ExoPlayer? = null
+
+    // APP初始的时候调用
+
+    @OptIn(UnstableApi::class)
+    fun init(context: Context) {
+        // ExoPlayer（⚠️ 用 Service context）
+        val dataSourceFactory =
+            DefaultHttpDataSource.Factory().setConnectTimeoutMs(15_000).setReadTimeoutMs(15_000)
+                .setAllowCrossProtocolRedirects(true)
+
+        val mediaSourceFactory = DefaultMediaSourceFactory(dataSourceFactory)
+
+        player = ExoPlayer.Builder(context).setMediaSourceFactory(mediaSourceFactory).build()
+
+    }
+}
 
 class MediaPlaybackService : Service() {
+    private lateinit var wakeLock: PowerManager.WakeLock
+    private lateinit var wifiLock: WifiManager.WifiLock
 
     override fun onCreate() {
         super.onCreate()
 
-        createNotificationChannel()
-        val notification = buildNotification()
-        startForeground(NOTIFICATION_ID, notification)
+        // WakeLock
+        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+        wakeLock = pm.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK, "Tomoyo::AudioWakeLock"
+        )
+        wakeLock.acquire()
+
+        // WifiLock
+        val wifi = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wifiLock = wifi.createWifiLock(
+            WifiManager.WIFI_MODE_FULL_HIGH_PERF, "Tomoyo::WifiLock"
+        )
+        wifiLock.acquire()
+
+        startForeground(NOTIFICATION_ID, buildNotification())
     }
 
     override fun onDestroy() {
-        mediaPlayer.release()
+
+        if (wakeLock.isHeld) wakeLock.release()
+        if (wifiLock.isHeld) wifiLock.release()
+
         super.onDestroy()
     }
 
@@ -45,17 +87,17 @@ class MediaPlaybackService : Service() {
         return null
     }
 
-    private fun createNotificationChannel() {
-        val name = "Player Service"
-        val descriptionText = "Service for playing media"
-        val importance = NotificationManager.IMPORTANCE_LOW
-        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-            description = descriptionText
-        }
-        val notificationManager: NotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
+//    private fun createNotificationChannel() {
+//        val name = "Player Service"
+//        val descriptionText = "Service for playing media"
+//        val importance = NotificationManager.IMPORTANCE_LOW
+//        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+//            description = descriptionText
+//        }
+//        val notificationManager: NotificationManager =
+//            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.createNotificationChannel(channel)
+//    }
 
     private fun buildNotification(): Notification {
         val intent = Intent(this, MainActivity::class.java).apply {
@@ -81,7 +123,11 @@ class MediaPlaybackService : Service() {
 
 actual class AudioPlayer actual constructor(
     private val musicPlayerState: MusicPlayerState,
-) : Runnable {
+) : Runnable, KoinComponent {
+    private val context: Context by inject()
+
+    private val mediaPlayer: ExoPlayer
+        get() = PlayerHolder.player ?: error("MediaPlayer not ready. Service not started.")
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -126,8 +172,28 @@ actual class AudioPlayer actual constructor(
                 stopUpdate()
 
                 // 无播放时停止前台服务
-                val context = MainActivity.mainContext!!
-                context.stopService(Intent(context, MediaPlaybackService::class.java))
+                // context.stopService(Intent(context, MediaPlaybackService::class.java))
+            }
+        }
+
+        override fun onPlayerError(error: PlaybackException) {
+            val cause = error.cause
+            when {
+                cause is UnknownHostException -> {
+                    onNetworkError()
+                }
+
+                error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED -> {
+                    onNetworkError()
+                }
+
+                error.errorCode == PlaybackException.ERROR_CODE_DECODING_FAILED -> {
+
+                }
+
+                else -> {
+
+                }
             }
         }
 
@@ -148,13 +214,12 @@ actual class AudioPlayer actual constructor(
     actual fun play() {
         if (musicPlayerState.isPlaying) return
 
-        // 启动前台服务
-        val context = MainActivity.mainContext!!
         val intent = Intent(context, MediaPlaybackService::class.java)
         ContextCompat.startForegroundService(context, intent)
 
-
-        mediaPlayer.play()
+        handler.post {
+            mediaPlayer.play()
+        }
     }
 
     actual fun pause() {
@@ -248,6 +313,21 @@ actual class AudioPlayer actual constructor(
         val playItem = MediaItem.fromUri(playUrl)
         mediaPlayer.setMediaItem(playItem)
         mediaPlayer.play()
+    }
+
+    private fun onNetworkError() {
+        musicPlayerState.isBuffering = true
+
+        // 停止进度刷新
+        stopUpdate()
+
+        // 延迟重试（给系统恢复网络的时间）
+        handler.postDelayed({
+            if (!mediaPlayer.isPlaying) {
+                mediaPlayer.prepare()
+                mediaPlayer.play()
+            }
+        }, 3000)
     }
 
 }

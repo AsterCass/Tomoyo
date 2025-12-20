@@ -1,14 +1,13 @@
 package com.aster.yuno.tomoyo
 
 import MainApp
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import biz.PlayerHolder
 import constant.enums.MainNavigationEnum
 import data.PlatformInitData
 import di.KoinInit
@@ -21,28 +20,19 @@ import ui.components.createAppNotificationChannel
 
 class MainActivity : ComponentActivity() {
 
-    private val thisContext: Context = this
-
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        var mainContext: Context? = null
-    }
-
-    init {
-        mainContext = thisContext
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
+
+        PlayerHolder.init(applicationContext)
         
         if (GlobalContext.getOrNull() == null) {
             KoinInit().init {
                 androidLogger()
-                androidContext(thisContext)
+                androidContext(applicationContext)
                 modules()
             }
         }

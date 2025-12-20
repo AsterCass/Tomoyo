@@ -6,11 +6,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
-import com.aster.yuno.tomoyo.MainActivity
 import com.google.firebase.messaging.FirebaseMessaging
+import org.koin.java.KoinJavaComponent.inject
 
 actual fun copyToClipboard(text: String) {
-    val context = MainActivity.mainContext!!
+    val context: Context by inject(Context::class.java)
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clipData = ClipData.newPlainText("Tomoyo Copy", text)
     clipboardManager.setPrimaryClip(clipData)
@@ -22,7 +22,7 @@ actual fun logInfo(text: String) {
 
 @SuppressLint("ServiceCast")
 actual fun isAppInForeground(): Boolean {
-    val context = MainActivity.mainContext!!
+    val context: Context by inject(Context::class.java)
     val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     val appProcesses = activityManager.runningAppProcesses ?: return false
 

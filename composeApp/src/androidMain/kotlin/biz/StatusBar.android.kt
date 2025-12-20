@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.aster.yuno.tomoyo.MainActivity
 
 actual class StatusBar actual constructor() {
     @Composable
@@ -16,8 +15,6 @@ actual class StatusBar actual constructor() {
         navigationBarColor: Color,
         isLight: Boolean,
     ) {
-
-        MainActivity.mainContext as Activity
         val view = LocalView.current
 
         if (!view.isInEditMode) {

@@ -18,6 +18,7 @@ import com.aster.yuno.tomoyo.MainActivity
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import org.koin.java.KoinJavaComponent.inject
 
 @SuppressLint("PermissionLaunchedDuringComposition")
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -78,8 +79,7 @@ fun createAppNotificationChannel(context: Context) {
 
 
 actual fun sendAppNotification(title: String, content: String) {
-    val context = MainActivity.mainContext!!
-
+    val context: Context by inject(Context::class.java)
 
     val intent = Intent(context, MainActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -106,7 +106,7 @@ actual fun sendAppNotification(title: String, content: String) {
 }
 
 actual fun clearAppNotification() {
-    val context = MainActivity.mainContext!!
+    val context: Context by inject(Context::class.java)
     val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.cancelAll()
