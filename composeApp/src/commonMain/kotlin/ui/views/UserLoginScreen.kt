@@ -147,8 +147,13 @@ class UserLoginScreen : Screen {
             navigator.popUntilRoot()
         })
 
-        var account by rememberSaveable { mutableStateOf("") }
-        var passwd by rememberSaveable { mutableStateOf("") }
+        val accountDB =
+            dataStorageManager.getNonFlowString(DataStorageManager.USER_LOGIN_ACCOUNT)
+        val passwdDB =
+            dataStorageManager.getNonFlowString(DataStorageManager.USER_LOGIN_PASSWD)
+
+        var account by rememberSaveable { mutableStateOf(accountDB) }
+        var passwd by rememberSaveable { mutableStateOf(passwdDB) }
         var checked by rememberSaveable { mutableStateOf(false) }
         var loginEnable by rememberSaveable { mutableStateOf(true) }
         val checkNotificationText = stringResource(Res.string.login_notification_check)

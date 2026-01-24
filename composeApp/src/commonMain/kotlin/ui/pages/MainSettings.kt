@@ -95,6 +95,16 @@ fun MainSettingsScreen(
                         .height(50.dp),
                     onClick = {
                         settingApiCoroutine.launch {
+                            // 主动登出，则删除保存的账号密码
+                            dataStorageManager.setString(
+                                DataStorageManager.USER_LOGIN_ACCOUNT,
+                                "",
+                            )
+                            dataStorageManager.setString(
+                                DataStorageManager.USER_LOGIN_PASSWD,
+                                "",
+                            )
+                            // 登出
                             mainModel.logout()
                         }
                     },

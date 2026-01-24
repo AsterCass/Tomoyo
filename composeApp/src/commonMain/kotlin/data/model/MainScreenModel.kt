@@ -176,6 +176,18 @@ class MainScreenModel : ScreenModel, KoinComponent {
 
         if (_userState.value.token.isBlank()) return
 
+        // save login account & passwd
+        if(account.isNotBlank() && passwd.isNotBlank()) {
+            dataStorageManager.setString(
+                DataStorageManager.USER_LOGIN_ACCOUNT,
+                account,
+            )
+            dataStorageManager.setString(
+                DataStorageManager.USER_LOGIN_PASSWD,
+                passwd,
+            )
+        }
+
         if (null != dbData) {
             val isLogin = BaseApi().isLogin(_userState.value.token)
             if (!isLogin) {
