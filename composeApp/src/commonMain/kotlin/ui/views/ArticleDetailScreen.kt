@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -85,8 +86,7 @@ class ArticleDetailScreen : Screen {
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Box(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 3.dp, vertical = 6.dp),
+                    modifier = Modifier.fillMaxWidth().offset(x = (-12.5).dp, y = (-5).dp)
                 ) {
 
                     IconButton(
